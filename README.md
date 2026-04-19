@@ -69,3 +69,4 @@ pytest tests/ -v
 | Streamlit | Dashboard (próxima fase) |
 | pytest | Testing |
 # proyecto_grado
+# proyecto_grado
