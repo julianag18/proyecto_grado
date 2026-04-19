@@ -68,3 +68,4 @@ pytest tests/ -v
 | Pydantic v2 | Validación de esquemas |
 | Streamlit | Dashboard (próxima fase) |
 | pytest | Testing |
+# proyecto_grado
