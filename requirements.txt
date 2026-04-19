@@ -1,0 +1,31 @@
+# ──────────────────────────────────────────────
+# PAME — Módulo Complementario
+# Dependencias Python (compatible con Python 3.13 en Windows)
+# ──────────────────────────────────────────────
+
+# Base de datos
+supabase==2.9.1
+postgrest==0.18.0
+
+# Procesamiento de datos (wheels precompilados para Python 3.13)
+pandas>=2.2.0
+openpyxl==3.1.4
+xlrd==2.0.1
+
+# Validación de esquemas
+pydantic==2.7.4
+pydantic-settings==2.3.4
+
+# Dashboard
+streamlit==1.36.0
+plotly==5.22.0
+
+# Utilidades
+python-dotenv==1.0.1
+PyYAML==6.0.1
+rich==13.7.1        # Logging con colores en consola
+typer==0.12.3       # CLI para scripts
+
+# Testing
+pytest==8.2.2
+pytest-cov==5.0.0

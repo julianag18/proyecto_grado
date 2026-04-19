@@ -1,0 +1,184 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# config/column_mappings.yaml
+# Mapeo flexible entre encabezados del Excel y columnas de la base de datos.
+# Si los archivos Excel de diferentes áreas usan nombres distintos para la misma
+# columna, se agregan como sinónimos en la lista correspondiente.
+# ──────────────────────────────────────────────────────────────────────────────
+
+inventario:
+  # campo_bd: [posibles nombres en el Excel]
+  codigo_equipo:
+    - "Código del Equipo"
+    - "Codigo del Equipo"
+    - "CODIGO EQUIPO"
+    - "codigo_equipo"
+    - "Código Equipo"
+  nombre:
+    - "Nombre"
+    - "Nombre del Equipo"
+    - "NOMBRE EQUIPO"
+    - "nombre"
+  serie:
+    - "Serie"
+    - "Número de Serie"
+    - "Numero de Serie"
+    - "No. Serie"
+    - "serie"
+  modelo:
+    - "Modelo"
+    - "MODELO"
+    - "modelo"
+  fabricante:
+    - "Fabricante"
+    - "FABRICANTE"
+    - "fabricante"
+  proveedor_nombre:
+    - "Proveedor del Equipo"
+    - "Proveedor"
+    - "PROVEEDOR"
+    - "proveedor"
+  ubicacion:
+    - "Ubicación"
+    - "Ubicacion"
+    - "UBICACION"
+    - "ubicacion"
+  area:
+    - "Área"
+    - "Area"
+    - "AREA"
+    - "area"
+  estado_equipo:
+    - "Estado del Equipo"
+    - "Estado Equipo"
+    - "ESTADO"
+    - "estado_equipo"
+  es_usable:
+    - "¿Es usable el equipo?"
+    - "Es usable"
+    - "Usable"
+    - "es_usable"
+  fecha_solicitud:
+    - "Fecha Solicitud"
+    - "Fecha de Solicitud"
+    - "fecha_solicitud"
+  estado_aprobacion:
+    - "Estado de Aprobación"
+    - "Estado de Aprobacion"
+    - "Estado Aprobación"
+    - "estado_aprobacion"
+  activo_fijo:
+    - "Activo Fijo"
+    - "ACTIVO FIJO"
+    - "activo_fijo"
+  mide_ambiente:
+    - "Mide ambiente"
+    - "Mide Ambiente"
+    - "mide_ambiente"
+  criticidad:
+    - "Criticidad"
+    - "CRITICIDAD"
+    - "criticidad"
+  creado_por:
+    - "Creado Por"
+    - "Creado por"
+    - "creado_por"
+
+servicios:
+  codigo_equipo:
+    - "Código del Equipo"
+    - "Codigo del Equipo"
+    - "CODIGO EQUIPO"
+    - "codigo_equipo"
+  nombre_equipo:
+    - "Nombre Equipo"
+    - "Nombre del Equipo"
+    - "NOMBRE EQUIPO"
+    - "nombre_equipo"
+  fecha_servicio_vigente:
+    - "Fecha de Servicio Vigente"
+    - "Fecha Servicio Vigente"
+    - "fecha_servicio_vigente"
+  fecha_ejecucion_programada:
+    - "Fecha de Ejecución del Servicio Programado"
+    - "Fecha Ejecucion Programada"
+    - "fecha_ejecucion_programada"
+  tipo_servicio:
+    - "Tipo de Servicio"
+    - "Tipo Servicio"
+    - "TIPO"
+    - "tipo_servicio"
+  frecuencia:
+    - "Frecuencia"
+    - "FRECUENCIA"
+    - "frecuencia"
+  numero_informe:
+    - "Número de Informe"
+    - "Numero de Informe"
+    - "No. Informe"
+    - "numero_informe"
+  estado_servicio:
+    - "Estado del Servicio"
+    - "Estado Servicio"
+    - "estado_servicio"
+  estado_entrega:
+    - "Estado de Entrega"
+    - "Estado Entrega"
+    - "estado_entrega"
+  estado_conformidad:
+    - "Estado de Conformidad"
+    - "Estado Conformidad"
+    - "estado_conformidad"
+  proveedor:
+    - "Proveedor"
+    - "PROVEEDOR"
+    - "proveedor"
+  periodo_proximo_servicio:
+    - "Periodo Próximo Servicio"
+    - "Periodo Proximo Servicio"
+    - "Período Próximo Servicio"
+    - "periodo_proximo_servicio"
+
+# Valores válidos para campos de tipo enum (usados en validación)
+enums:
+  estado_equipo:
+    - "En Servicio"
+    - "Fuera de Uso"
+    - "En Reparación"
+    - "Dado de Baja"
+  es_usable:
+    - "Disponible"
+    - "No Disponible"
+    - "En Préstamo"
+  estado_aprobacion:
+    - "Borrador"
+    - "Pendiente"
+    - "Aprobado"
+    - "Rechazado"
+  tipo_servicio:
+    - "Calibración"
+    - "Verificación"
+    - "Mantenimiento"
+    - "Calificación"
+  frecuencia:
+    - "Anual"
+    - "Semestral"
+    - "Trimestral"
+    - "Bimestral"
+    - "Mensual"
+  estado_servicio:
+    - "Programar"
+    - "En Ejecución"
+    - "Ejecutado"
+    - "Cancelado"
+  estado_entrega:
+    - "Pendiente"
+    - "Entregado"
+  estado_conformidad:
+    - "Pendiente de Calificar"
+    - "Conforme"
+    - "No Conforme"
+    - "Fuera de Especificación"
+  criticidad:
+    - "Alta"
+    - "Media"
+    - "Baja"
