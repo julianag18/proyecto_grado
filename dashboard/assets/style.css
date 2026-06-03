@@ -1,0 +1,455 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   dashboard/assets/style.css
+   Estilos globales del Dashboard PAME — Laboratorios Laproff
+   Tema Claro Premium · Plus Jakarta Sans & Space Grotesk · Paleta PAME HTML
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ── Variables de color y sombras del Mockup ────────────────────────────── */
+:root {
+  --teal:          #00A99D;
+  --teal-dark:     #008F84;
+  --teal-deep:     #006B63;
+  
+  --sidebar:        #0B3533;
+  --sidebar-hover:  #154845;
+  --sidebar-active: #1C5E5A;
+  
+  --page:           #EEF2F7;
+  --card:           #FFFFFF;
+  
+  --t1:             #1A2535;
+  --t2:             #4B5D72;
+  --t3:             #8094A8;
+  
+  --border:         #E2ECF5;
+  --border-lite:    #F0F5FA;
+  
+  /* Semáforo de Alertas */
+  --green:          #10B981;
+  --green-lt:       #D1FAE5;
+  
+  --amber:          #F59E0B;
+  --amber-lt:       #FEF3C7;
+  
+  --red:            #EF4444;
+  --red-lt:         #FEE2E2;
+  
+  --crimson:        #DC2626;
+  --crimson-lt:     #FEE2E2;
+  
+  /* Sombras */
+  --sh1: 0 1px 4px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.03);
+  --sh2: 0 4px 16px rgba(0,0,0,.09), 0 2px 4px rgba(0,0,0,.04);
+  --sh3: 0 12px 36px rgba(0,0,0,.13), 0 4px 10px rgba(0,0,0,.06);
+}
+
+/* ── Reset base Streamlit a Light Mode Premium ───────────────────────────── */
+html, body, [class*="css"] {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+  background-color: var(--page) !important;
+  color: var(--t2) !important;
+}
+
+/* Fondo principal de la app */
+.stApp {
+  background: var(--page) !important;
+}
+
+/* ── Cabecera / Header ────────────────────────────────────────────────────── */
+header[data-testid="stHeader"] {
+  background-color: var(--page) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+  background: var(--sidebar) !important;
+  border-right: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+[data-testid="stSidebar"] * {
+  color: rgba(255,255,255,0.7) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Estilos de enlaces / botones de navegación en sidebar */
+[data-testid="stSidebar"] a, [data-testid="stSidebar"] button {
+  color: rgba(255,255,255,0.65) !important;
+  border-radius: 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+[data-testid="stSidebar"] a:hover, [data-testid="stSidebar"] button:hover {
+  background: var(--sidebar-hover) !important;
+  color: rgba(255,255,255,0.95) !important;
+}
+
+[data-testid="stSidebar"] a[data-selected="true"] {
+  background: var(--sidebar-active) !important;
+  color: #ffffff !important;
+}
+
+/* Forzar colores de texto específicos de la cabecera en sidebar */
+[data-testid="stSidebar"] div[style*="color:#e6edf3"] {
+  color: #ffffff !important;
+}
+[data-testid="stSidebar"] div[style*="color:#8b949e"] {
+  color: rgba(255,255,255,0.6) !important;
+}
+[data-testid="stSidebar"] div[style*="color:#484f58"] {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+/* ── Métricas nativas de Streamlit ────────────────────────────────────────── */
+[data-testid="stMetric"] {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 1.2rem 1.25rem !important;
+  box-shadow: var(--sh1) !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-testid="stMetric"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh2) !important;
+}
+
+[data-testid="stMetricValue"] {
+  color: var(--t1) !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+[data-testid="stMetricLabel"] {
+  color: var(--t3) !important;
+  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* ── Tarjetas KPI Personalizadas (Estilo exacto Mockup pame.html) ─────────── */
+.kpi-card {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 18px 16px !important;
+  box-shadow: var(--sh1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: transform .2s, box-shadow .2s !important;
+  cursor: default !important;
+  color: var(--t1) !important;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--sh2) !important;
+}
+
+.kpi-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  height: 3px !important;
+  border-radius: 14px 14px 0 0 !important;
+}
+
+/* Degradados de tarjeta superior del Mockup */
+.kpi-card.total::before { background: linear-gradient(90deg, var(--teal), #00D4C8) !important; }
+.kpi-card.al-dia::before { background: linear-gradient(90deg, var(--green), #34D399) !important; }
+.kpi-card.proximo::before { background: linear-gradient(90deg, var(--amber), #FCD34D) !important; }
+.kpi-card.critico::before { background: linear-gradient(90deg, var(--red), #F87171) !important; }
+.kpi-card.vencido::before { background: linear-gradient(90deg, var(--crimson), var(--red)) !important; }
+.kpi-card.sin-datos::before { background: linear-gradient(90deg, #94A3B8, #CBD5E1) !important; }
+
+/* Colores de fuentes del Mockup para números de KPI */
+.kpi-card.total .kpi-number { color: var(--teal-deep) !important; }
+.kpi-card.al-dia .kpi-number { color: #059669 !important; }
+.kpi-card.proximo .kpi-number { color: #D97706 !important; }
+.kpi-card.critico .kpi-number { color: var(--crimson) !important; }
+.kpi-card.vencido .kpi-number { color: #7F1D1D !important; }
+.kpi-card.sin-datos .kpi-number { color: #64748B !important; }
+
+/* Subtítulos de color del Mockup */
+.kpi-card.al-dia .kpi-sub { color: #059669 !important; }
+.kpi-card.proximo .kpi-sub { color: #D97706 !important; }
+.kpi-card.critico .kpi-sub { color: var(--crimson) !important; }
+.kpi-card.vencido .kpi-sub { color: #991B1B !important; }
+
+.kpi-number {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  margin-bottom: 5px !important;
+}
+
+.kpi-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: var(--t3) !important;
+  margin-bottom: 9px !important;
+}
+
+.kpi-sub {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--t3) !important;
+}
+
+.kpi-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* ── Badges de estado de alerta del Mockup ────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.badge-al-dia   { background: var(--green-lt) !important;    color: #065F46 !important;   border: 1px solid #A7F3D0 !important; }
+.badge-proximo  { background: var(--amber-lt) !important;   color: #92400E !important;  border: 1px solid #FDE68A !important; }
+.badge-critico  { background: var(--red-lt) !important;   color: #991B1B !important;  border: 1px solid #FCA5A5 !important; }
+.badge-vencido  { background: var(--crimson-lt) !important;   color: #7F1D1D !important;  border: 1px solid #FCA5A5 !important; }
+.badge-sin-datos { background: var(--border-lite) !important; color: var(--t2) !important; border: 1px solid var(--border) !important; }
+
+/* ── Sección header ───────────────────────────────────────────────────────── */
+.section-header {
+  border-left: 3px solid var(--teal) !important;
+  padding-left: 0.75rem;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.section-header h2 {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--t1) !important;
+  margin: 0 !important;
+}
+
+.section-header p {
+  font-size: 0.82rem !important;
+  color: var(--t3) !important;
+  margin: 0.2rem 0 0 0 !important;
+}
+
+/* ── Forzar sobreecritura de colores inline del modo oscuro en el contenido ── */
+[data-testid="stAppViewContainer"] h1, 
+[data-testid="stAppViewContainer"] h2, 
+[data-testid="stAppViewContainer"] h3 {
+  color: var(--t1) !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+}
+
+[data-testid="stAppViewContainer"] p, 
+[data-testid="stAppViewContainer"] span {
+  color: var(--t2) !important;
+}
+
+[data-testid="stAppViewContainer"] [style*="color:#e6edf3"] {
+  color: var(--t1) !important;
+}
+
+[data-testid="stAppViewContainer"] [style*="color:#8b949e"] {
+  color: var(--t2) !important;
+}
+
+[data-testid="stAppViewContainer"] [style*="color:#484f58"] {
+  color: var(--t3) !important;
+}
+
+[data-testid="stAppViewContainer"] [style*="color:#2563eb"] {
+  color: var(--teal) !important;
+}
+
+/* ── DataFrames / tablas ──────────────────────────────────────────────────── */
+[data-testid="stDataFrame"] {
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* ── Expanders ────────────────────────────────────────────────────────────── */
+[data-testid="stExpander"] {
+  background: var(--card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--sh1) !important;
+}
+
+/* ── Selectbox / inputs ───────────────────────────────────────────────────── */
+[data-testid="stSelectbox"] > div > div,
+[data-testid="stMultiSelect"] > div > div {
+  background: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--t1) !important;
+}
+
+/* ── Botones primarios ────────────────────────────────────────────────────── */
+.stButton > button[kind="primary"] {
+  background: var(--teal) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  border-radius: 9px !important;
+  box-shadow: 0 2px 10px rgba(0,169,157,.35) !important;
+  transition: all 0.2s ease !important;
+}
+
+.stButton > button[kind="primary"]:hover {
+  background: var(--teal-dark) !important;
+  box-shadow: 0 4px 18px rgba(0,169,157,.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ── Alerta banners ───────────────────────────────────────────────────────── */
+.alert-banner {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  box-shadow: var(--sh1);
+}
+
+.alert-banner:hover {
+  transform: translateX(3px);
+  box-shadow: var(--sh2);
+}
+
+.alert-banner.vencido {
+  background: var(--crimson-lt) !important;
+  border-color: var(--crimson) !important;
+  color: #7F1D1D !important;
+}
+
+.alert-banner.critico {
+  background: var(--red-lt) !important;
+  border-color: var(--red) !important;
+  color: #991B1B !important;
+}
+
+.alert-banner.proximo {
+  background: var(--amber-lt) !important;
+  border-color: var(--amber) !important;
+  color: #92400E !important;
+}
+
+.alert-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.alert-msg {
+  font-size: 0.82rem;
+  color: var(--t2);
+  margin-top: 0.2rem;
+}
+
+/* ── Progress bars ────────────────────────────────────────────────────────── */
+.stProgress > div > div {
+  background: var(--teal) !important;
+}
+
+/* ── File uploader ────────────────────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+  background: var(--card) !important;
+  border: 2px dashed var(--border) !important;
+  border-radius: 12px !important;
+  transition: border-color 0.2s ease !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+  border-color: var(--teal) !important;
+}
+
+/* ── Separador ────────────────────────────────────────────────────────────── */
+hr {
+  border: none !important;
+  border-top: 1px solid var(--border) !important;
+  margin: 1.5rem 0 !important;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t3); }
+
+/* ── Utilidades ───────────────────────────────────────────────────────────── */
+.text-muted   { color: var(--t3) !important; }
+.text-success { color: var(--green)  !important; }
+.text-warning { color: var(--amber) !important; }
+.text-danger  { color: var(--red) !important; }
+.fw-bold { font-weight: 700 !important; }
+
+/* Ocultar navegación nativa redundante de Streamlit */
+[data-testid="stSidebarNav"] {
+  display: none !important;
+}
+
+/* ── Estilos del Logo y Module Pill en Sidebar ────────────────────────────── */
+.s-logo {
+  text-align: center;
+  padding: 1.5rem 1rem 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.logo-img {
+  width: 140px;
+  height: auto;
+  max-width: 100%;
+}
+.module-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(0, 169, 157, 0.22);
+  border: 1px solid rgba(0, 169, 157, 0.35);
+  border-radius: 7px;
+  padding: 5px 11px;
+  margin-top: 10px;
+}
+.mpill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  animation: blink 2.2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.mpill-txt {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #6EDDD7;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+

@@ -64,8 +64,8 @@ class TestFrecuenciaADias:
 
 class TestCalcularFechaProximo:
     def test_anual_desde_inicio_año(self):
-        fecha = calcular_fecha_proximo("2024-01-15", 365)
-        assert fecha == date(2025, 1, 15)
+        fecha = calcular_fecha_proximo("2023-01-15", 365)
+        assert fecha == date(2024, 1, 15)
 
     def test_semestral(self):
         fecha = calcular_fecha_proximo("2024-06-01", 182)

@@ -1,20 +1,12 @@
 """
-db/client.py
+src/database/exceptions.py
 ──────────────────────────────────────────────────────────────────────────────
-Singleton del cliente Firebase Firestore.
-Todos los módulos importan `get_firestore_client()` para obtener la conexión.
+Excepciones personalizadas para el módulo de base de datos PAME.
 ──────────────────────────────────────────────────────────────────────────────
 """
 
-from src.database.firebase_client import get_db
-
-def get_firestore_client():
-    """
-    Retorna el cliente Firestore de Firebase como singleton de firebase_client.
-    Si no hay credenciales, retorna None para permitir el funcionamiento en Modo Demo.
-    """
-    try:
-        return get_db()
-    except Exception:
-        return None
-
+class FirestoreIndexError(Exception):
+    """Excepción lanzada cuando una consulta en Firestore requiere un índice compuesto ausente."""
+    def __init__(self, message: str, index_url: str = None):
+        super().__init__(message)
+        self.index_url = index_url

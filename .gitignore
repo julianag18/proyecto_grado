@@ -1,0 +1,34 @@
+# ── Entorno y Credenciales locales ──────────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Claves de Firebase
+firebase_credentials.json
+firebase-key.json
+*.json.key
+secrets.yaml
+
+# ── Python / Pytest ─────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.webassets-cache
+
+# ── VS Code / Herramientas de IDE ────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

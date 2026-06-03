@@ -1,229 +1,265 @@
 """
 etl/loader.py
 ──────────────────────────────────────────────────────────────────────────────
-Módulo de carga: toma los DataFrames validados y los persiste en Supabase
-mediante operaciones UPSERT (insertar o actualizar si ya existe).
+Módulo de carga para Firebase Firestore.
+Toma los DataFrames validados y los persiste en Firestore.
 
-Estrategia UPSERT:
-  - EQUIPOS: clave única = codigo_equipo
-  - PROVEEDORES: clave única = nombre
-  - SERVICIOS: clave única = (codigo_equipo, tipo_servicio, fecha_servicio_vigente)
+Estrategia NoSQL:
+  - EQUIPOS: Colección principal 'equipos', ID de documento = 'codigo_equipo'
+  - SERVICIOS: Subcolección 'servicios' dentro del equipo,
+               ID de documento = '{tipo_servicio_safe}_{fecha_servicio_vigente}' (idempotente)
+  - PROVEEDORES: Colección 'proveedores' (opcional, para mantener compatibilidad)
 ──────────────────────────────────────────────────────────────────────────────
 """
 
 import math
-from dataclasses import dataclass
-
+from datetime import datetime, timezone
 import pandas as pd
 from rich.console import Console
 from rich.progress import track
 
-from db.client import get_client
+from config.settings import settings
+from db.client import get_firestore_client
 
 console = Console()
 
-# Tamaño de lote para envíos a Supabase (evita timeouts en cargas grandes)
-BATCH_SIZE = 50
+
+def _normalizar_nulos(val: any) -> any:
+    """
+    Normaliza valores nulos y cadenas de texto específicas a None (null en Firestore).
+    """
+    if pd.isna(val) or val is None:
+        return None
+    val_str = str(val).strip()
+    if val_str.upper() in ("NO IDENTIFICADO", "NO REGISTRA", "NO APLICA", "NAN", "NONE", "NULL", ""):
+        return None
+    return val_str
 
 
-@dataclass
+def _parsear_fecha_proximo_servicio(periodo: str | None) -> str | None:
+    """
+    Convierte un período 'MM/YYYY' a una fecha estándar 'YYYY-MM-01'.
+    """
+    if not periodo:
+        return None
+    parts = str(periodo).strip().split("/")
+    if len(parts) == 2:
+        mm, yyyy = parts
+        try:
+            return f"{yyyy}-{mm.zfill(2)}-01"
+        except Exception:
+            return None
+    return None
+
+
+def _extraer_anio(fecha: str | None) -> int | None:
+    """
+    Extrae el año como entero a partir de una fecha ISO 'YYYY-MM-DD'.
+    """
+    if not fecha:
+        return None
+    try:
+        return int(str(fecha).split("-")[0])
+    except (ValueError, IndexError):
+        return None
+
+
 class ResultadoCarga:
     """Métricas del proceso de carga."""
-    tabla: str
-    registros_enviados: int = 0
-    registros_exitosos: int = 0
-    registros_fallidos: int = 0
-    errores: list[str] = None
+    def __init__(self, tabla: str, registros_enviados: int = 0):
+        self.tabla = tabla
+        self.registros_enviados = registros_enviados
+        self.registros_exitosos = 0
+        self.registros_fallidos = 0
+        self.errores = []
 
-    def __post_init__(self):
-        if self.errores is None:
-            self.errores = []
-
-
-def _df_a_registros(df: pd.DataFrame) -> list[dict]:
-    """
-    Convierte un DataFrame a lista de diccionarios, eliminando claves con None/NaN.
-    Supabase rechaza valores None en campos con DEFAULT si se envían explícitamente.
-    """
-    registros = []
-    for _, fila in df.iterrows():
-        registro = {}
-        for k, v in fila.to_dict().items():
-            # Omitir columnas internas del ETL y valores nulos
-            if k.startswith("_"):
-                continue
-            if v is None or (isinstance(v, float) and math.isnan(v)):
-                continue
-            registro[k] = v
-        registros.append(registro)
-    return registros
-
-
-def _upsert_en_lotes(
-    tabla: str,
-    registros: list[dict],
-    clave_conflicto: str,
-) -> ResultadoCarga:
-    """
-    Envía los registros a Supabase en lotes usando UPSERT.
-
-    Parámetros
-    ----------
-    tabla : str
-        Nombre de la tabla en Supabase.
-    registros : list[dict]
-        Lista de registros a cargar.
-    clave_conflicto : str
-        Nombre de la columna (o columnas separadas por coma) para detectar conflicto.
-    """
-    cliente = get_client()
-    resultado = ResultadoCarga(tabla=tabla, registros_enviados=len(registros))
-
-    if not registros:
-        console.print(f"[yellow]  ⚠ No hay registros para cargar en '{tabla}'[/yellow]")
-        return resultado
-
-    # Dividir en lotes
-    total_lotes = math.ceil(len(registros) / BATCH_SIZE)
-    console.print(
-        f"\n[bold blue]📤 Cargando en '{tabla}':[/bold blue] "
-        f"{len(registros)} registros en {total_lotes} lote(s)"
-    )
-
-    for i in track(range(total_lotes), description=f"  Cargando {tabla}..."):
-        lote = registros[i * BATCH_SIZE: (i + 1) * BATCH_SIZE]
-        try:
-            cliente.table(tabla).upsert(
-                lote,
-                on_conflict=clave_conflicto,
-            ).execute()
-            resultado.registros_exitosos += len(lote)
-        except Exception as e:
-            resultado.registros_fallidos += len(lote)
-            resultado.errores.append(
-                f"Lote {i + 1}/{total_lotes}: {str(e)}"
-            )
-            console.print(f"[red]  ✗ Error en lote {i + 1}: {e}[/red]")
-
-    console.print(
-        f"[green]  ✓ Exitosos: {resultado.registros_exitosos}[/green]  "
-        f"[red]✗ Fallidos: {resultado.registros_fallidos}[/red]"
-    )
-    return resultado
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Funciones públicas
-# ──────────────────────────────────────────────────────────────────────────────
 
 def cargar_proveedores(df: pd.DataFrame) -> ResultadoCarga:
     """
-    Extrae proveedores únicos del DataFrame de equipos y los carga/actualiza
-    en la tabla 'proveedores'.
-
-    Parámetros
-    ----------
-    df : pd.DataFrame
-        DataFrame de equipos que puede contener columna 'proveedor_nombre'.
+    Guarda proveedores únicos en la colección 'proveedores'.
     """
-    if "proveedor_nombre" not in df.columns:
-        console.print("[yellow]  ⚠ Columna 'proveedor_nombre' no encontrada; se omite carga de proveedores[/yellow]")
-        return ResultadoCarga(tabla="proveedores")
+    resultado = ResultadoCarga(tabla="proveedores")
+    if "proveedor_nombre" not in df.columns and "proveedor" not in df.columns:
+        return resultado
 
-    # Extraer nombres únicos y no nulos
-    nombres_unicos = df["proveedor_nombre"].dropna().unique()
-    registros = [{"nombre": n} for n in nombres_unicos if str(n).strip()]
+    col = "proveedor_nombre" if "proveedor_nombre" in df.columns else "proveedor"
+    nombres_unicos = df[col].dropna().unique()
+    registros = [str(n).strip() for n in nombres_unicos if _normalizar_nulos(n)]
 
-    return _upsert_en_lotes("proveedores", registros, "nombre")
+    resultado.registros_enviados = len(registros)
+    db = get_firestore_client()
+
+    if db is None:
+        console.print("[yellow]  ⚠ Modo Demo activo: omitiendo carga de proveedores a Firestore[/yellow]")
+        resultado.registros_exitosos = len(registros)
+        return resultado
+
+    console.print(f"\n[bold blue]📤 Cargando en 'proveedores':[/bold blue] {len(registros)} registros")
+    for prov in registros:
+        try:
+            # Usar el nombre del proveedor sanitizado como ID
+            doc_id = prov.upper().replace(" ", "_")
+            db.collection("proveedores").document(doc_id).set({"nombre": prov}, merge=True)
+            resultado.registros_exitosos += 1
+        except Exception as e:
+            resultado.registros_fallidos += 1
+            resultado.errores.append(f"Proveedor {prov}: {e}")
+
+    return resultado
 
 
 def cargar_equipos(df: pd.DataFrame, migracion_id: str | None = None) -> ResultadoCarga:
     """
-    Carga el DataFrame de inventario en la tabla 'equipos'.
-
-    Parámetros
-    ----------
-    df : pd.DataFrame
-        DataFrame validado de equipos.
-    migracion_id : str | None
-        UUID del registro de migración para trazabilidad.
+    Carga o actualiza el DataFrame de equipos en la colección 'equipos'.
+    Usa 'codigo_equipo' como ID de documento (UPSERT).
     """
-    df_carga = df.copy()
+    resultado = ResultadoCarga(tabla="equipos", registros_enviados=len(df))
+    db = get_firestore_client()
 
-    # Agregar ID de migración para trazabilidad
-    if migracion_id:
-        df_carga["migracion_id"] = migracion_id
-
-    # Columnas permitidas en la tabla equipos (sin proveedor_id, se resuelve por trigger)
-    columnas_equipos = [
+    # Columnas conocidas que mapean directamente al documento de equipos
+    campos_estandar = {
         "codigo_equipo", "nombre", "serie", "modelo", "fabricante",
         "proveedor_nombre", "ubicacion", "area", "estado_equipo",
         "es_usable", "estado_aprobacion", "activo_fijo", "mide_ambiente",
         "criticidad", "fecha_solicitud", "fecha_entrega_area",
-        "fecha_aprobacion", "creado_por", "aprobado_por", "migracion_id",
-    ]
-    columnas_presentes = [c for c in columnas_equipos if c in df_carga.columns]
-    df_carga = df_carga[columnas_presentes]
+        "fecha_aprobacion", "creado_por", "aprobado_por", "migracion_id"
+    }
 
-    registros = _df_a_registros(df_carga)
-    return _upsert_en_lotes("equipos", registros, "codigo_equipo")
+    if db is None:
+        console.print("[yellow]  ⚠ Modo Demo activo: omitiendo carga de equipos a Firestore[/yellow]")
+        resultado.registros_exitosos = len(df)
+        return resultado
+
+    console.print(f"\n[bold blue]📤 Cargando en 'equipos':[/bold blue] {len(df)} registros")
+
+    for _, fila in track(df.iterrows(), total=len(df), description="  Cargando equipos..."):
+        try:
+            row_dict = fila.to_dict()
+            codigo = row_dict.get("codigo_equipo")
+            if not codigo:
+                continue
+
+            # Construir el documento
+            doc_data = {
+                "codigo_equipo": codigo,
+                "nombre_equipo": _normalizar_nulos(row_dict.get("nombre") or row_dict.get("nombre_equipo")),
+                "ubicacion": _normalizar_nulos(row_dict.get("ubicacion")),
+                "serie_equipo": _normalizar_nulos(row_dict.get("serie") or row_dict.get("serie_equipo")),
+                "activo_fijo": _normalizar_nulos(row_dict.get("activo_fijo")),
+                "activo": True,
+                "metadata_carga": {
+                    "migracion_id": migracion_id,
+                    "usuario": settings.pame_usuario,
+                    "fecha_carga": datetime.now(timezone.utc).isoformat()
+                }
+            }
+
+            # Agregar otros campos estándar si existen
+            for k, v in row_dict.items():
+                if k in campos_estandar and k not in ("codigo_equipo", "nombre", "serie", "activo_fijo"):
+                    doc_data[k] = _normalizar_nulos(v)
+
+            # Recolectar campos extra
+            campos_extra = {}
+            for k, v in row_dict.items():
+                if k not in campos_estandar and not k.startswith("_"):
+                    campos_extra[k] = v
+            if campos_extra:
+                doc_data["campos_extra"] = campos_extra
+
+            # Guardar en Firestore usando set(..., merge=True)
+            db.collection("equipos").document(codigo).set(doc_data, merge=True)
+            resultado.registros_exitosos += 1
+        except Exception as e:
+            resultado.registros_fallidos += 1
+            resultado.errores.append(f"Equipo {fila.get('codigo_equipo', 'desconocido')}: {e}")
+
+    console.print(f"[green]  ✓ Exitosos: {resultado.registros_exitosos}[/green]  [red]✗ Fallidos: {resultado.registros_fallidos}[/red]")
+    return resultado
 
 
 def cargar_servicios(df: pd.DataFrame, migracion_id: str | None = None) -> ResultadoCarga:
     """
-    Carga el DataFrame de servicios en la tabla 'servicios'.
-    Resuelve el equipo_id buscando el codigo_equipo en Supabase.
-
-    Parámetros
-    ----------
-    df : pd.DataFrame
-        DataFrame validado de servicios.
-    migracion_id : str | None
-        UUID del registro de migración para trazabilidad.
+    Carga o actualiza servicios en la subcolección 'servicios' de cada equipo.
+    El ID de documento es determinista para evitar duplicación.
     """
-    df_carga = df.copy()
-    cliente = get_client()
+    resultado = ResultadoCarga(tabla="servicios", registros_enviados=len(df))
+    db = get_firestore_client()
 
-    # ── Resolver equipo_id para cada codigo_equipo ─────────────────────────────
-    console.print("\n[cyan]  🔗 Resolviendo equipo_id desde codigo_equipo...[/cyan]")
-    codigos_unicos = df_carga["codigo_equipo"].dropna().unique().tolist()
-
-    # Obtener el mapeo codigo_equipo → id desde Supabase
-    respuesta = cliente.table("equipos")\
-        .select("id, codigo_equipo")\
-        .in_("codigo_equipo", codigos_unicos)\
-        .execute()
-
-    mapa_id = {r["codigo_equipo"]: r["id"] for r in respuesta.data}
-
-    df_carga["equipo_id"] = df_carga["codigo_equipo"].map(mapa_id)
-
-    # Filas sin equipo_id (equipo no registrado en BD)
-    sin_id = df_carga["equipo_id"].isna().sum()
-    if sin_id > 0:
-        console.print(
-            f"[yellow]  ⚠ {sin_id} servicio(s) sin equipo correspondiente en BD (se omitirán)[/yellow]"
-        )
-        df_carga = df_carga[df_carga["equipo_id"].notna()]
-
-    # Agregar ID de migración
-    if migracion_id:
-        df_carga["migracion_id"] = migracion_id
-
-    columnas_servicios = [
-        "equipo_id", "codigo_equipo", "nombre_equipo",
-        "fecha_servicio_vigente", "fecha_ejecucion_programada",
+    campos_estandar = {
         "tipo_servicio", "frecuencia", "frecuencia_dias",
-        "numero_informe", "estado_servicio", "estado_entrega",
-        "estado_conformidad", "proveedor", "periodo_proximo_servicio",
-        "migracion_id",
-    ]
-    columnas_presentes = [c for c in columnas_servicios if c in df_carga.columns]
-    df_carga = df_carga[columnas_presentes]
+        "fecha_servicio_vigente", "fecha_ejecucion_programada",
+        "periodo_proximo_servicio", "fecha_proximo_servicio",
+        "estado_servicio", "estado_entrega", "estado_conformidad",
+        "proveedor", "numero_informe", "migracion_id", "anio"
+    }
 
-    registros = _df_a_registros(df_carga)
-    return _upsert_en_lotes(
-        "servicios",
-        registros,
-        "codigo_equipo,tipo_servicio,fecha_servicio_vigente",
-    )
+    if db is None:
+        console.print("[yellow]  ⚠ Modo Demo activo: omitiendo carga de servicios a Firestore[/yellow]")
+        resultado.registros_exitosos = len(df)
+        return resultado
+
+    console.print(f"\n[bold blue]📤 Cargando en 'servicios':[/bold blue] {len(df)} registros")
+
+    for _, fila in track(df.iterrows(), total=len(df), description="  Cargando servicios..."):
+        try:
+            row_dict = fila.to_dict()
+            codigo = row_dict.get("codigo_equipo")
+            tipo_srv = row_dict.get("tipo_servicio")
+            fecha_vigente = row_dict.get("fecha_servicio_vigente")
+
+            if not codigo or not tipo_srv or not fecha_vigente:
+                resultado.registros_fallidos += 1
+                resultado.errores.append(f"Registro sin clave única (codigo={codigo}, tipo={tipo_srv}, fecha={fecha_vigente})")
+                continue
+
+            # Limpiar fecha_vigente
+            fecha_vigente_norm = _normalizar_nulos(fecha_vigente)
+            if not fecha_vigente_norm:
+                resultado.registros_fallidos += 1
+                resultado.errores.append(f"Fecha de servicio vigente nula para equipo {codigo}")
+                continue
+
+            # Crear ID de documento determinista
+            tipo_srv_safe = str(tipo_srv).lower().replace(" ", "_").replace("ñ", "n").replace("ó", "o")
+            doc_id = f"{tipo_srv_safe}_{fecha_vigente_norm}"
+
+            # Construir datos del servicio
+            periodo = row_dict.get("periodo_proximo_servicio")
+            fecha_proximo = row_dict.get("fecha_proximo_servicio") or _parsear_fecha_proximo_servicio(periodo)
+
+            doc_data = {
+                "tipo_servicio": tipo_srv,
+                "frecuencia": _normalizar_nulos(row_dict.get("frecuencia")),
+                "frecuencia_dias": row_dict.get("frecuencia_dias"),
+                "fecha_servicio_vigente": fecha_vigente_norm,
+                "fecha_ejecucion_programada": _normalizar_nulos(row_dict.get("fecha_ejecucion_programada")),
+                "periodo_proximo_servicio": _normalizar_nulos(periodo),
+                "fecha_proximo_servicio": _normalizar_nulos(fecha_proximo),
+                "estado_servicio": _normalizar_nulos(row_dict.get("estado_servicio")),
+                "estado_entrega": _normalizar_nulos(row_dict.get("estado_entrega")),
+                "estado_conformidad": _normalizar_nulos(row_dict.get("estado_conformidad")),
+                "proveedor": _normalizar_nulos(row_dict.get("proveedor")),
+                "numero_informe": _normalizar_nulos(row_dict.get("numero_informe")),
+                "anio": _extraer_anio(fecha_vigente_norm),
+                "migracion_id": migracion_id,
+            }
+
+            # Recolectar campos extra
+            campos_extra = {}
+            for k, v in row_dict.items():
+                if k not in campos_estandar and k not in ("codigo_equipo", "nombre_equipo") and not k.startswith("_"):
+                    campos_extra[k] = v
+            if campos_extra:
+                doc_data["campos_extra"] = campos_extra
+
+            # Guardar en la subcolección 'servicios' del documento del equipo
+            db.collection("equipos").document(codigo).collection("servicios").document(doc_id).set(doc_data, merge=True)
+            resultado.registros_exitosos += 1
+
+        except Exception as e:
+            resultado.registros_fallidos += 1
+            resultado.errores.append(f"Servicio para {fila.get('codigo_equipo', 'desconocido')}: {e}")
+
+    console.print(f"[green]  ✓ Exitosos: {resultado.registros_exitosos}[/green]  [red]✗ Fallidos: {resultado.registros_fallidos}[/red]")
+    return resultado

@@ -47,7 +47,7 @@ def _aplicar_mapeo(df: pd.DataFrame, mappings: dict[str, list[str]]) -> pd.DataF
     return df.rename(columns=rename_map)
 
 
-def leer_archivo(ruta: str | Path, tipo: str, hoja: int | str = 0) -> pd.DataFrame:
+def leer_archivo(ruta: str | Path, tipo: str, hoja: int | str = 0, mapeo_manual: dict[str, str] = None) -> pd.DataFrame:
     """
     Lee un archivo Excel o CSV y retorna un DataFrame con columnas normalizadas.
 
@@ -59,11 +59,13 @@ def leer_archivo(ruta: str | Path, tipo: str, hoja: int | str = 0) -> pd.DataFra
         Tipo de datos a leer: 'inventario' o 'servicios'.
     hoja : int | str
         Número o nombre de la hoja de Excel (ignorado para CSV).
+    mapeo_manual : dict[str, str] | None
+        Diccionario que mapea nombres de columna del archivo a nombres canónicos de la base de datos.
 
     Retorna
     -------
     pd.DataFrame
-        DataFrame con columnas renombradas según column_mappings.yaml.
+        DataFrame con columnas renombradas según mappings o mapeo manual.
 
     Excepciones
     -----------
@@ -116,8 +118,12 @@ def leer_archivo(ruta: str | Path, tipo: str, hoja: int | str = 0) -> pd.DataFra
     df.columns = [str(c).strip() for c in df.columns]
 
     # ── Aplicar mapeo de columnas ──────────────────────────────────────────────
-    mappings = _cargar_mappings(tipo)
-    df = _aplicar_mapeo(df, mappings)
+    if mapeo_manual:
+        df = df.rename(columns=mapeo_manual)
+        console.print(f"[cyan]  Mapeo manual aplicado:[/cyan] {mapeo_manual}")
+    else:
+        mappings = _cargar_mappings(tipo)
+        df = _aplicar_mapeo(df, mappings)
 
     console.print(
         f"[green]  ✓ Extracción completada: {len(df)} registros listos para transformación[/green]"

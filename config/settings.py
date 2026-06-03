@@ -17,10 +17,9 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     """Configuración centralizada del módulo PAME."""
 
-    # ── Supabase ──────────────────────────────────────────────────────────────
-    supabase_url: str = Field(default="", description="URL del proyecto Supabase")
-    supabase_anon_key: str = Field(default="", description="Clave anon/public de Supabase")
-    supabase_service_key: str = Field(default="", description="Clave service_role de Supabase")
+    # ── Firebase Firestore ────────────────────────────────────────────────────
+    firebase_credentials_path: str = Field(default="", description="Ruta al archivo JSON de credenciales de Firebase")
+    firebase_project_id: str = Field(default="", description="ID del proyecto Firebase (opcional si se usa JSON)")
 
     # ── Trazabilidad ──────────────────────────────────────────────────────────
     pame_usuario: str = Field(default="sistema", description="Usuario para logs de migración")
