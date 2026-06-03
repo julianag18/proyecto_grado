@@ -32,3 +32,10 @@ coverage.xml
 *.njsproj
 *.sln
 *.swp
+
+# Entornos virtuales
+.venv/
+venv/
+venv.bak/
+ENV/
+

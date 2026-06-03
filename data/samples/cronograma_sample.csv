@@ -1,0 +1,56 @@
+Equipo;Código del Equipo;Fecha de Servicio Vigente;Fecha de Ejecución del Servicio Programado;Tipo de Servicio;Frecuencia;Estado del Servicio;Estado de Entrega;Estado de Conformidad;Proveedor;Período Próximo Servicio;Activo Fijo;Serie Equipo;Ubicación
+Balanza LS2001;LS2001;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;ZOSER;01/2027;NO IDENTIFICADO;SN-10001;METROLOGÍA
+Balanza LS2002;LS2002;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;CONTROL SUPERIOR;01/2027;AF10-03600;SN-10002;MICROBIOLOGÍA
+Balanza LS2003;LS2003;15/01/2026;;Mantenimiento Preventivo;Semestral;Vigente;Entregado;Cumple;DOXA;01/2027;NO IDENTIFICADO;NO REGISTRA;INVESTIGACIÓN Y DESARROLLO
+Balanza LS2004;LS2004;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;ALMAPAL;01/2027;AF10-03600;SN-10004;PLANTA DE PRODUCCIÓN
+Balanza LS2005;LS2005;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;Centricol;01/2027;NO IDENTIFICADO;SN-10005;VALIDACIONES
+Balanza LS2006;LS2006;15/01/2026;;Calibración;Semestral;Vigente;Entregado;Cumple;KAIKA;01/2027;AF10-03600;NO REGISTRA;ALMACÉN DE MATERIALES
+Balanza LS2007;LS2007;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;AGUATEC;01/2027;NO IDENTIFICADO;SN-10007;CONTROL CALIDAD
+Balanza LS2008;LS2008;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;CONAMET;01/2027;AF10-03600;SN-10008;METROLOGÍA
+Balanza LS2009;LS2009;15/01/2026;;Mantenimiento Preventivo;Semestral;Vigente;Entregado;Cumple;METROGLOBAL;01/2027;NO IDENTIFICADO;NO REGISTRA;MICROBIOLOGÍA
+Balanza LS2010;LS2010;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;KILIAN;01/2027;AF10-03600;SN-10010;INVESTIGACIÓN Y DESARROLLO
+Balanza LS2011;LS2011;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;CELSIUS;01/2027;NO IDENTIFICADO;SN-10011;PLANTA DE PRODUCCIÓN
+Balanza LS2012;LS2012;15/01/2026;;Calibración;Semestral;Vigente;Entregado;Cumple;BLAMIS;01/2027;AF10-03600;NO REGISTRA;VALIDACIONES
+Balanza LS2013;LS2013;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;LAPROFF;01/2027;NO IDENTIFICADO;SN-10013;ALMACÉN DE MATERIALES
+Balanza LS2014;LS2014;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;ZOSER;01/2027;AF10-03600;SN-10014;CONTROL CALIDAD
+Balanza LS2015;LS2015;15/01/2026;;Mantenimiento Preventivo;Semestral;Vigente;Entregado;Cumple;CONTROL SUPERIOR;01/2027;NO IDENTIFICADO;NO REGISTRA;METROLOGÍA
+Balanza LS2016;LS2016;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;DOXA;01/2027;AF10-03600;SN-10016;MICROBIOLOGÍA
+Balanza LS2017;LS2017;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;ALMAPAL;01/2027;NO IDENTIFICADO;SN-10017;INVESTIGACIÓN Y DESARROLLO
+Balanza LS2018;LS2018;15/01/2026;;Calibración;Semestral;Vigente;Entregado;Cumple;Centricol;01/2027;AF10-03600;NO REGISTRA;PLANTA DE PRODUCCIÓN
+Balanza LS2019;LS2019;15/01/2026;;Mantenimiento Preventivo;Anual;Vigente;Entregado;Cumple;KAIKA;01/2027;NO IDENTIFICADO;SN-10019;VALIDACIONES
+Balanza LS2020;LS2020;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;AGUATEC;01/2027;AF10-03600;SN-10020;ALMACÉN DE MATERIALES
+Balanza LS2021;LS2021;15/01/2026;;Mantenimiento Preventivo;Semestral;Vigente;Entregado;Cumple;CONAMET;01/2027;NO IDENTIFICADO;NO REGISTRA;CONTROL CALIDAD
+Balanza LS2022;LS2022;15/01/2026;;Calibración;Anual;Vigente;Entregado;Cumple;METROGLOBAL;01/2027;AF10-03600;SN-10022;METROLOGÍA
+Termómetro LS2023;LS2023;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;KILIAN;04/2026;NO APLICA;SN-10023;MICROBIOLOGÍA
+Termómetro LS2024;LS2024;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;CELSIUS;04/2026;AF10-00882;NO IDENTIFICADO;INVESTIGACIÓN Y DESARROLLO
+Termómetro LS2025;LS2025;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;BLAMIS;04/2026;NO APLICA;SN-10025;PLANTA DE PRODUCCIÓN
+Termómetro LS2026;LS2026;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;LAPROFF;04/2026;AF10-00882;SN-10026;VALIDACIONES
+Termómetro LS2027;LS2027;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;ZOSER;04/2026;NO APLICA;NO IDENTIFICADO;ALMACÉN DE MATERIALES
+Termómetro LS2028;LS2028;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;CONTROL SUPERIOR;04/2026;AF10-00882;SN-10028;CONTROL CALIDAD
+Termómetro LS2029;LS2029;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;DOXA;04/2026;NO APLICA;SN-10029;METROLOGÍA
+Termómetro LS2030;LS2030;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;ALMAPAL;04/2026;AF10-00882;NO IDENTIFICADO;MICROBIOLOGÍA
+Termómetro LS2031;LS2031;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;Centricol;04/2026;NO APLICA;SN-10031;INVESTIGACIÓN Y DESARROLLO
+Termómetro LS2032;LS2032;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;KAIKA;04/2026;AF10-00882;SN-10032;PLANTA DE PRODUCCIÓN
+Termómetro LS2033;LS2033;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;AGUATEC;04/2026;NO APLICA;NO IDENTIFICADO;VALIDACIONES
+Termómetro LS2034;LS2034;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;CONAMET;04/2026;AF10-00882;SN-10034;ALMACÉN DE MATERIALES
+Termómetro LS2035;LS2035;10/10/2025;;Diagnóstico;Anual;Vencido;Pendiente;No Cumple;METROGLOBAL;04/2026;NO APLICA;SN-10035;CONTROL CALIDAD
+pH-metro LS2036;LS2036;05/12/2025;;Calificación OQ;Anual;Programar;Pendiente;Pendiente de Calificar;KILIAN;12/2026;AF10-00354;NO REGISTRA;METROLOGÍA
+pH-metro LS2037;LS2037;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;CELSIUS;12/2026;NO IDENTIFICADO;SN-10037;MICROBIOLOGÍA
+pH-metro LS2038;LS2038;05/12/2025;;Calificación OQ;Anual;Programar;Pendiente;Pendiente de Calificar;BLAMIS;12/2026;AF10-00354;SN-10038;INVESTIGACIÓN Y DESARROLLO
+pH-metro LS2039;LS2039;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;LAPROFF;12/2026;NO IDENTIFICADO;NO REGISTRA;PLANTA DE PRODUCCIÓN
+pH-metro LS2040;LS2040;05/12/2025;;Calificación OQ;Anual;Programar;Pendiente;Pendiente de Calificar;ZOSER;12/2026;AF10-00354;SN-10040;VALIDACIONES
+pH-metro LS2041;LS2041;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;CONTROL SUPERIOR;12/2026;NO IDENTIFICADO;SN-10041;ALMACÉN DE MATERIALES
+pH-metro LS2042;LS2042;05/12/2025;;Calificación OQ;Anual;Programar;Pendiente;Pendiente de Calificar;DOXA;12/2026;AF10-00354;NO REGISTRA;CONTROL CALIDAD
+pH-metro LS2043;LS2043;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;ALMAPAL;12/2026;NO IDENTIFICADO;SN-10043;METROLOGÍA
+pH-metro LS2044;LS2044;05/12/2025;;Calificación OQ;Anual;Programar;Pendiente;Pendiente de Calificar;Centricol;12/2026;AF10-00354;SN-10044;MICROBIOLOGÍA
+pH-metro LS2045;LS2045;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;KAIKA;12/2026;NO IDENTIFICADO;NO REGISTRA;INVESTIGACIÓN Y DESARROLLO
+Espectrofotómetro LS2046;LS2046;20/05/2026;;Calificación PQ;Anual;En ejecución;Pendiente;Pendiente de Calificar;AGUATEC;05/2027;AF10-02540;SN-10046;PLANTA DE PRODUCCIÓN
+Espectrofotómetro LS2047;LS2047;20/05/2026;;Calificación PQ;Anual;En ejecución;Pendiente;Pendiente de Calificar;CONAMET;05/2027;AF10-02540;SN-10047;VALIDACIONES
+Espectrofotómetro LS2048;LS2048;20/05/2026;;Calificación PQ;Anual;En ejecución;Pendiente;Pendiente de Calificar;METROGLOBAL;05/2027;AF10-02540;SN-10048;ALMACÉN DE MATERIALES
+Espectrofotómetro LS2049;LS2049;20/05/2026;;Calificación PQ;Anual;En ejecución;Pendiente;Pendiente de Calificar;KILIAN;05/2027;AF10-02540;SN-10049;CONTROL CALIDAD
+Espectrofotómetro LS2050;LS2050;20/05/2026;;Calificación PQ;Anual;En ejecución;Pendiente;Pendiente de Calificar;CELSIUS;05/2027;AF10-02540;SN-10050;METROLOGÍA
+Balanza LS2006;LS2006;15/01/2026;;Calibración;Semestral;Vigente;Entregado;Cumple;KAIKA;01/2027;AF10-03600;NO REGISTRA;ALMACÉN DE MATERIALES
+Termómetro LS2026;LS2026;10/10/2025;;Calificación;Semestral;Vencido;Pendiente;No Cumple;LAPROFF;04/2026;AF10-00882;SN-10026;VALIDACIONES
+pH-metro LS2039;LS2039;05/12/2025;;Mapeo;Trimestral;Programar;Pendiente;Pendiente de Calificar;LAPROFF;12/2026;NO IDENTIFICADO;NO REGISTRA;PLANTA DE PRODUCCIÓN
+;;10/10/2025;;Calibración;Anual;Vencido;Pendiente;No Cumple;LAPROFF;04/2026;NO IDENTIFICADO;NO IDENTIFICADO;CONTROL CALIDAD
+Balanza Inválida;;05/12/2025;;Calibración;Anual;Programar;Pendiente;Pendiente de Calificar;LAPROFF;12/2026;NO IDENTIFICADO;NO IDENTIFICADO;CONTROL CALIDAD
