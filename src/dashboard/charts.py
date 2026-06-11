@@ -150,7 +150,7 @@ def linea_tendencia_cumplimiento(df_historico: pd.DataFrame) -> go.Figure:
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family=FONT_FAMILY, size=11, color=TEXT_COLOR),
         xaxis=dict(gridcolor="#F1F5F9"),
-        yaxis=dict(gridcolor="#E2E8F0", range=[50, 100], suffix="%"),
+        yaxis=dict(gridcolor="#E2E8F0", range=[50, 100], ticksuffix="%"),
         height=200
     )
     return fig
