@@ -39,3 +39,6 @@ venv/
 venv.bak/
 ENV/
 
+# Base de datos local simulada (PAME)
+data/local_db_mock.json
+

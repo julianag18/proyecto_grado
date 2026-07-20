@@ -2,7 +2,7 @@
   {
     "Equipo": "LS2100",
     "Código del Equipo": "LS2100",
-    "Fecha de Servicio Vigente": "04/09/2022",
+    "Fecha de Servicio Vigente": "04/09/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -10,7 +10,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "ENDRESS+HAUSER",
-    "Período Próximo Servicio": "09/2023",
+    "Período Próximo Servicio": "09/2024",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "ENVASADO DE LÍQUIDOS Y SUSPENSIONES"
@@ -50,7 +50,7 @@
   {
     "Equipo": "LS2101",
     "Código del Equipo": "LS2101",
-    "Fecha de Servicio Vigente": "22/07/2022",
+    "Fecha de Servicio Vigente": "22/07/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -58,7 +58,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "INNOVATEK",
-    "Período Próximo Servicio": "07/2023",
+    "Período Próximo Servicio": "07/2024",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "S/N-10053",
     "Ubicación": "TABLETEADO C"
@@ -98,7 +98,7 @@
   {
     "Equipo": "LS2102",
     "Código del Equipo": "LS2102",
-    "Fecha de Servicio Vigente": "22/04/2022",
+    "Fecha de Servicio Vigente": "22/04/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -106,7 +106,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "KAIKA",
-    "Período Próximo Servicio": "04/2023",
+    "Período Próximo Servicio": "04/2024",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "ENCAPSULADO A"
@@ -146,7 +146,7 @@
   {
     "Equipo": "LS2103",
     "Código del Equipo": "LS2103",
-    "Fecha de Servicio Vigente": "08/09/2022",
+    "Fecha de Servicio Vigente": "08/09/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -154,7 +154,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "MB METROLOGÍA",
-    "Período Próximo Servicio": "09/2023",
+    "Período Próximo Servicio": "09/2024",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "S/N-83259",
     "Ubicación": "TABLETEADO D"
@@ -194,7 +194,7 @@
   {
     "Equipo": "LS2104",
     "Código del Equipo": "LS2104",
-    "Fecha de Servicio Vigente": "09/04/2022",
+    "Fecha de Servicio Vigente": "09/04/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -202,7 +202,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "PREMAC",
-    "Período Próximo Servicio": "04/2023",
+    "Período Próximo Servicio": "04/2024",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "SN-60205",
     "Ubicación": "PLANTA DE PRODUCCIÓN"
@@ -242,7 +242,7 @@
   {
     "Equipo": "LS2105",
     "Código del Equipo": "LS2105",
-    "Fecha de Servicio Vigente": "24/12/2022",
+    "Fecha de Servicio Vigente": "24/12/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -250,7 +250,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "INNOVATEK",
-    "Período Próximo Servicio": "12/2023",
+    "Período Próximo Servicio": "12/2024",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "S/N-67125",
     "Ubicación": "ENCAPSULADO A"
@@ -290,7 +290,7 @@
   {
     "Equipo": "LS2108",
     "Código del Equipo": "LS2108",
-    "Fecha de Servicio Vigente": "13/05/2022",
+    "Fecha de Servicio Vigente": "13/05/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -298,7 +298,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "MB METROLOGÍA",
-    "Período Próximo Servicio": "05/2023",
+    "Período Próximo Servicio": "05/2024",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "S/N-59692",
     "Ubicación": "TABLETEADO B"
@@ -338,7 +338,7 @@
   {
     "Equipo": "LS2110",
     "Código del Equipo": "LS2110",
-    "Fecha de Servicio Vigente": "25/05/2022",
+    "Fecha de Servicio Vigente": "25/05/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -346,7 +346,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "INNOVATEK",
-    "Período Próximo Servicio": "05/2023",
+    "Período Próximo Servicio": "05/2024",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "31465",
     "Ubicación": "TABLETEADO C"
@@ -386,7 +386,7 @@
   {
     "Equipo": "LS2111",
     "Código del Equipo": "LS2111",
-    "Fecha de Servicio Vigente": "12/01/2022",
+    "Fecha de Servicio Vigente": "12/01/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -394,7 +394,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "RED METROLÓGICA DE ANTIOQUIA",
-    "Período Próximo Servicio": "01/2023",
+    "Período Próximo Servicio": "01/2024",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "SN-54725",
     "Ubicación": "CONTROL CALIDAD"
@@ -434,7 +434,7 @@
   {
     "Equipo": "LS2112",
     "Código del Equipo": "LS2112",
-    "Fecha de Servicio Vigente": "15/05/2022",
+    "Fecha de Servicio Vigente": "15/05/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -442,7 +442,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "MB METROLOGÍA",
-    "Período Próximo Servicio": "05/2023",
+    "Período Próximo Servicio": "05/2024",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "54092",
     "Ubicación": "CONTROL CALIDAD"
@@ -482,7 +482,7 @@
   {
     "Equipo": "LS2113",
     "Código del Equipo": "LS2113",
-    "Fecha de Servicio Vigente": "26/08/2022",
+    "Fecha de Servicio Vigente": "26/08/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -490,7 +490,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "08/2023",
+    "Período Próximo Servicio": "08/2024",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "S/N-50135",
     "Ubicación": "CONTROL PROCESOS 3"
@@ -530,7 +530,7 @@
   {
     "Equipo": "LS2114",
     "Código del Equipo": "LS2114",
-    "Fecha de Servicio Vigente": "24/05/2022",
+    "Fecha de Servicio Vigente": "24/05/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -538,7 +538,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METRILAB",
-    "Período Próximo Servicio": "05/2023",
+    "Período Próximo Servicio": "05/2024",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "23176",
     "Ubicación": "ALMACÉN DE MATERIALES"
@@ -578,7 +578,7 @@
   {
     "Equipo": "LS2116",
     "Código del Equipo": "LS2116",
-    "Fecha de Servicio Vigente": "11/08/2022",
+    "Fecha de Servicio Vigente": "11/08/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -586,7 +586,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "ZOSER",
-    "Período Próximo Servicio": "08/2023",
+    "Período Próximo Servicio": "08/2024",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "MICROBIOLOGÍA"
@@ -626,7 +626,7 @@
   {
     "Equipo": "LS2117",
     "Código del Equipo": "LS2117",
-    "Fecha de Servicio Vigente": "28/05/2022",
+    "Fecha de Servicio Vigente": "28/05/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -634,7 +634,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "INSTRUELECTRONIC",
-    "Período Próximo Servicio": "05/2023",
+    "Período Próximo Servicio": "05/2024",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "89905",
     "Ubicación": "INVESTIGACIÓN Y DESARROLLO"
@@ -674,7 +674,7 @@
   {
     "Equipo": "LS2118",
     "Código del Equipo": "LS2118",
-    "Fecha de Servicio Vigente": "08/11/2022",
+    "Fecha de Servicio Vigente": "08/11/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -682,7 +682,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "INSTRUELECTRONIC",
-    "Período Próximo Servicio": "11/2023",
+    "Período Próximo Servicio": "11/2024",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "29528",
     "Ubicación": "TABLETEADO B"
@@ -722,7 +722,7 @@
   {
     "Equipo": "LS2119",
     "Código del Equipo": "LS2119",
-    "Fecha de Servicio Vigente": "14/01/2022",
+    "Fecha de Servicio Vigente": "14/01/2023",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -730,7 +730,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "LAPROFF",
-    "Período Próximo Servicio": "01/2023",
+    "Período Próximo Servicio": "01/2024",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "SN-85392",
     "Ubicación": "CONTROL PROCESOS 3"
@@ -738,7 +738,7 @@
   {
     "Equipo": "LS2100",
     "Código del Equipo": "LS2100",
-    "Fecha de Servicio Vigente": "02/10/2023",
+    "Fecha de Servicio Vigente": "02/10/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -746,7 +746,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "LABORATORIO METROLOGICO DE ANTIOQUIA",
-    "Período Próximo Servicio": "10/2024",
+    "Período Próximo Servicio": "10/2025",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "46458",
     "Ubicación": "VALIDACIONES"
@@ -770,7 +770,7 @@
   {
     "Equipo": "LS2101",
     "Código del Equipo": "LS2101",
-    "Fecha de Servicio Vigente": "16/12/2023",
+    "Fecha de Servicio Vigente": "16/12/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -778,7 +778,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "BLAMIS",
-    "Período Próximo Servicio": "12/2024",
+    "Período Próximo Servicio": "12/2025",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "SN-51224",
     "Ubicación": "TABLETEADO B"
@@ -802,7 +802,7 @@
   {
     "Equipo": "LS2102",
     "Código del Equipo": "LS2102",
-    "Fecha de Servicio Vigente": "12/09/2023",
+    "Fecha de Servicio Vigente": "12/09/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -810,7 +810,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "LABORATORIO METROLOGICO DE ANTIOQUIA",
-    "Período Próximo Servicio": "09/2024",
+    "Período Próximo Servicio": "09/2025",
     "Activo Fijo": "AF10-04100",
     "Serie Equipo": "S/N-36680",
     "Ubicación": "TABLETEADO B"
@@ -834,7 +834,7 @@
   {
     "Equipo": "LS2103",
     "Código del Equipo": "LS2103",
-    "Fecha de Servicio Vigente": "18/01/2023",
+    "Fecha de Servicio Vigente": "18/01/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -842,7 +842,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "AGUATEC",
-    "Período Próximo Servicio": "01/2024",
+    "Período Próximo Servicio": "01/2025",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "S/N-94896",
     "Ubicación": "PLANTA DE PRODUCCIÓN"
@@ -866,7 +866,7 @@
   {
     "Equipo": "LS2104",
     "Código del Equipo": "LS2104",
-    "Fecha de Servicio Vigente": "07/07/2023",
+    "Fecha de Servicio Vigente": "07/07/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -874,7 +874,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "CONTROL SUPERIOR",
-    "Período Próximo Servicio": "07/2024",
+    "Período Próximo Servicio": "07/2025",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "S/N-76550",
     "Ubicación": "TABLETEADO B"
@@ -898,7 +898,7 @@
   {
     "Equipo": "LS2105",
     "Código del Equipo": "LS2105",
-    "Fecha de Servicio Vigente": "23/04/2023",
+    "Fecha de Servicio Vigente": "23/04/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -906,7 +906,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "BLAMIS",
-    "Período Próximo Servicio": "04/2024",
+    "Período Próximo Servicio": "04/2025",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "ENCAPSULADO A"
@@ -930,7 +930,7 @@
   {
     "Equipo": "LS2105",
     "Código del Equipo": "LS2105",
-    "Fecha de Servicio Vigente": "19/09/2023",
+    "Fecha de Servicio Vigente": "19/09/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -938,7 +938,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "DOXA",
-    "Período Próximo Servicio": "09/2024",
+    "Período Próximo Servicio": "09/2025",
     "Activo Fijo": "AF10-03693",
     "Serie Equipo": "SN-69890",
     "Ubicación": "CONTROL CALIDAD"
@@ -962,7 +962,7 @@
   {
     "Equipo": "LS2106",
     "Código del Equipo": "LS2106",
-    "Fecha de Servicio Vigente": "28/06/2023",
+    "Fecha de Servicio Vigente": "28/06/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -970,7 +970,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "PREMAC",
-    "Período Próximo Servicio": "06/2024",
+    "Período Próximo Servicio": "06/2025",
     "Activo Fijo": "AF10-00354",
     "Serie Equipo": "S/N-73956",
     "Ubicación": "CONTROL PROCESOS 2"
@@ -994,7 +994,7 @@
   {
     "Equipo": "LS2107",
     "Código del Equipo": "LS2107",
-    "Fecha de Servicio Vigente": "06/08/2023",
+    "Fecha de Servicio Vigente": "06/08/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1002,7 +1002,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "LAPROFF",
-    "Período Próximo Servicio": "08/2024",
+    "Período Próximo Servicio": "08/2025",
     "Activo Fijo": "NO IDENTIFICADO",
     "Serie Equipo": "S/N-48452",
     "Ubicación": "DISPENSACIÓN (CABINA DE PESAJE N°1)"
@@ -1026,7 +1026,7 @@
   {
     "Equipo": "LS2108",
     "Código del Equipo": "LS2108",
-    "Fecha de Servicio Vigente": "22/10/2023",
+    "Fecha de Servicio Vigente": "22/10/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -1034,7 +1034,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "ENDRESS+HAUSER",
-    "Período Próximo Servicio": "10/2024",
+    "Período Próximo Servicio": "10/2025",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "SN-43289",
     "Ubicación": "ENVASADO DE CREMAS"
@@ -1058,7 +1058,7 @@
   {
     "Equipo": "LS2109",
     "Código del Equipo": "LS2109",
-    "Fecha de Servicio Vigente": "09/12/2023",
+    "Fecha de Servicio Vigente": "09/12/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1066,7 +1066,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "12/2024",
+    "Período Próximo Servicio": "12/2025",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "S/N-23979",
     "Ubicación": "TABLETEADO A"
@@ -1090,7 +1090,7 @@
   {
     "Equipo": "LS2110",
     "Código del Equipo": "LS2110",
-    "Fecha de Servicio Vigente": "24/10/2023",
+    "Fecha de Servicio Vigente": "24/10/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1098,7 +1098,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "10/2024",
+    "Período Próximo Servicio": "10/2025",
     "Activo Fijo": "AF10-03600",
     "Serie Equipo": "38705",
     "Ubicación": "ALMACÉN DE MATERIALES"
@@ -1122,7 +1122,7 @@
   {
     "Equipo": "LS2111",
     "Código del Equipo": "LS2111",
-    "Fecha de Servicio Vigente": "11/05/2023",
+    "Fecha de Servicio Vigente": "11/05/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -1130,7 +1130,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "KAIKA",
-    "Período Próximo Servicio": "05/2024",
+    "Período Próximo Servicio": "05/2025",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "57953",
     "Ubicación": "CONTROL PROCESOS 1"
@@ -1154,7 +1154,7 @@
   {
     "Equipo": "LS2112",
     "Código del Equipo": "LS2112",
-    "Fecha de Servicio Vigente": "28/04/2023",
+    "Fecha de Servicio Vigente": "28/04/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -1162,7 +1162,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "RED METROLÓGICA DE ANTIOQUIA",
-    "Período Próximo Servicio": "04/2024",
+    "Período Próximo Servicio": "04/2025",
     "Activo Fijo": "AF10-00354",
     "Serie Equipo": "61717",
     "Ubicación": "CONTROL CALIDAD"
@@ -1186,7 +1186,7 @@
   {
     "Equipo": "LS2113",
     "Código del Equipo": "LS2113",
-    "Fecha de Servicio Vigente": "22/02/2023",
+    "Fecha de Servicio Vigente": "22/02/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1194,7 +1194,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "LAPROFF",
-    "Período Próximo Servicio": "02/2024",
+    "Período Próximo Servicio": "02/2025",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "89964",
     "Ubicación": "TABLETEADO A"
@@ -1218,7 +1218,7 @@
   {
     "Equipo": "LS2114",
     "Código del Equipo": "LS2114",
-    "Fecha de Servicio Vigente": "08/02/2023",
+    "Fecha de Servicio Vigente": "08/02/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1226,7 +1226,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "BLAMIS",
-    "Período Próximo Servicio": "02/2024",
+    "Período Próximo Servicio": "02/2025",
     "Activo Fijo": "AF10-03693",
     "Serie Equipo": "S/N-80804",
     "Ubicación": "ENVASADO DE LÍQUIDOS Y SUSPENSIONES"
@@ -1250,7 +1250,7 @@
   {
     "Equipo": "LS2115",
     "Código del Equipo": "LS2115",
-    "Fecha de Servicio Vigente": "08/08/2023",
+    "Fecha de Servicio Vigente": "08/08/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1258,7 +1258,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "RED METROLÓGICA DE ANTIOQUIA",
-    "Período Próximo Servicio": "08/2024",
+    "Período Próximo Servicio": "08/2025",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "94518",
     "Ubicación": "DISPENSACIÓN (CABINA DE PESAJE N°1)"
@@ -1282,7 +1282,7 @@
   {
     "Equipo": "LS2115",
     "Código del Equipo": "LS2115",
-    "Fecha de Servicio Vigente": "26/01/2023",
+    "Fecha de Servicio Vigente": "26/01/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1290,7 +1290,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "ALMAPAL",
-    "Período Próximo Servicio": "01/2024",
+    "Período Próximo Servicio": "01/2025",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "CONTROL PROCESOS 2"
@@ -1314,7 +1314,7 @@
   {
     "Equipo": "LS2117",
     "Código del Equipo": "LS2117",
-    "Fecha de Servicio Vigente": "26/05/2023",
+    "Fecha de Servicio Vigente": "26/05/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -1322,7 +1322,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "RED METROLÓGICA DE ANTIOQUIA",
-    "Período Próximo Servicio": "05/2024",
+    "Período Próximo Servicio": "05/2025",
     "Activo Fijo": "NO IDENTIFICADO",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "TABLETEADO A"
@@ -1346,7 +1346,7 @@
   {
     "Equipo": "LS2118",
     "Código del Equipo": "LS2118",
-    "Fecha de Servicio Vigente": "17/06/2023",
+    "Fecha de Servicio Vigente": "17/06/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1354,7 +1354,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "MB METROLOGÍA",
-    "Período Próximo Servicio": "06/2024",
+    "Período Próximo Servicio": "06/2025",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "SN-15683",
     "Ubicación": "CONTROL PROCESOS 1"
@@ -1378,7 +1378,7 @@
   {
     "Equipo": "LS2119",
     "Código del Equipo": "LS2119",
-    "Fecha de Servicio Vigente": "11/02/2023",
+    "Fecha de Servicio Vigente": "11/02/2024",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1386,7 +1386,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "CONTROL SUPERIOR",
-    "Período Próximo Servicio": "02/2024",
+    "Período Próximo Servicio": "02/2025",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "S/N-86724",
     "Ubicación": "CONTROL PROCESOS 2"
@@ -1410,7 +1410,7 @@
   {
     "Equipo": "LS2100",
     "Código del Equipo": "LS2100",
-    "Fecha de Servicio Vigente": "21/11/2024",
+    "Fecha de Servicio Vigente": "21/11/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1418,7 +1418,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "INSTRUELECTRONIC",
-    "Período Próximo Servicio": "11/2025",
+    "Período Próximo Servicio": "11/2026",
     "Activo Fijo": "AF10-03693",
     "Serie Equipo": "SN-69441",
     "Ubicación": "DISPENSACIÓN (CABINA DE PESAJE N°2)"
@@ -1442,7 +1442,7 @@
   {
     "Equipo": "LS2101",
     "Código del Equipo": "LS2101",
-    "Fecha de Servicio Vigente": "14/02/2024",
+    "Fecha de Servicio Vigente": "14/02/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1450,7 +1450,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "KASALAB",
-    "Período Próximo Servicio": "02/2025",
+    "Período Próximo Servicio": "02/2026",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "SN-86869",
     "Ubicación": "CONTROL PROCESOS 2"
@@ -1474,7 +1474,7 @@
   {
     "Equipo": "LS2102",
     "Código del Equipo": "LS2102",
-    "Fecha de Servicio Vigente": "17/10/2024",
+    "Fecha de Servicio Vigente": "17/10/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1482,7 +1482,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "RED METROLÓGICA DE ANTIOQUIA",
-    "Período Próximo Servicio": "10/2025",
+    "Período Próximo Servicio": "10/2026",
     "Activo Fijo": "AF10-03693",
     "Serie Equipo": "SN-55890",
     "Ubicación": "CONTROL PROCESOS 2"
@@ -1506,7 +1506,7 @@
   {
     "Equipo": "LS2103",
     "Código del Equipo": "LS2103",
-    "Fecha de Servicio Vigente": "27/11/2024",
+    "Fecha de Servicio Vigente": "27/11/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -1514,7 +1514,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "Centricol",
-    "Período Próximo Servicio": "11/2025",
+    "Período Próximo Servicio": "11/2026",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "54541",
     "Ubicación": "DISPENSACIÓN (CABINA DE PESAJE N°1)"
@@ -1538,7 +1538,7 @@
   {
     "Equipo": "LS2105",
     "Código del Equipo": "LS2105",
-    "Fecha de Servicio Vigente": "15/07/2024",
+    "Fecha de Servicio Vigente": "15/07/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1546,7 +1546,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "CELSIUS",
-    "Período Próximo Servicio": "07/2025",
+    "Período Próximo Servicio": "07/2026",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "84395",
     "Ubicación": "MICROBIOLOGÍA"
@@ -1570,7 +1570,7 @@
   {
     "Equipo": "LS2107",
     "Código del Equipo": "LS2107",
-    "Fecha de Servicio Vigente": "04/09/2024",
+    "Fecha de Servicio Vigente": "04/09/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1578,7 +1578,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "DOXA",
-    "Período Próximo Servicio": "09/2025",
+    "Período Próximo Servicio": "09/2026",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "73783",
     "Ubicación": "CONTROL PROCESOS 1"
@@ -1602,7 +1602,7 @@
   {
     "Equipo": "LS2108",
     "Código del Equipo": "LS2108",
-    "Fecha de Servicio Vigente": "10/05/2024",
+    "Fecha de Servicio Vigente": "10/05/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación",
     "Frecuencia": "Anual",
@@ -1610,7 +1610,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "LAPROFF",
-    "Período Próximo Servicio": "05/2025",
+    "Período Próximo Servicio": "05/2026",
     "Activo Fijo": "AF10-03693",
     "Serie Equipo": "26932",
     "Ubicación": "DISPENSACIÓN (CABINA DE PESAJE N°2)"
@@ -1634,7 +1634,7 @@
   {
     "Equipo": "LS2109",
     "Código del Equipo": "LS2109",
-    "Fecha de Servicio Vigente": "13/10/2024",
+    "Fecha de Servicio Vigente": "13/10/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1642,7 +1642,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "10/2025",
+    "Período Próximo Servicio": "10/2026",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "TABLETEADO D"
@@ -1666,7 +1666,7 @@
   {
     "Equipo": "LS2110",
     "Código del Equipo": "LS2110",
-    "Fecha de Servicio Vigente": "03/09/2024",
+    "Fecha de Servicio Vigente": "03/09/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -1674,7 +1674,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "09/2025",
+    "Período Próximo Servicio": "09/2026",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "SN-32037",
     "Ubicación": "MICROBIOLOGÍA"
@@ -1698,7 +1698,7 @@
   {
     "Equipo": "LS2111",
     "Código del Equipo": "LS2111",
-    "Fecha de Servicio Vigente": "09/03/2024",
+    "Fecha de Servicio Vigente": "09/03/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1706,7 +1706,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "INNOVATEK",
-    "Período Próximo Servicio": "03/2025",
+    "Período Próximo Servicio": "03/2026",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "NO IDENTIFICADO",
     "Ubicación": "ENCAPSULADO A"
@@ -1730,7 +1730,7 @@
   {
     "Equipo": "LS2112",
     "Código del Equipo": "LS2112",
-    "Fecha de Servicio Vigente": "10/11/2024",
+    "Fecha de Servicio Vigente": "10/11/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1738,7 +1738,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "CELSIUS",
-    "Período Próximo Servicio": "11/2025",
+    "Período Próximo Servicio": "11/2026",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "SN-69233",
     "Ubicación": "METROLOGÍA"
@@ -1762,7 +1762,7 @@
   {
     "Equipo": "LS2114",
     "Código del Equipo": "LS2114",
-    "Fecha de Servicio Vigente": "07/11/2024",
+    "Fecha de Servicio Vigente": "07/11/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1770,7 +1770,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "LABORATORIO METROLOGICO DE ANTIOQUIA",
-    "Período Próximo Servicio": "11/2025",
+    "Período Próximo Servicio": "11/2026",
     "Activo Fijo": "AF10-00882",
     "Serie Equipo": "SN-69050",
     "Ubicación": "INVESTIGACIÓN Y DESARROLLO"
@@ -1794,7 +1794,7 @@
   {
     "Equipo": "LS2114",
     "Código del Equipo": "LS2114",
-    "Fecha de Servicio Vigente": "17/09/2024",
+    "Fecha de Servicio Vigente": "17/09/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1802,7 +1802,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "No Cumple",
     "Proveedor": "CELSIUS",
-    "Período Próximo Servicio": "09/2025",
+    "Período Próximo Servicio": "09/2026",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "S/N-54350",
     "Ubicación": "METROLOGÍA"
@@ -1826,7 +1826,7 @@
   {
     "Equipo": "LS2115",
     "Código del Equipo": "LS2115",
-    "Fecha de Servicio Vigente": "22/10/2024",
+    "Fecha de Servicio Vigente": "22/10/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calibración",
     "Frecuencia": "Anual",
@@ -1834,7 +1834,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "CELSIUS",
-    "Período Próximo Servicio": "10/2025",
+    "Período Próximo Servicio": "10/2026",
     "Activo Fijo": "AF10-02540",
     "Serie Equipo": "61374",
     "Ubicación": "PLANTA DE PRODUCCIÓN"
@@ -1858,7 +1858,7 @@
   {
     "Equipo": "LS2116",
     "Código del Equipo": "LS2116",
-    "Fecha de Servicio Vigente": "12/09/2024",
+    "Fecha de Servicio Vigente": "12/09/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación OQ",
     "Frecuencia": "Anual",
@@ -1866,7 +1866,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "09/2025",
+    "Período Próximo Servicio": "09/2026",
     "Activo Fijo": "NO APLICA",
     "Serie Equipo": "SN-73736",
     "Ubicación": "ALMACÉN DE MATERIALES"
@@ -1890,7 +1890,7 @@
   {
     "Equipo": "LS2118",
     "Código del Equipo": "LS2118",
-    "Fecha de Servicio Vigente": "05/07/2024",
+    "Fecha de Servicio Vigente": "05/07/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Calificación PQ",
     "Frecuencia": "Anual",
@@ -1898,7 +1898,7 @@
     "Estado de Entrega": "Entregado",
     "Estado de Conformidad": "Cumple",
     "Proveedor": "SERVIMETERS",
-    "Período Próximo Servicio": "07/2025",
+    "Período Próximo Servicio": "07/2026",
     "Activo Fijo": "AF10-03169",
     "Serie Equipo": "SN-15726",
     "Ubicación": "ENVASADO DE LÍQUIDOS Y SUSPENSIONES"
@@ -1922,7 +1922,7 @@
   {
     "Equipo": "LS2118",
     "Código del Equipo": "LS2118",
-    "Fecha de Servicio Vigente": "10/04/2024",
+    "Fecha de Servicio Vigente": "10/04/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -1930,7 +1930,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "KAIKA",
-    "Período Próximo Servicio": "04/2025",
+    "Período Próximo Servicio": "04/2026",
     "Activo Fijo": "AF10-03648",
     "Serie Equipo": "67749",
     "Ubicación": "ENVASADO DE CREMAS"
@@ -1954,7 +1954,7 @@
   {
     "Equipo": "LS2119",
     "Código del Equipo": "LS2119",
-    "Fecha de Servicio Vigente": "18/06/2024",
+    "Fecha de Servicio Vigente": "18/06/2025",
     "Fecha de Ejecución del Servicio Programado": null,
     "Tipo de Servicio": "Mantenimiento Preventivo",
     "Frecuencia": "Anual",
@@ -1962,7 +1962,7 @@
     "Estado de Entrega": "Pendiente",
     "Estado de Conformidad": "Pendiente de Calificar",
     "Proveedor": "METROGLOBAL",
-    "Período Próximo Servicio": "06/2025",
+    "Período Próximo Servicio": "06/2026",
     "Activo Fijo": "NO REGISTRA",
     "Serie Equipo": "SN-77286",
     "Ubicación": "PLANTA DE PRODUCCIÓN"

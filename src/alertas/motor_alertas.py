@@ -19,15 +19,25 @@ class Alerta:
     prioridad:      str             # "CRITICA", "ALTA", "MEDIA"
     mensaje:        str
 
+def obtener_umbrales_alerta(frecuencia: str) -> tuple[int, int, int]:
+    """
+    Retorna los umbrales de días (CRITICA, ALTA, MEDIA) según la frecuencia del servicio.
+    Optimizado para dar suficiente tiempo logístico para agendar y ejecutar calibraciones.
+    """
+    frec = str(frecuencia).strip().lower()
+    if frec in ["bienal", "trienal", "anual"]:
+        return 15, 30, 45  # Metrología anual requiere más margen (compras, contratos)
+    elif frec == "semestral":
+        return 10, 20, 30
+    elif frec in ["trimestral", "mensual"]:
+        return 5, 10, 15
+    else:
+        return 7, 15, 30   # Umbrales por defecto
+
 def generar_alertas() -> List[Alerta]:
     """
     Consulta Firestore, obtiene el estado actual de todos los equipos
     y genera una lista de alertas priorizadas.
-
-    Prioridades:
-    - CRITICA: vencido (dias_restantes < 0) o vence en ≤ 7 días
-    - ALTA:    vence entre 8 y 15 días
-    - MEDIA:   vence entre 16 y 30 días
     """
     equipos = get_estado_actual_todos()
     alertas = []
@@ -37,24 +47,27 @@ def generar_alertas() -> List[Alerta]:
         if dias is None:
             continue
 
+        frecuencia = eq.get("frecuencia") or "Anual"
+        u_critica, u_alta, u_media = obtener_umbrales_alerta(frecuencia)
+
         if dias < 0:
             prioridad = "CRITICA"
             mensaje = (f"VENCIDO hace {abs(dias)} días — "
                        f"Tipo: {eq.get('tipo_servicio', 'N/A')} — "
                        f"Proveedor: {eq.get('proveedor', 'N/A')}")
-        elif dias <= 7:
+        elif dias <= u_critica:
             prioridad = "CRITICA"
             mensaje = (f"Vence en {dias} días — "
                        f"Tipo: {eq.get('tipo_servicio', 'N/A')} — "
                        f"Acción inmediata requerida")
-        elif dias <= 15:
+        elif dias <= u_alta:
             prioridad = "ALTA"
             mensaje = f"Vence en {dias} días — Programar servicio pronto"
-        elif dias <= 30:
+        elif dias <= u_media:
             prioridad = "MEDIA"
             mensaje = f"Vence en {dias} días — Pendiente de programar"
         else:
-            continue  # sin alerta si queda más de 30 días
+            continue  # sin alerta si queda más de lo parametrizado
 
         alertas.append(Alerta(
             codigo_equipo  = eq.get("id", ""),

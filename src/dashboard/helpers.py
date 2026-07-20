@@ -32,41 +32,34 @@ def cargar_estado_actual_pame() -> pd.DataFrame:
     """
     Carga el estado de todos los equipos y sus últimos servicios.
     Retorna un DataFrame de Pandas.
+    Prioriza la base de datos (Firestore o Mock JSON local) y usa el CSV de muestra solo al iniciar.
     """
-    if _FIRESTORE_DISPONIBLE:
-        try:
-            from src.database.equipos_repo import get_estado_actual_todos
-            datos = get_estado_actual_todos()
-            if datos:
-                # Firestore retorna lista de diccionarios, convertimos a DataFrame
-                df = pd.DataFrame(datos)
-                return df
-        except Exception as e:
-            print(f"Error cargando desde Firestore, usando fallback: {e}")
+    try:
+        from src.database.equipos_repo import get_estado_actual_todos
+        datos = get_estado_actual_todos()
+        if datos:
+            # Si hay algún equipo con servicio, usamos esta base de datos
+            # Para validar que no esté totalmente vacía (ej. después de limpiar la BD)
+            # Solo consideramos vacía si no hay registros o si todos están vacíos
+            if len(datos) > 0 and any(d.get("fecha_servicio_vigente") for d in datos):
+                return pd.DataFrame(datos)
+    except Exception as e:
+        print(f"Error cargando estado actual desde base de datos: {e}")
 
-    # Fallback / Modo Demo: Leer del cronograma_sample.csv generado
+    # Fallback / Carga Inicial de Demostración: Leer del cronograma_sample.csv generado
     csv_path = ROOT_DIR / "data" / "samples" / "cronograma_sample.csv"
     if not csv_path.exists():
-        # Si no existe en samples, buscar en data/test
         csv_path = ROOT_DIR / "data" / "test" / "cronograma_prueba.xlsx"
         if csv_path.exists():
-            df = pd.read_excel(csv_path)
-            # Normalizar columnas para el dashboard
-            return df
+            return pd.read_excel(csv_path)
         return pd.DataFrame()
 
-    # Cargar CSV sample
     try:
         df = pd.read_csv(csv_path, encoding="latin-1", sep=";")
-        
-        # Mapear nombres a los internos
         from src.etl.transformer import transform
         validos, _, _ = transform(df.to_dict(orient="records"))
-        
-        # Aplanar para el DataFrame
         df_validos = pd.DataFrame(validos)
         
-        # Calcular dias_restantes
         from src.database.equipos_repo import calcular_dias_restantes
         if not df_validos.empty and "fecha_proximo_servicio" in df_validos.columns:
             df_validos["dias_restantes"] = df_validos["fecha_proximo_servicio"].apply(calcular_dias_restantes)
@@ -79,35 +72,49 @@ def cargar_estado_actual_pame() -> pd.DataFrame:
 def cargar_cumplimiento_anual(anio: int) -> pd.DataFrame:
     """
     Carga el historial de servicios de un año determinado.
+    Prioriza la base de datos (Firestore o Mock JSON local) y usa los JSON históricos solo como carga inicial.
     """
-    if _FIRESTORE_DISPONIBLE:
-        try:
-            from src.database.equipos_repo import get_servicios_por_anio
-            datos = get_servicios_por_anio(anio)
-            if datos:
-                return pd.DataFrame(datos)
-        except Exception as e:
-            print(f"Error cargando cumplimiento anual desde Firestore: {e}")
-
-    # Fallback / Modo Demo: Leer de cronograma_historico.json
-    json_path = ROOT_DIR / "data" / "samples" / "cronograma_historico.json"
-    if not json_path.exists():
-        return pd.DataFrame()
-
     try:
-        with open(json_path, encoding="utf-8") as f:
-            raw = json.load(f)
+        from src.database.equipos_repo import get_servicios_por_anio
+        datos = get_servicios_por_anio(anio)
+        if datos:
+            return pd.DataFrame(datos)
+    except Exception as e:
+        print(f"Error cargando cumplimiento anual desde base de datos: {e}")
+
+    # Fallback / Carga Inicial de Demostración: Combinar cronograma_historico.json y cronograma_sample.csv
+    json_path = ROOT_DIR / "data" / "samples" / "cronograma_historico.json"
+    csv_path = ROOT_DIR / "data" / "samples" / "cronograma_sample.csv"
+    
+    registros = []
+    
+    if json_path.exists():
+        try:
+            with open(json_path, encoding="utf-8") as f:
+                registros.extend(json.load(f))
+        except Exception as e:
+            print(f"Error leyendo cronograma_historico.json: {e}")
+            
+    if csv_path.exists():
+        try:
+            df_csv = pd.read_csv(csv_path, encoding="latin-1", sep=";")
+            registros.extend(df_csv.to_dict(orient="records"))
+        except Exception as e:
+            print(f"Error leyendo cronograma_sample.csv: {e}")
+            
+    if not registros:
+        return pd.DataFrame()
         
-        # Transformar registros
+    try:
         from src.etl.transformer import transform
-        validos, _, _ = transform(raw)
-        
+        validos, _, _ = transform(registros)
         df = pd.DataFrame(validos)
         if not df.empty and "anio" in df.columns:
-            df = df[df["anio"] == anio]
+            if anio > 0:
+                df = df[df["anio"] == anio]
         return df
     except Exception as e:
-        print(f"Error leyendo cronograma_historico.json: {e}")
+        print(f"Error transformando registros anuales en modo demo: {e}")
         return pd.DataFrame()
 
 def cargar_historial_etl() -> pd.DataFrame:

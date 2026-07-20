@@ -36,3 +36,11 @@ def get_db() -> firestore.Client:
 
     _db = firestore.Client(credentials=credentials)
     return _db
+
+def firestore_disponible() -> bool:
+    """Retorna True si las credenciales de Firestore están configuradas."""
+    try:
+        get_db()
+        return True
+    except Exception:
+        return False
