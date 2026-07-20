@@ -214,6 +214,7 @@ def get_estado_actual_todos() -> list[dict]:
                 "estado_alerta":           ultimo.get("estado_alerta") or "SIN_DATOS",
                 "numero_informe":          ultimo.get("numero_informe"),
                 "servicio_id":             ultimo.get("id"),
+                "anio":                    ultimo.get("anio"),
             })
         else:
             eq.update({
@@ -228,6 +229,7 @@ def get_estado_actual_todos() -> list[dict]:
                 "proveedor":               None,
                 "numero_informe":          None,
                 "servicio_id":             None,
+                "anio":                    None,
             })
         resultado.append(eq)
     return resultado

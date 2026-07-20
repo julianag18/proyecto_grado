@@ -159,8 +159,14 @@ def enviar_alerta_diaria(alertas: List[Alerta], force_console: bool = False) -> 
     exito = False
     error_msg = None
     
-    # Si faltan credenciales o se fuerza consola, trabajamos en modo fallback/consola
-    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass:
+    # Si faltan credenciales o se usan placeholders, trabajamos en modo fallback/consola
+    is_placeholder = False
+    if smtp_user and smtp_pass:
+        is_placeholder = ("tu_cuenta_de_correo" in smtp_user or 
+                          "tu_contrasena_de_aplicacion" in smtp_pass or 
+                          "correo@laproff.com" in smtp_user)
+                          
+    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass or is_placeholder:
         print("\n=== [MODO SIMULACIÓN / CONSOLA] ENVIANDO ALERTA DIARIA ===")
         print(f"Remitente: {remitente}")
         print(f"Destinatarios: {destinatarios}")
@@ -257,7 +263,13 @@ def enviar_alerta_critica_inmediata(alerta: Alerta, force_console: bool = False)
     exito = False
     error_msg = None
 
-    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass:
+    is_placeholder = False
+    if smtp_user and smtp_pass:
+        is_placeholder = ("tu_cuenta_de_correo" in smtp_user or 
+                          "tu_contrasena_de_aplicacion" in smtp_pass or 
+                          "correo@laproff.com" in smtp_user)
+
+    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass or is_placeholder:
         print("\n=== [MODO SIMULACIÓN / CONSOLA] ENVIANDO ALERTA CRÍTICA INMEDIATA ===")
         print(f"Equipo: {alerta.codigo_equipo} ({alerta.nombre_equipo})")
         print(f"Destinatarios: {destinatarios}")
