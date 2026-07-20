@@ -118,17 +118,16 @@ def cargar_cumplimiento_anual(anio: int) -> pd.DataFrame:
         return pd.DataFrame()
 
 def cargar_historial_etl() -> pd.DataFrame:
-    """Carga los logs de cargas ETL."""
+    """Carga los logs de cargas ETL. Prioriza el repositorio."""
     datos_crudos = []
-    if _FIRESTORE_DISPONIBLE:
-        try:
-            from src.database.equipos_repo import get_historial_etl
-            datos_crudos = get_historial_etl(limite=50)
-        except Exception:
-            pass
+    try:
+        from src.database.equipos_repo import get_historial_etl
+        datos_crudos = get_historial_etl(limite=50)
+    except Exception as e:
+        print(f"Error cargando historial ETL: {e}")
 
     if not datos_crudos:
-        # Fallback / Modo Demo
+        # Fallback / Carga Inicial de Demostración
         datos_crudos = [
             {
                 "fecha_carga": "2026-06-01T08:00:00.000000",
@@ -174,17 +173,18 @@ def cargar_historial_etl() -> pd.DataFrame:
 
 
 def cargar_historial_alertas() -> pd.DataFrame:
-    """Carga los logs de alertas enviadas."""
-    if _FIRESTORE_DISPONIBLE:
-        try:
-            from src.database.equipos_repo import get_historial_alertas
-            datos = get_historial_alertas(limite=50)
-            if datos:
-                return pd.DataFrame(datos)
-        except Exception:
-            pass
+    """Carga los logs de alertas enviadas. Prioriza el repositorio."""
+    datos = []
+    try:
+        from src.database.equipos_repo import get_historial_alertas
+        datos = get_historial_alertas(limite=50)
+    except Exception as e:
+        print(f"Error cargando historial alertas: {e}")
 
-    # Modo Demo
+    if datos:
+        return pd.DataFrame(datos)
+
+    # Modo Demo / Carga Inicial de Demostración
     return pd.DataFrame([
         {
             "fecha_envio": "2026-06-03T08:00:00.000000",
