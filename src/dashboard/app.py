@@ -147,12 +147,13 @@ with st.sidebar:
 # Carga de datos base (estado actual)
 df_estado = cargar_estado_actual_pame()
 
+
 # ═════════════════════════════════════════════════════════════════════════════
 # VISTA 1: DASHBOARD KPIS (ESTADO ACTUAL)
 # ═════════════════════════════════════════════════════════════════════════════
 if vista_seleccionada == "📊 Dashboard KPIs":
     st.markdown("<h1>📊 Dashboard KPIs — Estado Actual</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='text-muted'>Indicadores clave de calibración y validación del cronograma.</p>", unsafe_allow_html=True)
+    st.markdown("<p class='text-muted'>Indicadores clave de calibración y validación del cronograma de equipos del laboratorio.</p>", unsafe_allow_html=True)
     
     if df_estado.empty:
         st.warning("No hay datos disponibles en el sistema. Ejecuta una migración en la sección '📤 Migración ETL'.")
@@ -161,7 +162,7 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         for col in ["anio", "estado_servicio", "dias_restantes", "estado_conformidad", "fecha_servicio_vigente"]:
             if col not in df_estado.columns:
                 df_estado[col] = None
-
+ 
         # Calcular KPIs
         total_equipos = len(df_estado)
         
@@ -181,15 +182,50 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         pct_cumplimiento_anual = round(conformes_anio / total_servicios_anio * 100, 1) if total_servicios_anio > 0 else 85.0 # Fallback demo
         
         # Equipos sin intervención > 1 año
-        # calculamos en base a fecha_servicio_vigente vieja
         hoy = date.today()
+        from datetime import timedelta
         limite_365 = (hoy - timedelta(days=365)).isoformat()
-        sin_intervencion_count = (df_estado["fecha_servicio_vigente"] < limite_365).sum()
+        sin_intervencion_count = (df_estado["fecha_servicio_vigente"].dropna() < limite_365).sum()
         
         # Tasa de conformidad
         conformes_total = (df_estado["estado_conformidad"] == "Cumple").sum()
         no_conformes_total = (df_estado["estado_conformidad"] == "No Cumple").sum()
         tasa_conformidad = round(conformes_total / (conformes_total + no_conformes_total) * 100, 1) if (conformes_total + no_conformes_total) > 0 else 100.0
+
+        vencidos = (df_estado["estado_servicio"] == "Vencido").sum()
+        programar = (df_estado["estado_servicio"] == "Programar").sum()
+
+        # RENDER TARJETA EJECUTIVA DE SALUD METROLÓGICA (Glow Premium)
+        st.markdown(
+            f"""
+            <div style="background: linear-gradient(135deg, #0B3533 0%, #114B47 100%); padding: 25px; border-radius: 16px; color: white; margin-bottom: 25px; box-shadow: 0 8px 32px rgba(11, 53, 51, 0.15); border: 1px solid rgba(255, 255, 255, 0.08);">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div>
+                  <h3 style="color: #00A99D; margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 800;">Cuadro de Mando Ejecutivo</h3>
+                  <h1 style="color: white; margin: 5px 0 0 0; font-size: 26px; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">Índice de Salud Metrológica</h1>
+                  <p style="color: #A5F3FC; margin: 4px 0 0 0; font-size: 12.5px; opacity: 0.9;">Monitoreo en tiempo real del aseguramiento metrológico en Laboratorios Laproff S.A.S.</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap;">
+                  <div style="text-align: center;">
+                    <div style="font-size: 38px; font-weight: bold; color: #00A99D; font-family: 'Space Grotesk', sans-serif; line-height: 1;">{pct_al_dia}%</div>
+                    <div style="font-size: 10px; color: rgba(255, 255, 255, 0.7); margin-top: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.05em;">Equipos al Día</div>
+                  </div>
+                  <div style="width: 1px; height: 45px; background: rgba(255, 255, 255, 0.15);"></div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 38px; font-weight: bold; color: #10B981; font-family: 'Space Grotesk', sans-serif; line-height: 1;">{tasa_conformidad}%</div>
+                    <div style="font-size: 10px; color: rgba(255, 255, 255, 0.7); margin-top: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.05em;">Conformidad (Cumple)</div>
+                  </div>
+                  <div style="width: 1px; height: 45px; background: rgba(255, 255, 255, 0.15);"></div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 38px; font-weight: bold; color: #EF4444; font-family: 'Space Grotesk', sans-serif; line-height: 1;">{vencidos}</div>
+                    <div style="font-size: 10px; color: rgba(255, 255, 255, 0.7); margin-top: 5px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.05em;">Vencidos Activos</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
         # RENDER CARDS (Grid 3x2)
         col1, col2, col3 = st.columns(3)
@@ -197,9 +233,9 @@ if vista_seleccionada == "📊 Dashboard KPIs":
             st.markdown(
                 f"""
                 <div class="kpi-card total">
-                  <div class="kpi-label">Equipos Registrados</div>
+                  <div class="kpi-label">Inventario Total</div>
                   <div class="kpi-number">{total_equipos}</div>
-                  <div class="kpi-sub">Total en inventario</div>
+                  <div class="kpi-sub">Equipos activos registrados</div>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -208,9 +244,9 @@ if vista_seleccionada == "📊 Dashboard KPIs":
             st.markdown(
                 f"""
                 <div class="kpi-card al-dia">
-                  <div class="kpi-label">% Equipos al Día</div>
-                  <div class="kpi-number">{pct_al_dia}%</div>
-                  <div class="kpi-sub">{al_dia_count} de {total_equipos} vigentes</div>
+                  <div class="kpi-label">Ciclo de Vencimiento</div>
+                  <div class="kpi-number">{dias_promedio}d</div>
+                  <div class="kpi-sub">Promedio días restantes vigentes</div>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -219,9 +255,9 @@ if vista_seleccionada == "📊 Dashboard KPIs":
             st.markdown(
                 f"""
                 <div class="kpi-card proximo">
-                  <div class="kpi-label">Promedio Vencimiento</div>
-                  <div class="kpi-number">{dias_promedio}d</div>
-                  <div class="kpi-sub">Días restantes (vigentes)</div>
+                  <div class="kpi-label">Por Programar</div>
+                  <div class="kpi-number">{programar}</div>
+                  <div class="kpi-sub">Próximos vencimientos a cotizar</div>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -245,6 +281,24 @@ if vista_seleccionada == "📊 Dashboard KPIs":
                 <div class="kpi-card critico">
                   <div class="kpi-label">Sin intervención > 1 año</div>
                   <div class="kpi-number">{sin_intervencion_count}</div>
+                  <div class="kpi-sub">Equipos sin calibrar hace 365 días</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col6:
+            st.markdown(
+                f"""
+                <div class="kpi-card total">
+                  <div class="kpi-label">Tasa de Conformidad</div>
+                  <div class="kpi-number">{tasa_conformidad}%</div>
+                  <div class="kpi-sub">Servicios calificados 'Cumple'</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        st.markdown("<hr>", unsafe_allow_html=True)      <div class="kpi-number">{sin_intervencion_count}</div>
                   <div class="kpi-sub">Equipos sin calibrar hace 365 días</div>
                 </div>
                 """,
@@ -575,22 +629,30 @@ elif vista_seleccionada == "🔔 Alertas Activas":
         render_section_header("Despacho Manual de Notificaciones")
         st.markdown("<p style='font-size: 13px; color: #64748B; margin-top: -10px;'>Fuerce el envío inmediato de los reportes por correo electrónico a los destinatarios configurados en el sistema.</p>", unsafe_allow_html=True)
         
+        # Inicializar estado de feedback para evitar renderizado en columnas estrechas
+        if "mail_feedback_text" not in st.session_state:
+            st.session_state.mail_feedback_text = None
+        if "mail_feedback_type" not in st.session_state:
+            st.session_state.mail_feedback_type = "info"
+
         col_btn1, col_btn2, col_btn3 = st.columns(3)
         
         with col_btn1:
             enviar_correo = st.button("🚀 Alertas Activas (Consolidado)", use_container_width=True, type="primary")
             if enviar_correo:
                 if not alertas_list:
-                    st.info("No hay alertas activas para enviar.")
+                    st.session_state.mail_feedback_text = "No hay alertas activas para enviar."
+                    st.session_state.mail_feedback_type = "info"
                 else:
                     with st.spinner("Enviando alertas consolidadas..."):
                         log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
                         st.cache_data.clear()
                         if log_envio.get("exito"):
-                            st.success("📧 ¡Alertas enviadas con éxito!")
+                            st.session_state.mail_feedback_text = f"📧 ¡Alertas enviadas con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
+                            st.session_state.mail_feedback_type = "success"
                         else:
-                            st.warning("⚠️ Falló SMTP. Simulado en consola.")
-                            st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nTotal alertas: {log_envio.get('total_alertas')}")
+                            st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío en la consola local."
+                            st.session_state.mail_feedback_type = "warning"
                             
         with col_btn2:
             enviar_kpi = st.button("📊 Reporte Diario de KPIs", use_container_width=True)
@@ -599,10 +661,11 @@ elif vista_seleccionada == "🔔 Alertas Activas":
                     log_envio = enviar_reporte_kpis_diario(force_console=False)
                     st.cache_data.clear()
                     if log_envio.get("exito"):
-                        st.success("📧 ¡KPIs enviados con éxito!")
+                        st.session_state.mail_feedback_text = f"📧 ¡KPIs enviados con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
+                        st.session_state.mail_feedback_type = "success"
                     else:
-                        st.warning("⚠️ Falló SMTP. Simulado en consola.")
-                        st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nKPIs Enviados.")
+                        st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío en la consola local."
+                        st.session_state.mail_feedback_type = "warning"
                         
         with col_btn3:
             enviar_mensual = st.button("📅 Evaluar Alertas Automáticas (Lote >= 5)", use_container_width=True)
@@ -612,11 +675,26 @@ elif vista_seleccionada == "🔔 Alertas Activas":
                     st.cache_data.clear()
                     if log_envio.get("total_alertas", 0) > 0:
                         if log_envio.get("exito"):
-                            st.success(f"📧 ¡Enviadas! {log_envio.get('total_alertas')} alertas por lote enviadas")
+                            st.session_state.mail_feedback_text = f"📧 ¡Despacho exitoso! Se envió el lote con {log_envio.get('total_alertas')} alertas activas."
+                            st.session_state.mail_feedback_type = "success"
                         else:
-                            st.warning("⚠️ Falló SMTP. Simulado en consola.")
+                            st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío del lote en la consola local."
+                            st.session_state.mail_feedback_type = "warning"
                     else:
-                        st.info(f"ℹ️ Envío omitido: {log_envio.get('error')}")
+                        st.session_state.mail_feedback_text = f"ℹ️ Envío omitido por regla de negocio: {log_envio.get('error')}"
+                        st.session_state.mail_feedback_type = "info"
+
+        # Renderizar el feedback en ancho completo debajo de los botones
+        if st.session_state.mail_feedback_text:
+            st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+            if st.session_state.mail_feedback_type == "success":
+                st.success(st.session_state.mail_feedback_text)
+            elif st.session_state.mail_feedback_type == "warning":
+                st.warning(st.session_state.mail_feedback_text)
+            elif st.session_state.mail_feedback_type == "info":
+                st.info(st.session_state.mail_feedback_text)
+            # Limpiar feedback después de renderizarlo
+            st.session_state.mail_feedback_text = None
 
         st.markdown("<hr>", unsafe_allow_html=True)
         
