@@ -186,11 +186,41 @@ def get_ultimo_servicio(codigo_equipo: str, tipo_servicio: str = None) -> Option
 
 def get_estado_actual_todos() -> list[dict]:
     """
-    Retorna el estado actual de todos los equipos activos.
-    Para cada equipo obtiene su servicio más reciente.
-    Retorna lista de dicts con campos combinados equipo + último servicio.
+    Retorna el estado actual de todos los equipos activos de forma optimizada.
+    Evita el problema de consultas N+1 cargando todos los servicios en una sola lectura.
     """
     equipos = get_all_equipos(solo_activos=True)
+    if not equipos:
+        return []
+
+    # Obtener todos los servicios de forma masiva
+    todos_servicios = []
+    if firestore_disponible():
+        try:
+            db = get_db()
+            docs = db.collection_group(SUBCOL_SERVICIOS).stream()
+            todos_servicios = [{"id": d.id, **d.to_dict()} for d in docs]
+        except Exception as e:
+            print(f"Error cargando servicios masivamente de Firestore: {e}")
+    else:
+        db_local = _cargar_mock_db()
+        todos_servicios = list(db_local.get("servicios", {}).values())
+
+    # Agrupar servicios por codigo_equipo y encontrar el último (más reciente por fecha)
+    servicios_por_equipo = {}
+    for srv in todos_servicios:
+        cod = srv.get("codigo_equipo")
+        if not cod:
+            continue
+        fecha_act = srv.get("fecha_servicio_vigente") or ""
+        if cod not in servicios_por_equipo:
+            servicios_por_equipo[cod] = srv
+        else:
+            fecha_prev = servicios_por_equipo[cod].get("fecha_servicio_vigente") or ""
+            if fecha_act > fecha_prev:
+                servicios_por_equipo[cod] = srv
+
+    # Combinar equipos con su último servicio en memoria
     resultado = []
     for eq in equipos:
         eq_id = eq.get("id")
@@ -198,7 +228,7 @@ def get_estado_actual_todos() -> list[dict]:
         eq["codigo_equipo"] = eq_id
         eq["nombre"] = eq.get("nombre_equipo") or eq.get("nombre") or eq_id
         
-        ultimo = get_ultimo_servicio(eq_id)
+        ultimo = servicios_por_equipo.get(eq_id)
         if ultimo:
             eq.update({
                 "tipo_servicio":           ultimo.get("tipo_servicio"),

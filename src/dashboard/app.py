@@ -150,6 +150,11 @@ if vista_seleccionada == "📊 Dashboard KPIs":
     if df_estado.empty:
         st.warning("No hay datos disponibles en el sistema. Ejecuta una migración en la sección '📤 Migración ETL'.")
     else:
+        # Asegurar columnas requeridas para evitar KeyError
+        for col in ["anio", "estado_servicio", "dias_restantes", "estado_conformidad", "fecha_servicio_vigente"]:
+            if col not in df_estado.columns:
+                df_estado[col] = None
+
         # Calcular KPIs
         total_equipos = len(df_estado)
         
@@ -571,8 +576,10 @@ elif vista_seleccionada == "🔔 Alertas Activas":
                     log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
                     
                     if log_envio.get("exito"):
+                        st.cache_data.clear()
                         st.success(f"📧 Correo diario enviado con éxito a {', '.join(log_envio.get('destinatarios', []))}")
                     else:
+                        st.cache_data.clear()
                         st.warning("⚠️ El correo no se pudo enviar vía SMTP (Credenciales por defecto). Se simuló envío en consola.")
                         st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nTotal alertas: {log_envio.get('total_alertas')}")
 
@@ -627,7 +634,7 @@ elif vista_seleccionada == "📤 Migración ETL":
                 with st.spinner("Procesando pipeline ETL..."):
                     try:
                         reporte = run_pipeline(str(temp_path), dry_run=dry_run_opt)
-                        
+                        st.cache_data.clear()
                         st.success("🎉 ¡Pipeline ETL ejecutado con éxito!")
                         
                         # Mostrar métricas del reporte
@@ -668,11 +675,20 @@ elif vista_seleccionada == "📤 Migración ETL":
         if borrar_db:
             with st.spinner("Eliminando documentos de Firestore..."):
                 if is_demo:
-                    st.info("🧪 Modo Demo activo. No hay base de datos Firestore real conectada para limpiar.")
+                    try:
+                        from src.database.equipos_repo import limpiar_equipos
+                        count_del = limpiar_equipos()
+                        st.cache_data.clear()
+                        st.success(f"💥 Base de datos local limpia con éxito. Se eliminaron {count_del} registros.")
+                        time.sleep(1.5)
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"No se pudo limpiar la base de datos local: {e}")
                 else:
                     try:
                         from src.database.equipos_repo import limpiar_equipos
                         count_del = limpiar_equipos()
+                        st.cache_data.clear()
                         st.success(f"💥 Base de datos limpia con éxito. Se eliminaron {count_del} registros.")
                         time.sleep(1.5)
                         st.rerun()

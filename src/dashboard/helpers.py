@@ -6,8 +6,10 @@ import os
 import json
 import sys
 import pandas as pd
+import streamlit as st
 from pathlib import Path
 from datetime import date
+
 
 # Asegurar que el root del proyecto esté en el path
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
@@ -28,6 +30,7 @@ def es_demo_mode() -> bool:
     """Retorna True si el sistema opera en modo demo (sin Firestore)."""
     return not _FIRESTORE_DISPONIBLE
 
+@st.cache_data(show_spinner=False)
 def cargar_estado_actual_pame() -> pd.DataFrame:
     """
     Carga el estado de todos los equipos y sus últimos servicios.
@@ -69,6 +72,7 @@ def cargar_estado_actual_pame() -> pd.DataFrame:
         print(f"Error leyendo cronograma_sample.csv en modo demo: {e}")
         return pd.DataFrame()
 
+@st.cache_data(show_spinner=False)
 def cargar_cumplimiento_anual(anio: int) -> pd.DataFrame:
     """
     Carga el historial de servicios de un año determinado.
@@ -117,6 +121,7 @@ def cargar_cumplimiento_anual(anio: int) -> pd.DataFrame:
         print(f"Error transformando registros anuales en modo demo: {e}")
         return pd.DataFrame()
 
+@st.cache_data(show_spinner=False)
 def cargar_historial_etl() -> pd.DataFrame:
     """Carga los logs de cargas ETL. Prioriza el repositorio."""
     datos_crudos = []
@@ -172,6 +177,7 @@ def cargar_historial_etl() -> pd.DataFrame:
     return pd.DataFrame(datos_procesados)
 
 
+@st.cache_data(show_spinner=False)
 def cargar_historial_alertas() -> pd.DataFrame:
     """Carga los logs de alertas enviadas. Prioriza el repositorio."""
     datos = []
