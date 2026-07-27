@@ -615,54 +615,54 @@ elif vista_seleccionada == "🔔 Alertas Activas":
         if "mail_feedback_type" not in st.session_state:
             st.session_state.mail_feedback_type = "info"
 
-        col_btn1, col_btn2, col_btn3 = st.columns(3)
-        
-        with col_btn1:
-            enviar_correo = st.button("🚀 Alertas Activas (Consolidado)", use_container_width=True, type="primary")
-            if enviar_correo:
-                if not alertas_list:
-                    st.session_state.mail_feedback_text = "No hay alertas activas para enviar."
-                    st.session_state.mail_feedback_type = "info"
-                else:
-                    with st.spinner("Enviando alertas consolidadas..."):
-                        log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
-                        st.cache_data.clear()
-                        if log_envio.get("exito"):
-                            st.session_state.mail_feedback_text = f"📧 ¡Alertas enviadas con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
-                            st.session_state.mail_feedback_type = "success"
-                        else:
-                            st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío en la consola local."
-                            st.session_state.mail_feedback_type = "warning"
-                            
-        with col_btn2:
-            enviar_kpi = st.button("📊 Reporte Diario de KPIs", use_container_width=True)
-            if enviar_kpi:
-                with st.spinner("Enviando reporte de KPIs..."):
-                    log_envio = enviar_reporte_kpis_diario(force_console=False)
+        # Stacked buttons vertically for full horizontal responsiveness
+        enviar_correo = st.button("🚀 Enviar Alertas Activas (Consolidado)", use_container_width=True, type="primary")
+        if enviar_correo:
+            if not alertas_list:
+                st.session_state.mail_feedback_text = "No hay alertas activas para enviar."
+                st.session_state.mail_feedback_type = "info"
+            else:
+                with st.spinner("Enviando alertas consolidadas..."):
+                    log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
                     st.cache_data.clear()
                     if log_envio.get("exito"):
-                        st.session_state.mail_feedback_text = f"📧 ¡KPIs enviados con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
+                        st.session_state.mail_feedback_text = f"📧 ¡Alertas enviadas con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
                         st.session_state.mail_feedback_type = "success"
                     else:
                         st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío en la consola local."
                         st.session_state.mail_feedback_type = "warning"
+                            
+        st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
+        
+        enviar_kpi = st.button("📊 Enviar Reporte Diario de KPIs", use_container_width=True)
+        if enviar_kpi:
+            with st.spinner("Enviando reporte de KPIs..."):
+                log_envio = enviar_reporte_kpis_diario(force_console=False)
+                st.cache_data.clear()
+                if log_envio.get("exito"):
+                    st.session_state.mail_feedback_text = f"📧 ¡KPIs enviados con éxito a {', '.join(log_envio.get('destinatarios', []))}!"
+                    st.session_state.mail_feedback_type = "success"
+                else:
+                    st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío en la consola local."
+                    st.session_state.mail_feedback_type = "warning"
                         
-        with col_btn3:
-            enviar_mensual = st.button("📅 Evaluar Alertas Automáticas (Lote >= 5)", use_container_width=True)
-            if enviar_mensual:
-                with st.spinner("Evaluando regla de negocio de alertas automáticas..."):
-                    log_envio = verificar_y_enviar_alertas_automaticas(force_console=False)
-                    st.cache_data.clear()
-                    if log_envio.get("total_alertas", 0) > 0:
-                        if log_envio.get("exito"):
-                            st.session_state.mail_feedback_text = f"📧 ¡Despacho exitoso! Se envió el lote con {log_envio.get('total_alertas')} alertas activas."
-                            st.session_state.mail_feedback_type = "success"
-                        else:
-                            st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío del lote en la consola local."
-                            st.session_state.mail_feedback_type = "warning"
+        st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
+        
+        enviar_mensual = st.button("📅 Evaluar Alertas Automáticas (Lote >= 5)", use_container_width=True)
+        if enviar_mensual:
+            with st.spinner("Evaluando regla de negocio de alertas automáticas..."):
+                log_envio = verificar_y_enviar_alertas_automaticas(force_console=False)
+                st.cache_data.clear()
+                if log_envio.get("total_alertas", 0) > 0:
+                    if log_envio.get("exito"):
+                        st.session_state.mail_feedback_text = f"📧 ¡Despacho exitoso! Se envió el lote con {log_envio.get('total_alertas')} alertas activas."
+                        st.session_state.mail_feedback_type = "success"
                     else:
-                        st.session_state.mail_feedback_text = f"ℹ️ Envío omitido por regla de negocio: {log_envio.get('error')}"
-                        st.session_state.mail_feedback_type = "info"
+                        st.session_state.mail_feedback_text = "⚠️ Falló SMTP. Se simuló el envío del lote en la consola local."
+                        st.session_state.mail_feedback_type = "warning"
+                else:
+                    st.session_state.mail_feedback_text = f"ℹ️ Envío omitido por regla de negocio: {log_envio.get('error')}"
+                    st.session_state.mail_feedback_type = "info"
 
         # Renderizar el feedback en ancho completo debajo de los botones
         if st.session_state.mail_feedback_text:
