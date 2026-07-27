@@ -37,7 +37,13 @@ from src.dashboard.charts import (
 )
 from src.etl.pipeline import run_pipeline
 from src.alertas.motor_alertas import generar_alertas, agrupar_por_area
-from src.alertas.email_sender import enviar_alerta_diaria, enviar_reporte_kpis_diario, enviar_alertas_mes_siguiente
+from src.alertas.email_sender import (
+    enviar_alerta_diaria,
+    enviar_reporte_kpis_diario,
+    enviar_alertas_mes_siguiente,
+    verificar_y_enviar_alertas_automaticas
+)
+
 
 
 # ── Configuración global de la página ────────────────────────────────────────────
@@ -599,16 +605,18 @@ elif vista_seleccionada == "🔔 Alertas Activas":
                         st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nKPIs Enviados.")
                         
         with col_btn3:
-            enviar_mensual = st.button("📅 Alertas Próximo Mes", use_container_width=True)
+            enviar_mensual = st.button("📅 Evaluar Alertas Automáticas (Lote >= 5)", use_container_width=True)
             if enviar_mensual:
-                with st.spinner("Filtrando y enviando vencimientos del próximo mes..."):
-                    log_envio = enviar_alertas_mes_siguiente(force_console=False)
+                with st.spinner("Evaluando regla de negocio de alertas automáticas..."):
+                    log_envio = verificar_y_enviar_alertas_automaticas(force_console=False)
                     st.cache_data.clear()
-                    if log_envio.get("exito"):
-                        st.success(f"📧 ¡Enviadas! {log_envio.get('total_alertas')} equipos")
+                    if log_envio.get("total_alertas", 0) > 0:
+                        if log_envio.get("exito"):
+                            st.success(f"📧 ¡Enviadas! {log_envio.get('total_alertas')} alertas por lote enviadas")
+                        else:
+                            st.warning("⚠️ Falló SMTP. Simulado en consola.")
                     else:
-                        st.warning("⚠️ Falló SMTP. Simulado en consola.")
-                        st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nEquipos del próximo mes: {log_envio.get('total_alertas')}")
+                        st.info(f"ℹ️ Envío omitido: {log_envio.get('error')}")
 
         st.markdown("<hr>", unsafe_allow_html=True)
         

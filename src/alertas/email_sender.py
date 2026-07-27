@@ -617,31 +617,154 @@ def enviar_alertas_mes_siguiente(force_console: bool = False) -> dict:
 
     return log_alerta
 
+def verificar_y_enviar_alertas_automaticas(force_console: bool = False) -> dict:
+    """
+    Verifica de forma automática el envío de alertas de vencimiento.
+    Aplica una regla de negocio logística:
+    1. Filtra los equipos a un mes de vencerse (días restantes entre 15 y 45).
+    2. Solo envía el correo si hay al menos 5 equipos en este rango (para optimizar cotizaciones en lote).
+    3. Excepción de seguridad: Si hay algún equipo con estado crítico (<15 días), se envía de inmediato.
+    """
+    from src.database.equipos_repo import get_estado_actual_todos, registrar_alerta
+    
+    equipos = get_estado_actual_todos()
+    
+    proximos = []   # Equipos a un mes de vencerse (15-45 días)
+    criticos = []   # Equipos críticos (<15 días)
+    
+    for eq in equipos:
+        dias = eq.get("dias_restantes")
+        if dias is None:
+            continue
+        
+        alerta_obj = Alerta(
+            codigo_equipo  = eq.get("codigo_equipo", ""),
+            nombre_equipo  = eq.get("nombre", ""),
+            ubicacion      = eq.get("ubicacion", "SIN UBICACIÓN"),
+            proveedor      = eq.get("proveedor"),
+            tipo_servicio  = eq.get("tipo_servicio"),
+            fecha_proxima  = eq.get("fecha_proximo_servicio"),
+            dias_restantes = dias,
+            prioridad      = "MEDIA" if dias > 30 else "ALTA" if dias > 15 else "CRITICA",
+            mensaje        = f"Vence en {dias} días",
+        )
+        
+        if 15 < dias <= 45:
+            proximos.append(alerta_obj)
+        elif dias <= 15:
+            criticos.append(alerta_obj)
+            
+    # Evaluar si se cumple la regla de negocio para enviar
+    debe_enviar = False
+    motivo = ""
+    
+    if len(proximos) >= 5:
+        debe_enviar = True
+        motivo = f"Lote de {len(proximos)} equipos próximos a vencer (Límite >= 5 alcanzado)"
+    elif len(criticos) > 0:
+        debe_enviar = True
+        motivo = f"Alerta de seguridad: {len(criticos)} equipos críticos con menos de 15 días"
+        
+    if not debe_enviar:
+        print(f"[Alertas Automáticas] Evaluación omitida: {len(proximos)} próximos (requiere >= 5) y {len(criticos)} críticos.")
+        return {
+            "tipo": "alerta_automatica_lote",
+            "equipos_alertados": [],
+            "total_alertas": 0,
+            "destinatarios": [],
+            "fecha_envio": datetime.utcnow().isoformat(),
+            "exito": True,
+            "error": "Omitido por regla de negocio (acumulación < 5 y 0 críticos)"
+        }
+
+    # Unir alertas para el correo
+    todas_alertas = criticos + proximos
+    
+    destinatarios_env = os.getenv("EMAIL_DESTINATARIOS", "juli3213@gmail.com")
+    destinatarios = [d.strip() for d in destinatarios_env.split(",") if d.strip()]
+    remitente = os.getenv("EMAIL_REMITENTE", "pame-alertas@laproff.com")
+    smtp_host = os.getenv("SMTP_HOST")
+    smtp_port = os.getenv("SMTP_PORT")
+    smtp_user = os.getenv("SMTP_USER")
+    smtp_pass = os.getenv("SMTP_PASSWORD")
+
+    exito = False
+    error_msg = None
+    
+    html_content = generar_html_alerta(todas_alertas)
+    html_content = html_content.replace(
+        "<h1>PAME — Aseguramiento Metrológico</h1>",
+        f"<h1>PAME — Aseguramiento Metrológico</h1><h2 style='color:#FFF;'>Despacho Automático: {motivo}</h2>"
+    )
+
+    is_placeholder = False
+    if smtp_user and smtp_pass:
+        is_placeholder = ("tu_cuenta_de_correo" in smtp_user or 
+                          "tu_contrasena_de_aplicacion" in smtp_pass or 
+                          "correo@laproff.com" in smtp_user)
+
+    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass or is_placeholder:
+        print(f"\n=== [MODO SIMULACIÓN] ENVIANDO ALERTAS AUTOMÁTICAS ({motivo}) ===")
+        print(f"Destinatarios: {destinatarios}")
+        print(f"Total alertas: {len(todas_alertas)}")
+        exito = True
+    else:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"Alerta Automática PAME — {motivo}"
+            msg["From"] = remitente
+            msg["To"] = ", ".join(destinatarios)
+            msg.attach(MIMEText(html_content, "html"))
+            port = int(smtp_port) if smtp_port else 587
+            server = smtplib.SMTP(smtp_host, port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(remitente, destinatarios, msg.as_string())
+            server.quit()
+            exito = True
+            print(f"[SMTP] Alerta automática enviada: {motivo}")
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[SMTP ERROR] No se pudo enviar el correo automático: {e}")
+
+    log_alerta = {
+        "tipo": "alerta_automatica_lote",
+        "equipos_alertados": [a.codigo_equipo for a in todas_alertas],
+        "total_alertas": len(todas_alertas),
+        "destinatarios": destinatarios,
+        "fecha_envio": datetime.utcnow().isoformat(),
+        "exito": exito,
+        "error": error_msg
+    }
+    try:
+        registrar_alerta(log_alerta)
+    except Exception as e:
+        print(f"No se pudo registrar la alerta automática en DB: {e}")
+
+    return log_alerta
+
 def programar_alertas_diarias(hora: str = "08:00"):
     """
     Programa el envío automático de alertas usando la librería schedule.
-    Envía KPIs diarios todos los días a la hora indicada.
-    Envía alertas de vencimientos del próximo mes el día 1 de cada mes.
+    1. Envía KPIs diarios todos los días a la hora indicada.
+    2. Ejecuta la verificación de alertas por lotes todos los días a la misma hora.
     """
-    def job_diario():
+    def job_diario_kpi():
         print(f"[Cronograma Diario] Iniciando reporte de KPIs diario a las {hora}...")
         try:
             enviar_reporte_kpis_diario()
         except Exception as e:
             print(f"[Cronograma Diario Error] Error al generar o enviar reporte de KPIs: {e}")
 
-    def job_mensual():
-        from datetime import date
-        hoy = date.today()
-        # Verificar si es el primer día del mes
-        if hoy.day == 1:
-            print(f"[Cronograma Mensual] Primer día del mes detectado. Enviando alertas del próximo mes...")
-            try:
-                enviar_alertas_mes_siguiente()
-            except Exception as e:
-                print(f"[Cronograma Mensual Error] Error al enviar alertas del próximo mes: {e}")
+    def job_diario_alertas():
+        print(f"[Cronograma Diario] Verificando envío automático de alertas a las {hora}...")
+        try:
+            verificar_y_enviar_alertas_automaticas()
+        except Exception as e:
+            print(f"[Cronograma Diario Error] Error al evaluar alertas de vencimiento: {e}")
 
-    schedule.every().day.at(hora).do(job_diario)
-    schedule.every().day.at(hora).do(job_mensual)
+    schedule.every().day.at(hora).do(job_diario_kpi)
+    schedule.every().day.at(hora).do(job_diario_alertas)
     print(f"[Cronograma PAME] Tareas programadas exitosamente a las {hora} todos los días.")
+
 
