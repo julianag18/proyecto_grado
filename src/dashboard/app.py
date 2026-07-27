@@ -37,7 +37,8 @@ from src.dashboard.charts import (
 )
 from src.etl.pipeline import run_pipeline
 from src.alertas.motor_alertas import generar_alertas, agrupar_por_area
-from src.alertas.email_sender import enviar_alerta_diaria
+from src.alertas.email_sender import enviar_alerta_diaria, enviar_reporte_kpis_diario, enviar_alertas_mes_siguiente
+
 
 # ── Configuración global de la página ────────────────────────────────────────────
 st.set_page_config(
@@ -564,24 +565,50 @@ elif vista_seleccionada == "🔔 Alertas Activas":
             unsafe_allow_html=True
         )
         
-        # Botón para simular / forzar envío manual por correo
-        enviar_correo = st.button("🚀 Enviar alertas por correo ahora", type="primary", use_container_width=True)
+        # Opciones de envío manual por correo
+        render_section_header("Despacho Manual de Notificaciones")
+        st.markdown("<p style='font-size: 13px; color: #64748B; margin-top: -10px;'>Fuerce el envío inmediato de los reportes por correo electrónico a los destinatarios configurados en el sistema.</p>", unsafe_allow_html=True)
         
-        if enviar_correo:
-            if not alertas_list:
-                st.info("No hay alertas activas para enviar.")
-            else:
-                with st.spinner("Enviando correo de alertas PAME..."):
-                    # Llamar al email_sender
-                    log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
-                    
+        col_btn1, col_btn2, col_btn3 = st.columns(3)
+        
+        with col_btn1:
+            enviar_correo = st.button("🚀 Alertas Activas (Consolidado)", use_container_width=True, type="primary")
+            if enviar_correo:
+                if not alertas_list:
+                    st.info("No hay alertas activas para enviar.")
+                else:
+                    with st.spinner("Enviando alertas consolidadas..."):
+                        log_envio = enviar_alerta_diaria(alertas_list, force_console=False)
+                        st.cache_data.clear()
+                        if log_envio.get("exito"):
+                            st.success("📧 ¡Alertas enviadas con éxito!")
+                        else:
+                            st.warning("⚠️ Falló SMTP. Simulado en consola.")
+                            st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nTotal alertas: {log_envio.get('total_alertas')}")
+                            
+        with col_btn2:
+            enviar_kpi = st.button("📊 Reporte Diario de KPIs", use_container_width=True)
+            if enviar_kpi:
+                with st.spinner("Enviando reporte de KPIs..."):
+                    log_envio = enviar_reporte_kpis_diario(force_console=False)
+                    st.cache_data.clear()
                     if log_envio.get("exito"):
-                        st.cache_data.clear()
-                        st.success(f"📧 Correo diario enviado con éxito a {', '.join(log_envio.get('destinatarios', []))}")
+                        st.success("📧 ¡KPIs enviados con éxito!")
                     else:
-                        st.cache_data.clear()
-                        st.warning("⚠️ El correo no se pudo enviar vía SMTP (Credenciales por defecto). Se simuló envío en consola.")
-                        st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nTotal alertas: {log_envio.get('total_alertas')}")
+                        st.warning("⚠️ Falló SMTP. Simulado en consola.")
+                        st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nKPIs Enviados.")
+                        
+        with col_btn3:
+            enviar_mensual = st.button("📅 Alertas Próximo Mes", use_container_width=True)
+            if enviar_mensual:
+                with st.spinner("Filtrando y enviando vencimientos del próximo mes..."):
+                    log_envio = enviar_alertas_mes_siguiente(force_console=False)
+                    st.cache_data.clear()
+                    if log_envio.get("exito"):
+                        st.success(f"📧 ¡Enviadas! {log_envio.get('total_alertas')} equipos")
+                    else:
+                        st.warning("⚠️ Falló SMTP. Simulado en consola.")
+                        st.code(f"Destinatarios: {log_envio.get('destinatarios')}\nEquipos del próximo mes: {log_envio.get('total_alertas')}")
 
         st.markdown("<hr>", unsafe_allow_html=True)
         

@@ -314,18 +314,334 @@ def enviar_alerta_critica_inmediata(alerta: Alerta, force_console: bool = False)
 
     return log_alerta
 
+def enviar_reporte_kpis_diario(force_console: bool = False) -> dict:
+    """
+    Calcula los KPIs actuales del laboratorio y envía un correo diario con el resumen.
+    """
+    from src.database.equipos_repo import get_estado_actual_todos, registrar_alerta
+    
+    equipos = get_estado_actual_todos()
+    total_equipos = len(equipos)
+    
+    al_dia = sum(1 for e in equipos if e.get("estado_servicio") == "Vigente")
+    pct_al_dia = round(al_dia / total_equipos * 100, 1) if total_equipos > 0 else 0.0
+    
+    vencidos = sum(1 for e in equipos if e.get("estado_servicio") == "Vencido")
+    programar = sum(1 for e in equipos if e.get("estado_servicio") == "Programar")
+    
+    conformes = sum(1 for e in equipos if e.get("estado_conformidad") == "Cumple")
+    no_conformes = sum(1 for e in equipos if e.get("estado_conformidad") == "No Cumple")
+    tasa_conformidad = round(conformes / (conformes + no_conformes) * 100, 1) if (conformes + no_conformes) > 0 else 100.0
+    
+    # Generar HTML
+    html_content = f"""
+    <html>
+      <head>
+        <style>
+          body {{ font-family: Arial, sans-serif; color: {COLOR_TEXT}; line-height: 1.5; }}
+          .header {{ background-color: {COLOR_HEADER_BG}; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }}
+          .header h1 {{ color: #FFFFFF; margin: 0; font-size: 24px; }}
+          .header h2 {{ color: {COLOR_PRIMARY}; margin: 5px 0 0 0; font-size: 16px; font-weight: normal; }}
+          .kpi-container {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }}
+          .kpi-card {{ flex: 1; min-width: 120px; background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px; text-align: center; }}
+          .kpi-value {{ font-size: 20px; font-weight: bold; color: {COLOR_PRIMARY}; margin-top: 5px; }}
+          .kpi-label {{ font-size: 12px; color: #64748B; }}
+          .section-title {{ font-size: 16px; font-weight: bold; margin-top: 25px; border-bottom: 2px solid {COLOR_PRIMARY}; padding-bottom: 5px; }}
+          table {{ width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }}
+          th {{ background-color: {COLOR_HEADER_BG}; color: #FFFFFF; padding: 8px; text-align: left; }}
+          td {{ padding: 8px; border: 1px solid #E2E8F0; }}
+          .footer {{ text-align: center; margin-top: 30px; font-size: 11px; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 15px; }}
+        </style>
+      </head>
+      <body>
+        <div style="max-width: 600px; margin: 0 auto; border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px;">
+          <div class="header">
+            <h1>PAME — Aseguramiento Metrológico</h1>
+            <h2>Reporte Diario de KPIs del Laboratorio</h2>
+          </div>
+          
+          <p>Estimado Coordinador, a continuación se presenta el estado de los indicadores de aseguramiento metrológico el día de hoy ({datetime.now().strftime('%d/%m/%Y')}):</p>
+          
+          <div class="kpi-container" style="margin-bottom: 20px;">
+            <div class="kpi-card">
+              <div class="kpi-label">Equipos Totales</div>
+              <div class="kpi-value">{total_equipos}</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">% Equipos al Día</div>
+              <div class="kpi-value">{pct_al_dia}%</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Tasa Conformidad</div>
+              <div class="kpi-value">{tasa_conformidad}%</div>
+            </div>
+          </div>
+          
+          <div class="kpi-container" style="margin-bottom: 20px;">
+            <div class="kpi-card" style="background-color: #FEF2F2; border-color: #FCA5A5;">
+              <div class="kpi-label" style="color: #991B1B;">Equipos Vencidos</div>
+              <div class="kpi-value" style="color: #DC2626;">{vencidos}</div>
+            </div>
+            <div class="kpi-card" style="background-color: #FEF3C7; border-color: #FDE68A;">
+              <div class="kpi-label" style="color: #92400E;">Por Programar</div>
+              <div class="kpi-value" style="color: #D97706;">{programar}</div>
+            </div>
+          </div>
+    """
+    
+    # Listar vencidos si los hay
+    vencidos_list = [e for e in equipos if e.get("estado_servicio") == "Vencido"]
+    if vencidos_list:
+        html_content += """
+          <div class="section-title" style="color: #DC2626;">🚨 EQUIPOS VENCIDOS (Requieren Intervención Inmediata)</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Ubicación</th>
+                <th>Días Vencido</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for eq in vencidos_list:
+            dias_v = abs(eq.get("dias_restantes") or 0)
+            html_content += f"""
+              <tr>
+                <td><b>{eq.get('codigo_equipo')}</b></td>
+                <td>{eq.get('nombre')}</td>
+                <td>{eq.get('ubicacion')}</td>
+                <td style="color: #DC2626; font-weight: bold;">Hace {dias_v} días</td>
+              </tr>
+            """
+        html_content += """
+            </tbody>
+          </table>
+        """
+        
+    html_content += f"""
+          <div class="footer">
+            Generado automáticamente por PAME — Aseguramiento Metrológico de Laboratorios Laproff S.A.S.<br>
+            © {datetime.now().year} Todos los derechos reservados.
+          </div>
+        </div>
+      </body>
+    </html>
+    """
+
+    destinatarios_env = os.getenv("EMAIL_DESTINATARIOS", "juli3213@gmail.com")
+    destinatarios = [d.strip() for d in destinatarios_env.split(",") if d.strip()]
+    remitente = os.getenv("EMAIL_REMITENTE", "pame-alertas@laproff.com")
+    smtp_host = os.getenv("SMTP_HOST")
+    smtp_port = os.getenv("SMTP_PORT")
+    smtp_user = os.getenv("SMTP_USER")
+    smtp_pass = os.getenv("SMTP_PASSWORD")
+
+    exito = False
+    error_msg = None
+
+    is_placeholder = False
+    if smtp_user and smtp_pass:
+        is_placeholder = ("tu_cuenta_de_correo" in smtp_user or 
+                          "tu_contrasena_de_aplicacion" in smtp_pass or 
+                          "correo@laproff.com" in smtp_user)
+
+    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass or is_placeholder:
+        print("\n=== [MODO SIMULACIÓN / CONSOLA] ENVIANDO REPORTE DIARIO DE KPIS ===")
+        print(f"Destinatarios: {destinatarios}")
+        print(f"Asunto: Reporte Diario de KPIs PAME — % Al Día: {pct_al_dia}%")
+        exito = True
+    else:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"Reporte Diario de KPIs PAME — % Al Día: {pct_al_dia}%"
+            msg["From"] = remitente
+            msg["To"] = ", ".join(destinatarios)
+            msg.attach(MIMEText(html_content, "html"))
+            port = int(smtp_port) if smtp_port else 587
+            server = smtplib.SMTP(smtp_host, port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(remitente, destinatarios, msg.as_string())
+            server.quit()
+            exito = True
+            print(f"[SMTP] Reporte de KPIs diario enviado exitosamente a: {destinatarios}")
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[SMTP ERROR] No se pudo enviar el reporte de KPIs diario: {e}")
+
+    log_alerta = {
+        "tipo": "reporte_kpis_diario",
+        "equipos_alertados": ["KPI_REPORT"],
+        "total_alertas": 1,
+        "destinatarios": destinatarios,
+        "fecha_envio": datetime.utcnow().isoformat(),
+        "exito": exito,
+        "error": error_msg
+    }
+    try:
+        registrar_alerta(log_alerta)
+    except Exception as e:
+        print(f"No se pudo guardar el registro del reporte de KPIs en DB: {e}")
+
+    return log_alerta
+
+def enviar_alertas_mes_siguiente(force_console: bool = False) -> dict:
+    """
+    Busca los equipos que vencen el próximo mes calendario y envía el informe consolidado.
+    """
+    from src.database.equipos_repo import get_estado_actual_todos, registrar_alerta
+    from datetime import date
+    
+    equipos = get_estado_actual_todos()
+    
+    # Calcular próximo mes calendario
+    hoy = date.today()
+    if hoy.month == 12:
+        sig_mes = 1
+        sig_anio = hoy.year + 1
+    else:
+        sig_mes = hoy.month + 1
+        sig_anio = hoy.year
+
+    nombre_sig_mes = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ][sig_mes - 1]
+
+    # Filtrar equipos que vencen en el próximo mes
+    alertas_filtradas = []
+    for eq in equipos:
+        f_prox_str = eq.get("fecha_proximo_servicio")
+        if not f_prox_str:
+            continue
+        try:
+            f_prox = date.fromisoformat(f_prox_str)
+            if f_prox.year == sig_anio and f_prox.month == sig_mes:
+                dias = eq.get("dias_restantes") or 0
+                prioridad = "MEDIA"
+                if dias <= 15:
+                    prioridad = "CRITICA"
+                elif dias <= 30:
+                    prioridad = "ALTA"
+                    
+                alertas_filtradas.append(Alerta(
+                    codigo_equipo  = eq.get("codigo_equipo", ""),
+                    nombre_equipo  = eq.get("nombre", ""),
+                    ubicacion      = eq.get("ubicacion", "SIN UBICACIÓN"),
+                    proveedor      = eq.get("proveedor"),
+                    tipo_servicio  = eq.get("tipo_servicio"),
+                    fecha_proxima  = f_prox_str,
+                    dias_restantes = dias,
+                    prioridad      = prioridad,
+                    mensaje        = f"Vence el próximo mes ({nombre_sig_mes} de {sig_anio})",
+                ))
+        except Exception:
+            continue
+
+    # Enviar reporte consolidado si hay alertas
+    destinatarios_env = os.getenv("EMAIL_DESTINATARIOS", "juli3213@gmail.com")
+    destinatarios = [d.strip() for d in destinatarios_env.split(",") if d.strip()]
+    remitente = os.getenv("EMAIL_REMITENTE", "pame-alertas@laproff.com")
+    smtp_host = os.getenv("SMTP_HOST")
+    smtp_port = os.getenv("SMTP_PORT")
+    smtp_user = os.getenv("SMTP_USER")
+    smtp_pass = os.getenv("SMTP_PASSWORD")
+
+    exito = False
+    error_msg = None
+    
+    if not alertas_filtradas:
+        print(f"[Alertas Mensuales] No hay equipos con vencimiento en {nombre_sig_mes} {sig_anio}.")
+        log_alerta = {
+            "tipo": "alertas_mes_siguiente",
+            "equipos_alertados": [],
+            "total_alertas": 0,
+            "destinatarios": destinatarios,
+            "fecha_envio": datetime.utcnow().isoformat(),
+            "exito": True,
+            "error": "No hay vencimientos programados para el próximo mes"
+        }
+        return log_alerta
+
+    html_content = generar_html_alerta(alertas_filtradas)
+    html_content = html_content.replace(
+        "<h1>PAME — Aseguramiento Metrológico</h1>",
+        f"<h1>PAME — Aseguramiento Metrológico</h1><h2 style='color:#FFF;'>Alertas de Vencimientos: {nombre_sig_mes} {sig_anio}</h2>"
+    )
+
+    is_placeholder = False
+    if smtp_user and smtp_pass:
+        is_placeholder = ("tu_cuenta_de_correo" in smtp_user or 
+                          "tu_contrasena_de_aplicacion" in smtp_pass or 
+                          "correo@laproff.com" in smtp_user)
+
+    if force_console or not smtp_host or not smtp_user or not smtp_pass or "app_password" in smtp_pass or is_placeholder:
+        print(f"\n=== [MODO SIMULACIÓN / CONSOLA] ENVIANDO ALERTAS MENSUALES DE VENCIMIENTO ({nombre_sig_mes}) ===")
+        print(f"Destinatarios: {destinatarios}")
+        print(f"Total alertas: {len(alertas_filtradas)}")
+        exito = True
+    else:
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = f"Cronograma PAME — Alertas de Vencimiento para {nombre_sig_mes} {sig_anio} ({len(alertas_filtradas)} equipos)"
+            msg["From"] = remitente
+            msg["To"] = ", ".join(destinatarios)
+            msg.attach(MIMEText(html_content, "html"))
+            port = int(smtp_port) if smtp_port else 587
+            server = smtplib.SMTP(smtp_host, port)
+            server.starttls()
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(remitente, destinatarios, msg.as_string())
+            server.quit()
+            exito = True
+            print(f"[SMTP] Alertas mensuales enviadas exitosamente a: {destinatarios}")
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[SMTP ERROR] No se pudo enviar el reporte mensual: {e}")
+
+    log_alerta = {
+        "tipo": "alertas_mes_siguiente",
+        "equipos_alertados": [a.codigo_equipo for a in alertas_filtradas],
+        "total_alertas": len(alertas_filtradas),
+        "destinatarios": destinatarios,
+        "fecha_envio": datetime.utcnow().isoformat(),
+        "exito": exito,
+        "error": error_msg
+    }
+    try:
+        registrar_alerta(log_alerta)
+    except Exception as e:
+        print(f"No se pudo guardar el registro de alertas del próximo mes en DB: {e}")
+
+    return log_alerta
+
 def programar_alertas_diarias(hora: str = "08:00"):
     """
-    Programa el envío automático de alertas diarias usando la librería schedule.
-    Este loop bloquea la ejecución. Debe llamarse en un hilo separado o loop controlado.
+    Programa el envío automático de alertas usando la librería schedule.
+    Envía KPIs diarios todos los días a la hora indicada.
+    Envía alertas de vencimientos del próximo mes el día 1 de cada mes.
     """
-    def job():
-        print(f"[Cronograma Alertas] Iniciando trabajo diario a las {hora}...")
+    def job_diario():
+        print(f"[Cronograma Diario] Iniciando reporte de KPIs diario a las {hora}...")
         try:
-            alertas = generar_alertas()
-            enviar_alerta_diaria(alertas)
+            enviar_reporte_kpis_diario()
         except Exception as e:
-            print(f"[Cronograma Alertas Error] Error al generar o enviar alertas diarias: {e}")
+            print(f"[Cronograma Diario Error] Error al generar o enviar reporte de KPIs: {e}")
 
-    schedule.every().day.at(hora).do(job)
-    print(f"[Cronograma Alertas] Programado exitosamente para ejecutarse todos los días a las {hora}")
+    def job_mensual():
+        from datetime import date
+        hoy = date.today()
+        # Verificar si es el primer día del mes
+        if hoy.day == 1:
+            print(f"[Cronograma Mensual] Primer día del mes detectado. Enviando alertas del próximo mes...")
+            try:
+                enviar_alertas_mes_siguiente()
+            except Exception as e:
+                print(f"[Cronograma Mensual Error] Error al enviar alertas del próximo mes: {e}")
+
+    schedule.every().day.at(hora).do(job_diario)
+    schedule.every().day.at(hora).do(job_mensual)
+    print(f"[Cronograma PAME] Tareas programadas exitosamente a las {hora} todos los días.")
+
