@@ -324,10 +324,12 @@ def enviar_reporte_kpis_diario(force_console: bool = False) -> dict:
     total_equipos = len(equipos)
     
     al_dia = sum(1 for e in equipos if e.get("estado_servicio") == "Vigente")
-    pct_al_dia = round(al_dia / total_equipos * 100, 1) if total_equipos > 0 else 0.0
-    
     vencidos = sum(1 for e in equipos if e.get("estado_servicio") == "Vencido")
     programar = sum(1 for e in equipos if e.get("estado_servicio") == "Programar")
+    
+    pct_al_dia = round(al_dia / total_equipos * 100, 1) if total_equipos > 0 else 0.0
+    pct_vencido = round(vencidos / total_equipos * 100, 1) if total_equipos > 0 else 0.0
+    pct_programar = round(programar / total_equipos * 100, 1) if total_equipos > 0 else 0.0
     
     conformes = sum(1 for e in equipos if e.get("estado_conformidad") == "Cumple")
     no_conformes = sum(1 for e in equipos if e.get("estado_conformidad") == "No Cumple")
@@ -347,9 +349,9 @@ def enviar_reporte_kpis_diario(force_console: bool = False) -> dict:
           .kpi-value {{ font-size: 20px; font-weight: bold; color: {COLOR_PRIMARY}; margin-top: 5px; }}
           .kpi-label {{ font-size: 12px; color: #64748B; }}
           .section-title {{ font-size: 16px; font-weight: bold; margin-top: 25px; border-bottom: 2px solid {COLOR_PRIMARY}; padding-bottom: 5px; }}
-          table {{ width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }}
-          th {{ background-color: {COLOR_HEADER_BG}; color: #FFFFFF; padding: 8px; text-align: left; }}
-          td {{ padding: 8px; border: 1px solid #E2E8F0; }}
+          table.data-table {{ width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }}
+          table.data-table th {{ background-color: {COLOR_HEADER_BG}; color: #FFFFFF; padding: 8px; text-align: left; }}
+          table.data-table td {{ padding: 8px; border: 1px solid #E2E8F0; }}
           .footer {{ text-align: center; margin-top: 30px; font-size: 11px; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 15px; }}
         </style>
       </head>
@@ -387,14 +389,25 @@ def enviar_reporte_kpis_diario(force_console: bool = False) -> dict:
               <div class="kpi-value" style="color: #D97706;">{programar}</div>
             </div>
           </div>
+
+          <div style="margin-top: 15px; margin-bottom: 25px;">
+            <span style="font-size: 13px; font-weight: bold; color: #4B5563;">Distribución de Estado Metrológico:</span>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 5px; height: 24px; border: 1px solid #E2E8F0; border-radius: 6px; overflow: hidden; text-align: center;">
+              <tr>
+                {f'<td style="width: {pct_al_dia}%; background-color: #10B981; color: white; font-size: 11px; font-weight: bold; padding: 4px;">{pct_al_dia}% Vigentes</td>' if pct_al_dia > 5 else f'<td style="width: {pct_al_dia}%; background-color: #10B981;"></td>' if pct_al_dia > 0 else ''}
+                {f'<td style="width: {pct_programar}%; background-color: #F59E0B; color: white; font-size: 11px; font-weight: bold; padding: 4px;">{pct_programar}% Próximos</td>' if pct_programar > 5 else f'<td style="width: {pct_programar}%; background-color: #F59E0B;"></td>' if pct_programar > 0 else ''}
+                {f'<td style="width: {pct_vencido}%; background-color: #DC2626; color: white; font-size: 11px; font-weight: bold; padding: 4px;">{pct_vencido}% Vencidos</td>' if pct_vencido > 5 else f'<td style="width: {pct_vencido}%; background-color: #DC2626;"></td>' if pct_vencido > 0 else ''}
+              </tr>
+            </table>
+          </div>
     """
     
     # Listar vencidos si los hay
     vencidos_list = [e for e in equipos if e.get("estado_servicio") == "Vencido"]
     if vencidos_list:
         html_content += """
-          <div class="section-title" style="color: #DC2626;">🚨 EQUIPOS VENCIDOS (Requieren Intervención Inmediata)</div>
-          <table>
+          <div class="section-title" style="color: #DC2626;">🚨 EQUIPOS VENCIDOS</div>
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Código</th>
@@ -413,6 +426,37 @@ def enviar_reporte_kpis_diario(force_console: bool = False) -> dict:
                 <td>{eq.get('nombre')}</td>
                 <td>{eq.get('ubicacion')}</td>
                 <td style="color: #DC2626; font-weight: bold;">Hace {dias_v} días</td>
+              </tr>
+            """
+        html_content += """
+            </tbody>
+          </table>
+        """
+
+    # Listar próximos a vencer (15 a 45 días) para dar visibilidad
+    proximos_list = [e for e in equipos if e.get("dias_restantes") is not None and 15 < e.get("dias_restantes") <= 45]
+    if proximos_list:
+        html_content += """
+          <div class="section-title" style="color: #D97706; border-bottom-color: #F59E0B;">📅 EQUIPOS PRÓXIMOS A VENCER (Planificación a 1 mes)</div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Ubicación</th>
+                <th>Días Restantes</th>
+              </tr>
+            </thead>
+            <tbody>
+        """
+        for eq in proximos_list:
+            dias_r = eq.get("dias_restantes")
+            html_content += f"""
+              <tr>
+                <td><b>{eq.get('codigo_equipo')}</b></td>
+                <td>{eq.get('nombre')}</td>
+                <td>{eq.get('ubicacion')}</td>
+                <td style="color: #D97706; font-weight: bold;">{dias_r} días restantes</td>
               </tr>
             """
         html_content += """
