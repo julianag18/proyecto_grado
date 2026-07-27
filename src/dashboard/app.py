@@ -298,26 +298,6 @@ if vista_seleccionada == "📊 Dashboard KPIs":
                 unsafe_allow_html=True
             )
 
-        st.markdown("<hr>", unsafe_allow_html=True)      <div class="kpi-number">{sin_intervencion_count}</div>
-                  <div class="kpi-sub">Equipos sin calibrar hace 365 días</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        with col6:
-            st.markdown(
-                f"""
-                <div class="kpi-card total">
-                  <div class="kpi-label">Tasa de Conformidad</div>
-                  <div class="kpi-number">{tasa_conformidad}%</div>
-                  <div class="kpi-sub">Servicios 'Cumple' / total calificados</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        st.markdown("<hr>", unsafe_allow_html=True)
-
         # SECCIÓN GRÁFICOS (Dona + Barras)
         col_left, col_right = st.columns([1, 1])
         with col_left:
