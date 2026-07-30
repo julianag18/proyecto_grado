@@ -243,8 +243,8 @@ def create_report():
     saved_successfully = False
     
     desktop_paths = [
-        "C:/Users/julianag18/Desktop/informe_avance_proyecto.docx",
-        "C:/Users/julianag18/OneDrive/Desktop/informe_avance_proyecto.docx"
+        "C:/Users/julianag18/Desktop/informe_final_avance.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/informe_final_avance.docx"
     ]
     
     for path in desktop_paths:
@@ -257,15 +257,17 @@ def create_report():
             print(f"Could not save to {path}: {e}")
             
     if not saved_successfully:
-        doc.save("informe_avance_proyecto_backup.docx")
+        doc.save("informe_final_avance_backup.docx")
         print("Backup saved locally.")
 
-    # Eliminar versiones viejas sobrantes del espacio de trabajo
+    # Eliminar versiones viejas sobrantes del espacio de trabajo y del escritorio
     cleanup_files = [
         "C:/Users/julianag18/OneDrive/Desktop/proyecto_grado-main/informe_avance_proyecto.docx",
         "C:/Users/julianag18/OneDrive/Desktop/proyecto_grado-main/informe_avance_proyecto_v2.docx",
         "C:/Users/julianag18/Desktop/Proyecto de grado/proyecto_grado-main/informe_avance_proyecto.docx",
         "C:/Users/julianag18/Desktop/Proyecto de grado/proyecto_grado-main/informe_avance_proyecto_v2.docx",
+        "C:/Users/julianag18/Desktop/informe_avance_proyecto.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/informe_avance_proyecto.docx",
         "informe_avance_proyecto.docx",
         "informe_avance_proyecto_v2.docx",
         "informe_avance_proyecto_desktop_backup.docx"
