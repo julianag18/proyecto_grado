@@ -223,13 +223,46 @@ def create_report():
         run_title.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
         p.add_run(desc)
 
-    # Save
-    try:
-        doc.save("informe_avance_proyecto.docx")
-        print("Expanded report generated successfully as 'informe_avance_proyecto.docx'.")
-    except PermissionError:
-        doc.save("informe_avance_proyecto_v2.docx")
-        print("Expanded report generated successfully as 'informe_avance_proyecto_v2.docx' (the main file was locked in Word).")
+    # Save to Desktop
+    import os
+    saved_successfully = False
+    
+    desktop_paths = [
+        "C:/Users/julianag18/Desktop/informe_avance_proyecto.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/informe_avance_proyecto.docx"
+    ]
+    
+    for path in desktop_paths:
+        try:
+            # Create directory if it doesn't exist (though desktop should exist)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            doc.save(path)
+            print(f"Report saved to Desktop at: {path}")
+            saved_successfully = True
+        except Exception as e:
+            print(f"Could not save to {path}: {e}")
+            
+    if not saved_successfully:
+        # Fallback to local workspace if desktop write fails entirely
+        doc.save("informe_avance_proyecto_desktop_backup.docx")
+        print("Desktop write failed. Saved locally as: informe_avance_proyecto_desktop_backup.docx")
+
+    # Clean up old versions in the project directories
+    cleanup_files = [
+        "C:/Users/julianag18/OneDrive/Desktop/proyecto_grado-main/informe_avance_proyecto.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/proyecto_grado-main/informe_avance_proyecto_v2.docx",
+        "C:/Users/julianag18/Desktop/Proyecto de grado/proyecto_grado-main/informe_avance_proyecto.docx",
+        "C:/Users/julianag18/Desktop/Proyecto de grado/proyecto_grado-main/informe_avance_proyecto_v2.docx",
+        "informe_avance_proyecto.docx",
+        "informe_avance_proyecto_v2.docx"
+    ]
+    for file_path in cleanup_files:
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Deleted old version: {file_path}")
+        except Exception as e:
+            print(f"Could not delete old version {file_path}: {e}")
 
 if __name__ == "__main__":
     create_report()
