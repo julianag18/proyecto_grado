@@ -48,10 +48,10 @@ def create_report():
     # Metadata
     meta = doc.add_paragraph()
     meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    meta.add_run("Proyecto de Grado\n").bold = True
+    meta.add_run("Proyecto de Grado para la Titulación Profesional\n").bold = True
     meta.add_run("Autor: ").bold = True
     meta.add_run("Juliana Gómez\n")
-    meta.add_run("Fecha: ").bold = True
+    meta.add_run("Fecha de Generación: ").bold = True
     meta.add_run("29 de Julio de 2026\n")
     meta.add_run("Destinatario: ").bold = True
     meta.add_run("Asesor Interno del Proyecto de Grado / Profesor de Universidad\n")
@@ -72,6 +72,17 @@ def create_report():
         r.font.color.rgb = RGBColor(0x0F, 0x76, 0x6E) # Teal color matching PAME theme
         return h
 
+    # Heading 2 helper
+    def add_heading_2(text):
+        h = doc.add_paragraph()
+        h.paragraph_format.space_before = Pt(12)
+        h.paragraph_format.space_after = Pt(4)
+        r = h.add_run(text)
+        r.bold = True
+        r.font.size = Pt(12)
+        r.font.color.rgb = RGBColor(0x11, 0x5E, 0x59)
+        return h
+
     # Paragraph helper
     def add_para(text, before=0, after=6):
         para = doc.add_paragraph()
@@ -84,102 +95,93 @@ def create_report():
     # Section 1
     add_heading_1("1. Resumen Ejecutivo")
     add_para(
-        "Este informe presenta el estado de avance actual del desarrollo e implementación del módulo de "
-        "Aseguramiento Metrológico Digital (PAME) para Laboratorios Laproff S.A.S. Durante las últimas semanas, "
-        "el proyecto ha transitado de una fase preliminar con cuellos de botella técnicos a un prototipo completamente "
-        "funcional, optimizado para grandes bases de datos e integrado con sistemas de despacho automático de notificaciones. "
-        "Este documento sirve como insumo de cara a la revisión parcial previa a la redacción definitiva del documento de "
-        "tesis y a la validación final del sistema."
+        "El presente informe de avance parcial expone de manera detallada el diseño, la reestructuración "
+        "y el estado técnico del módulo digital de Plan de Aseguramiento Metrológico (PAME) concebido para "
+        "Laboratorios Laproff S.A.S. En el transcurso de las últimas semanas, se abordó la necesidad de "
+        "migrar un cronograma tradicional en hojas de cálculo hacia una plataforma web centralizada, interactiva "
+        "y de alto rendimiento. "
+    )
+    add_para(
+        "A través de una reingeniería de bases de datos, se resolvió un cuello de botella de rendimiento que congelaba "
+        "el software durante varios minutos ante cargas de datos masivas. Asimismo, se integró el motor de notificaciones "
+        "automáticas por correo electrónico a través de la API SMTP de Brevo. Este informe describe detalladamente el "
+        "CÓMO y el PORQUÉ de las decisiones arquitectónicas tomadas, sirviendo de base para la retroalimentación del asesor "
+        "antes de proceder a la redacción formal de la tesis y las validaciones en sitio."
     )
 
     # Section 2
-    add_heading_1("2. Comparativo de Estado: Objetivos Iniciales vs. Avances Logrados")
+    add_heading_1("2. Arquitectura del Sistema: ¿Cómo y Con Qué se Construyó?")
     add_para(
-        "A continuación se detalla el progreso técnico y funcional comparando el punto de partida con los hitos "
-        "alcanzados recientemente en la optimización del backend y la integración de alertas:"
+        "Para garantizar un desarrollo ágil, seguro y mantenible, se seleccionó un stack tecnológico robusto, "
+        "orientado a la representación de datos analíticos en tiempo real:"
     )
-
-    # Table 1: Progress
-    table = doc.add_table(rows=5, cols=3)
-    table.alignment = WD_TABLE_ALIGNMENT.CENTER
     
-    headers = ["Área del Proyecto", "Estado Inicial", "Avance Implementado y Funcional"]
-    col_widths = [Inches(1.8), Inches(2.2), Inches(2.5)]
-    
-    # Format Headers
-    hdr_cells = table.rows[0].cells
-    for i, header_text in enumerate(headers):
-        hdr_cells[i].text = header_text
-        set_cell_background(hdr_cells[i], "0F766E") # Teal header
-        set_cell_margins(hdr_cells[i])
-        run = hdr_cells[i].paragraphs[0].runs[0]
-        run.bold = True
-        run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
-        
-    data = [
-        (
-            "Rendimiento e Integridad",
-            "El cambio entre pestañas del aplicativo tardaba hasta 3 minutos tras cargar bases de datos reales más pesadas (debido a consultas recursivas N+1 en la base de datos).",
-            "Optimización del 1000% (tiempo O(N) lineal): Rediseño del motor de consultas de base de datos para agrupar servicios en memoria y almacenamiento en caché inteligente. La transición entre pestañas ahora es instantánea (milisegundos) y soporta bases de datos de gran volumen."
-        ),
-        (
-            "Notificaciones por Correo",
-            "Fallas de remitente inválido y desconexión con el servidor SMTP de Brevo. No se recibían alertas.",
-            "Sincronización Exitosa: Configuración del canal de retransmisión SMTP cifrado con Brevo. Despacho probado y funcional hacia el correo objetivo (juli3213@gmail.com)."
-        ),
-        (
-            "Automatización de Alertas",
-            "Inexistente. Solo existía la opción de consulta visual o descarga del cronograma en Excel.",
-            "Lógica de Alertas Automáticas: Creación de un servicio en segundo plano que evalúa el inventario a diario y envía un correo consolidado de alertas cuando se acumula un lote de >= 5 equipos próximos a vencer. Si un equipo es crítico (<15 días restantes), el sistema evade la regla del lote y envía una alerta inmediata."
-        ),
-        (
-            "Reportes y Cuadro de Mando",
-            "Visualizaciones estándar sin KPIs consolidados.",
-            "Dashboard de KPIs Enriquecido: Implementación de un Índice de Salud Metrológica ejecutivo, tasas de conformidad del cronograma y un reporte diario automático de KPIs enviado por correo con barra de distribución gráfica nativa HTML/CSS."
-        )
+    tech_points = [
+        ("Interfaz de Usuario (Frontend): ", 
+         "Desarrollada en Streamlit (Python) acoplado a un sistema de diseño web premium mediante CSS nativo. Esto proporciona una navegación fluida basada en pestañas (Dashboard, Inventario, Cumplimiento, Cronograma y Migración ETL) y un diseño responsivo adaptado a dispositivos móviles y estaciones de cómputo en planta."),
+        ("Base de Datos (Persistencia): ", 
+         "Implementada sobre Firebase / Google Cloud Firestore en modo NoSQL y adaptada con repositorios locales parametrizables (Modo Demo) para garantizar portabilidad e independencia de infraestructura durante el desarrollo preliminar."),
+        ("Motor de Alertas y Notificaciones (Integración Externa): ", 
+         "Conectado a través del protocolo SMTP cifrado con Brevo (Sendinblue). El sistema despacha correos automáticos estructurados en HTML responsivo que contienen tablas analíticas e indicadores clave de rendimiento (KPIs) en tiempo real.")
     ]
-
-    for row_idx, row_data in enumerate(data, start=1):
-        row_cells = table.rows[row_idx].cells
-        for col_idx, cell_value in enumerate(row_data):
-            row_cells[col_idx].text = cell_value
-            set_cell_margins(row_cells[col_idx])
-            # Subtle alternate shading
-            if row_idx % 2 == 0:
-                set_cell_background(row_cells[col_idx], "F1F5F9")
-            else:
-                set_cell_background(row_cells[col_idx], "FFFFFF")
-
-    # Set column widths
-    for row in table.rows:
-        for idx, width in enumerate(col_widths):
-            row.cells[idx].width = width
+    
+    for title, desc in tech_points:
+        p = doc.add_paragraph(style='List Bullet')
+        p.paragraph_format.space_after = Pt(4)
+        run_title = p.add_run(title)
+        run_title.bold = True
+        run_title.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
+        p.add_run(desc)
 
     # Section 3
-    add_heading_1("3. Justificación de Decisiones Metrológicas")
+    add_heading_1("3. Decisiones Técnicas Clave y Justificaciones (El \"Por Qué\")")
     
-    p = doc.add_paragraph()
-    r = p.add_run("Regla de Anticipación de 1 Mes (30 días) para Alertas Automáticas")
-    r.bold = True
-    r.font.size = Pt(12)
-    r.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
-    
+    add_heading_2("A. Eliminación del congelamiento del sistema (Optimización del Backend)")
     add_para(
-        "Una de las decisiones clave de diseño y validación del sistema fue establecer que las alertas preventivas "
-        "automáticas de calibración y validación se despachen exactamente con 1 mes de anticipación. Esta decisión "
-        "no es arbitraria; obedece a la realidad logística y operativa del aseguramiento metrológico en la industria "
-        "farmacéutica y de laboratorios:"
+        "Desafío Detectado: Al cargar la base de datos completa de Laboratorios Laproff, que incluye cientos de registros de "
+        "equipos y múltiples servicios históricos de calibración/validación, la aplicación sufría un congelamiento de hasta 3 minutos "
+        "al cambiar de pestaña. El análisis del log arrojó un error de diseño de tipo N+1: el sistema realizaba consultas consecutivas "
+        "a la base de datos por cada celda y equipo renderizado en pantalla."
     )
-    
+    add_para(
+        "Solución Implementada: Se reescribió el repositorio de datos para descargar la totalidad de los servicios en una sola consulta "
+        "agrupada, resolviendo la relación en memoria con complejidad de tiempo O(N) lineal. Adicionalmente, se decoraron las funciones "
+        "de lectura con almacenamiento en caché local (@st.cache_data) y se configuró un mecanismo automático de invalidación que "
+        "borra la caché solo cuando se ejecuta una nueva migración de datos, asegurando que la información permanezca al día sin "
+        "saturar el servidor. El paso entre pestañas pasó a ser instantáneo (milisegundos)."
+    )
+
+    add_heading_2("B. Reglas de Envío de Alertas por Lotes para Evitar Fatiga por Notificaciones")
+    add_para(
+        "Desafío Detectado: Enviar correos electrónicos diarios por cada equipo próximo a vencer genera saturación ("
+        "fatiga por alertas) en la bandeja de entrada del coordinador de metrología, lo que usualmente conduce a que las notificaciones "
+        "sean ignoradas."
+    )
+    add_para(
+        "Solución Implementada: Se programó una regla de negocio inteligente. Las alertas estándar (equipos en estado 'Programar' con 15 a 45 "
+        "días restantes) se retienen y solo se despachan automáticamente una vez acumuladas en un lote consolidado de cinco (5) o más "
+        "equipos. No obstante, si el sistema detecta algún equipo en estado 'Crítico' (menos de 15 días para vencer), la regla del lote se "
+        "evade automáticamente y se despacha una alerta roja de forma inmediata."
+    )
+
+    # Section 4
+    add_heading_1("4. Justificación Metrológica del Plazo de Alerta de 1 Mes (30 días)")
+    add_para(
+        "Uno de los puntos clave a defender ante el jurado y el asesor universitario es la selección del plazo preventivo de "
+        "30 días para las alertas automáticas. En metrología industrial y manufactura farmacéutica, el vencimiento de un instrumento "
+        "implica su retiro inmediato del proceso productivo, lo que puede detener líneas enteras de envasado, dosificación o control de calidad. "
+        "Por ende, 30 días es el margen óptimo debido al siguiente ciclo logístico real:"
+    )
+
     bullet_points = [
-        ("Cotización y Selección de Proveedores (Días 1 a 12): ", 
-         "No todas las magnitudes son calibradas internamente. El coordinador de metrología debe buscar proveedores con acreditación ONAC (u homólogos), enviar alcances, esperar propuestas económicas, tramitar aprobaciones de compras internas y emitir la orden de servicio."),
-        ("Coordinación de Tiempos y Espacios (Días 12 a 17): ", 
-         "Se programan las fechas de la visita del técnico o el envío de los patrones, asegurando que no interfiera críticamente con los lotes de producción activos del laboratorio."),
-        ("Ejecución del Servicio y Emisión de Informes (Días 17 a 24): ", 
-         "El periodo en el que se ejecuta físicamente la calibración y el tiempo de tolerancia que requiere el laboratorio externo para generar y firmar los certificados metrológicos."),
-        ("Entrega y Restablecimiento (Días 24 a 30): ", 
-         "El equipo regresa a la planta, se verifica la conformidad del certificado contra las tolerancias del proceso, se etiqueta y se pone en funcionamiento nuevamente.")
+        ("Trámite Administrativo y Cotización (Días 1 a 12): ", 
+         "El coordinador debe documentar las especificaciones y tolerancias del instrumento, solicitar cotizaciones a proveedores externos que cuenten con acreditación ONAC (u homólogos vigentes) y tramitar la aprobación del gasto con el departamento de compras."),
+        ("Programación Operativa (Días 12 a 17): ", 
+         "Se negocia con el área de producción del laboratorio para hallar ventanas de tiempo en las que el equipo pueda calibrarse en sitio o enviarse al laboratorio del proveedor, minimizando el impacto en la cadena de manufactura de medicamentos."),
+        ("Ejecución Técnica del Servicio (Días 17 a 24): ", 
+         "Corresponde al traslado físico del patrón o del instrumento, ejecución del ensayo metrológico, cálculo de incertidumbres y el tiempo de emisión del informe técnico por parte del laboratorio externo."),
+        ("Entrega y Dictamen de Conformidad (Días 24 a 30): ", 
+         "El coordinador recibe el equipo y el certificado de calibración. Se realiza un análisis de tolerancia del proceso para verificar si la desviación del instrumento cumple con los requisitos del método analítico. Si cumple, se etiqueta como 'Conforme' y se reincorpora oficialmente a planta antes de la fecha límite.")
     ]
     
     for title, desc in bullet_points:
@@ -189,32 +191,28 @@ def create_report():
         run_title.bold = True
         run_title.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
         p.add_run(desc)
-        
-    add_para(
-        "Conclusión: Un tiempo de alerta inferior a 30 días pondría en riesgo la continuidad operativa de los análisis "
-        "en Laboratorios Laproff, forzando al uso de equipos vencidos o a detenciones de producción no planificadas."
-    )
-
-    # Section 4
-    add_heading_1("4. Estado de la Validación Técnica")
-    add_para(
-        "Las pruebas y el control de calidad del código han arrojado resultados muy positivos. "
-        "Se cuenta con una suite de pruebas automatizadas en tests/ que validan el motor de priorización de alertas, "
-        "el agrupamiento por áreas, el pipeline de ETL de datos pesados y la simulación del envío de correos. "
-        "El 100% de las pruebas ejecutadas (13 passed) pasan exitosamente de manera limpia y sin errores de sintaxis o de compilación."
-    )
 
     # Section 5
-    add_heading_1("5. Trabajo Pendiente (Roadmap del Proyecto)")
+    add_heading_1("5. Resumen de Pruebas y Validación Técnica")
     add_para(
-        "De cara al cierre del proyecto de grado y tras la retroalimentación del asesor en la próxima reunión, "
-        "se tienen mapeadas las siguientes actividades pendientes:"
+        "El módulo cuenta con una suite de pruebas de caja blanca utilizando pytest en la carpeta tests/. "
+        "Estas pruebas automatizadas simulan cargas masivas a la base de datos, el cálculo matemático de días restantes, "
+        "las reglas lógicas de transición de estados del cronograma y el formateo dinámico de correos en HTML. "
+        "Todas las pruebas integradas pasan con éxito (13 pruebas aprobadas de forma limpia), lo que garantiza la "
+        "estabilidad estructural de la aplicación ante cambios futuros."
     )
-    
+
+    # Section 6
+    add_heading_1("6. Roadmap y Puntos Clave para la Reunión con el Asesor")
+    add_para(
+        "A continuación se enlistan las áreas de mejora visual y técnica en las que se continuará trabajando "
+        "y que servirán de base para la retroalimentación inmediata del profesor:"
+    )
+
     roadmap_points = [
-        ("Mejoras en el Frontend (Detalles Visuales): ", "Uniformar las etiquetas del eje Y (conteo de equipos) y el eje X (áreas del laboratorio/meses) en las gráficas de Plotly de la pestaña principal del Dashboard. Además, mejorar la visibilidad de los nombres largos de equipos y áreas para evitar que se superpongan en resoluciones más pequeñas."),
-        ("Fase Final de Validación: ", "Ejecutar un piloto en paralelo de 1 a 2 semanas utilizando datos reales del día a día del laboratorio para asegurar que el despachador automático no genere falsos positivos o spam de alertas. Adicionalmente, confirmar que los correos automáticos diarios de KPIs cumplan las expectativas visuales del coordinador metrológico."),
-        ("Redacción del Documento Escrito (Tesis): ", "Redacción formal de los capítulos de Metodología de Implementación y Resultados, documentando el análisis de eficiencia antes y después de la optimización del backend.")
+        ("Mejoras de Frontend y Visualización de Gráficos: ", "Ajustar las leyendas y títulos de los ejes X e Y de las gráficas de Plotly. En pantallas angostas, algunos nombres extensos de áreas del laboratorio tienden a recortarse."),
+        ("Retroalimentación sobre Pruebas de Campo: ", "Definir el protocolo de validación y el tiempo óptimo del piloto con datos reales del laboratorio. ¿Es recomendable mantener el paralelo con el sistema anterior por 1 o 2 semanas?"),
+        ("Definición de Capítulos de Tesis: ", "Presentar la estructura inicial del documento escrito de grado para recibir sus sugerencias en cuanto a los apartados teóricos de aseguramiento metrológico e ingeniería de software.")
     ]
     
     for title, desc in roadmap_points:
@@ -225,18 +223,13 @@ def create_report():
         run_title.font.color.rgb = RGBColor(0x0F, 0x17, 0x2A)
         p.add_run(desc)
 
-    # Section 6
-    add_heading_1("6. Siguientes Pasos de Cara a la Reunión con el Asesor")
-    add_para(
-        "Este informe servirá de base para la próxima sesión de revisión con el asesor universitario. El objetivo de la reunión será: "
-        "1) Validar el enfoque funcional del sistema PAME. "
-        "2) Confirmar si la justificación logística para la alerta preventiva de 30 días es considerada suficiente para el marco teórico de la tesis. "
-        "3) Obtener aprobación del profesor para dar inicio a la redacción definitiva del documento escrito."
-    )
-
     # Save
-    doc.save("informe_avance_proyecto.docx")
-    print("Report generated successfully as 'informe_avance_proyecto.docx'.")
+    try:
+        doc.save("informe_avance_proyecto.docx")
+        print("Expanded report generated successfully as 'informe_avance_proyecto.docx'.")
+    except PermissionError:
+        doc.save("informe_avance_proyecto_v2.docx")
+        print("Expanded report generated successfully as 'informe_avance_proyecto_v2.docx' (the main file was locked in Word).")
 
 if __name__ == "__main__":
     create_report()
