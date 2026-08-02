@@ -33,6 +33,7 @@ from src.dashboard.charts import (
     barras_comparativo_anual,
     linea_evolucion_mensual,
     barras_calidad_datos,
+    radar_desempeno_area,
     COLORES
 )
 from src.etl.pipeline import run_pipeline
@@ -84,6 +85,138 @@ def render_section_header(title: str, subtitle: str = ""):
         """,
         unsafe_allow_html=True,
     )
+
+def render_html_distribucion_estados(df: pd.DataFrame) -> str:
+    """Genera un componente HTML personalizado para mostrar la distribución de estados."""
+    if df.empty or "estado_servicio" not in df.columns:
+        return "<div style='color:#64748B;'>No hay datos</div>"
+        
+    conteo = df["estado_servicio"].value_counts()
+    total = len(df)
+    
+    vigentes = conteo.get("Vigente", 0)
+    programar = conteo.get("Programar", 0)
+    ejecucion = conteo.get("En ejecución", 0)
+    vencidos = conteo.get("Vencido", 0)
+    
+    pct_vigentes = round(vigentes / total * 100, 1) if total > 0 else 0.0
+    pct_programar = round(programar / total * 100, 1) if total > 0 else 0.0
+    pct_ejecucion = round(ejecucion / total * 100, 1) if total > 0 else 0.0
+    pct_vencidos = round(vencidos / total * 100, 1) if total > 0 else 0.0
+    
+    # Colores
+    c_vigente = "#10B981"
+    c_programar = "#F59E0B"
+    c_ejecucion = "#06B6D4"
+    c_vencido = "#EF4444"
+    
+    html = f"""
+    <div style="background: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 20px; min-height: 340px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="margin: 0 0 5px 0; color: #1A2535; font-size: 14px; font-weight: 700;">Distribución Global de Estados</h4>
+        <p style="margin: 0 0 20px 0; color: #64748B; font-size: 11.5px;">Proporción y cantidad de equipos según su estado metrológico.</p>
+      </div>
+      
+      <!-- Barra segmentada redonda -->
+      <div style="width: 100%; height: 26px; background-color: #F1F5F9; border-radius: 13px; display: flex; overflow: hidden; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); border: 1px solid #E2ECF5;">
+        {f'<div style="width: {pct_vigentes}%; background-color: {c_vigente}; transition: all 0.3s;" title="Vigentes: {vigentes} ({pct_vigentes}%)"></div>' if pct_vigentes > 0 else ''}
+        {f'<div style="width: {pct_programar}%; background-color: {c_programar}; transition: all 0.3s;" title="Por Programar: {programar} ({pct_programar}%)"></div>' if pct_programar > 0 else ''}
+        {f'<div style="width: {pct_ejecucion}%; background-color: {c_ejecucion}; transition: all 0.3s;" title="En ejecución: {ejecucion} ({pct_ejecucion}%)"></div>' if pct_ejecucion > 0 else ''}
+        {f'<div style="width: {pct_vencidos}%; background-color: {c_vencido}; transition: all 0.3s;" title="Vencidos: {vencidos} ({pct_vencidos}%)"></div>' if pct_vencidos > 0 else ''}
+      </div>
+      
+      <!-- Detalles y leyenda -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9;">
+          <div style="width: 10px; height: 10px; background-color: {c_vigente}; border-radius: 50%;"></div>
+          <div>
+            <div style="font-size: 10px; font-weight: bold; color: #64748B; text-transform: uppercase;">Vigentes</div>
+            <div style="font-size: 14px; font-weight: 800; color: #1A2535;">{vigentes} <span style="font-size: 10px; color: #94A3B8; font-weight: normal;">({pct_vigentes}%)</span></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9;">
+          <div style="width: 10px; height: 10px; background-color: {c_programar}; border-radius: 50%;"></div>
+          <div>
+            <div style="font-size: 10px; font-weight: bold; color: #64748B; text-transform: uppercase;">Por Programar</div>
+            <div style="font-size: 14px; font-weight: 800; color: #1A2535;">{programar} <span style="font-size: 10px; color: #94A3B8; font-weight: normal;">({pct_programar}%)</span></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9;">
+          <div style="width: 10px; height: 10px; background-color: {c_ejecucion}; border-radius: 50%;"></div>
+          <div>
+            <div style="font-size: 10px; font-weight: bold; color: #64748B; text-transform: uppercase;">En Ejecución</div>
+            <div style="font-size: 14px; font-weight: 800; color: #1A2535;">{ejecucion} <span style="font-size: 10px; color: #94A3B8; font-weight: normal;">({pct_ejecucion}%)</span></div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #F8FAFC; border-radius: 8px; border: 1px solid #F1F5F9;">
+          <div style="width: 10px; height: 10px; background-color: {c_vencido}; border-radius: 50%;"></div>
+          <div>
+            <div style="font-size: 10px; font-weight: bold; color: #64748B; text-transform: uppercase;">Vencidos</div>
+            <div style="font-size: 14px; font-weight: 800; color: #1A2535;">{vencidos} <span style="font-size: 10px; color: #94A3B8; font-weight: normal;">({pct_vencidos}%)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+    return "\n".join(line.strip() for line in html.split("\n") if line.strip())
+
+def render_html_vencimientos_por_area(df: pd.DataFrame) -> str:
+    """Genera un componente HTML para mostrar las áreas con más equipos críticos como lista de barras de progreso."""
+    if df.empty or "ubicacion" not in df.columns or "estado_servicio" not in df.columns:
+        return "<div style='color:#64748B;'>No hay datos</div>"
+
+    # Filtrar solo estados críticos o alertas (Vencido, Programar, En ejecución)
+    df_criticos = df[df["estado_servicio"].isin(["Vencido", "Programar", "En ejecución"])]
+    if df_criticos.empty:
+        return """
+        <div style="background: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 20px; min-height: 340px; display: flex; align-items: center; justify-content: center; text-align: center;">
+          <div>
+            <span style="font-size: 2rem;">🎉</span>
+            <h4 style="color: #10B981; margin: 10px 0 5px 0; font-size: 14px; font-weight:700;">Planta al Día</h4>
+            <p style="color: #64748B; font-size: 11px; margin:0;">No hay alertas activas en ninguna ubicación.</p>
+          </div>
+        </div>
+        """
+
+    # Agrupar por ubicación y contar alertas
+    pivot = df_criticos.groupby("ubicacion").size().reset_index(name="cantidad")
+    pivot = pivot.sort_values("cantidad", ascending=False).head(5) # Top 5 áreas
+    
+    max_alertas = pivot["cantidad"].max() if not pivot.empty else 1
+    
+    rows_html = ""
+    colores_alerta = ["#EF4444", "#EF4444", "#F59E0B", "#F59E0B", "#94A3B8"]
+    
+    for idx, row in enumerate(pivot.itertuples()):
+        col = colores_alerta[idx] if idx < len(colores_alerta) else "#94A3B8"
+        pct_width = (row.cantidad / max_alertas) * 100
+        
+        rows_html += f"""
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-weight: 700; color: #1A2535; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">{row.ubicacion}</span>
+            <span style="color: {col}; font-weight: 800; font-size: 11px; background: {col}12; padding: 1px 7px; border-radius: 10px;">{row.cantidad}</span>
+          </div>
+          <!-- Barra de progreso visual -->
+          <div style="width: 100%; height: 8px; background-color: #F1F5F9; border-radius: 4px; overflow: hidden; border: 1px solid #F1F5F9;">
+            <div style="width: {pct_width}%; height: 100%; background-color: {col}; border-radius: 4px; transition: width 0.4s ease-out;"></div>
+          </div>
+        </div>
+        """
+        
+    html = f"""
+    <div style="background: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 20px; min-height: 340px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="margin: 0 0 5px 0; color: #1A2535; font-size: 14px; font-weight: 700;">Top Ubicaciones Críticas</h4>
+        <p style="margin: 0 0 15px 0; color: #64748B; font-size: 11px;">Áreas con mayor acumulación de equipos vencidos o por calificar.</p>
+      </div>
+      
+      <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+        {rows_html}
+      </div>
+    </div>
+    """
+    return "\n".join(line.strip() for line in html.split("\n") if line.strip())
 
 def to_excel(df: pd.DataFrame) -> bytes:
     """Convierte un DataFrame a bytes de Excel."""
@@ -195,6 +328,10 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         vencidos = (df_estado["estado_servicio"] == "Vencido").sum()
         programar = (df_estado["estado_servicio"] == "Programar").sum()
 
+        # Nuevas opciones de KPIs
+        pendientes_calificar = (df_estado["estado_conformidad"].isin(["Pendiente", "Pendiente de Calificar", "PENDIENTE"])).sum()
+        sin_proveedor = (df_estado["proveedor"].isna() | (df_estado["proveedor"] == "")).sum()
+
         # RENDER TARJETA EJECUTIVA DE SALUD METROLÓGICA (Glow Premium)
         st.markdown(
             f"""
@@ -227,8 +364,8 @@ if vista_seleccionada == "📊 Dashboard KPIs":
             unsafe_allow_html=True
         )
 
-        # RENDER CARDS (Grid 3x2)
-        col1, col2, col3 = st.columns(3)
+        # RENDER CARDS (Grid 4x2 - 8 opciones)
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
             st.markdown(
                 f"""
@@ -244,9 +381,9 @@ if vista_seleccionada == "📊 Dashboard KPIs":
             st.markdown(
                 f"""
                 <div class="kpi-card al-dia">
-                  <div class="kpi-label">Ciclo de Vencimiento</div>
-                  <div class="kpi-number">{dias_promedio}d</div>
-                  <div class="kpi-sub">Promedio días restantes vigentes</div>
+                  <div class="kpi-label">Equipos al Día</div>
+                  <div class="kpi-number">{pct_al_dia}%</div>
+                  <div class="kpi-sub">Estado metrológico vigente</div>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -254,34 +391,36 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         with col3:
             st.markdown(
                 f"""
-                <div class="kpi-card proximo">
-                  <div class="kpi-label">Por Programar</div>
-                  <div class="kpi-number">{programar}</div>
-                  <div class="kpi-sub">Próximos vencimientos a cotizar</div>
+                <div class="kpi-card al-dia">
+                  <div class="kpi-label">Tasa Conformidad</div>
+                  <div class="kpi-number">{tasa_conformidad}%</div>
+                  <div class="kpi-sub">Calificados como 'Cumple'</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
-
-        col4, col5, col6 = st.columns(3)
         with col4:
             st.markdown(
                 f"""
                 <div class="kpi-card total">
                   <div class="kpi-label">Cumplimiento Anual</div>
                   <div class="kpi-number">{pct_cumplimiento_anual}%</div>
-                  <div class="kpi-sub">Servicios conformes {anio_actual}</div>
+                  <div class="kpi-sub">Meta del año en curso ({anio_actual})</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+
+        st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+
+        col5, col6, col7, col8 = st.columns(4)
         with col5:
             st.markdown(
                 f"""
-                <div class="kpi-card critico">
-                  <div class="kpi-label">Sin intervención > 1 año</div>
-                  <div class="kpi-number">{sin_intervencion_count}</div>
-                  <div class="kpi-sub">Equipos sin calibrar hace 365 días</div>
+                <div class="kpi-card vencido">
+                  <div class="kpi-label">Equipos Vencidos</div>
+                  <div class="kpi-number">{vencidos}</div>
+                  <div class="kpi-sub">Calibración/calificación vencida</div>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -289,24 +428,197 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         with col6:
             st.markdown(
                 f"""
-                <div class="kpi-card total">
-                  <div class="kpi-label">Tasa de Conformidad</div>
-                  <div class="kpi-number">{tasa_conformidad}%</div>
-                  <div class="kpi-sub">Servicios calificados 'Cumple'</div>
+                <div class="kpi-card proximo">
+                  <div class="kpi-label">Por Programar</div>
+                  <div class="kpi-number">{programar}</div>
+                  <div class="kpi-sub">Vencimientos próximos 30 días</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col7:
+            st.markdown(
+                f"""
+                <div class="kpi-card critico">
+                  <div class="kpi-label">Sin Intervención > 1 año</div>
+                  <div class="kpi-number">{sin_intervencion_count}</div>
+                  <div class="kpi-sub">Equipos sin calibrar en 365 días</div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        with col8:
+            st.markdown(
+                f"""
+                <div class="kpi-card {"proximo" if pendientes_calificar > 0 else "total"}">
+                  <div class="kpi-label">Pendiente Calificar</div>
+                  <div class="kpi-number">{pendientes_calificar}</div>
+                  <div class="kpi-sub">Servicios sin calificar resultado</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
 
-        # SECCIÓN GRÁFICOS (Dona + Barras)
+        # Banner de Advertencias/Fallos
+        errores_detectados = []
+        if vencidos > 0:
+            errores_detectados.append(f"<b>{vencidos}</b> equipo(s) vencido(s)")
+        if sin_intervencion_count > 0:
+            errores_detectados.append(f"<b>{sin_intervencion_count}</b> equipo(s) sin intervención > 1 año")
+        if no_conformes_total > 0:
+            errores_detectados.append(f"<b>{no_conformes_total}</b> equipo(s) con no conformidad")
+        if pendientes_calificar > 0:
+            errores_detectados.append(f"<b>{pendientes_calificar}</b> servicio(s) pendiente(s) de calificar")
+
+        if errores_detectados:
+            msg_alertas = ", ".join(errores_detectados)
+            st.markdown(
+                f"""
+                <div class="alert-banner vencido" style="margin-top: 20px;">
+                  <div style="font-size: 1.5rem; line-height: 1; margin-right: 10px;">🚨</div>
+                  <div>
+                    <div class="alert-title">Métricas de Falla / Advertencia Detectadas</div>
+                    <div class="alert-msg">El sistema ha identificado desvíos en el control metrológico: {msg_alertas}. Utilice el panel inferior para inspeccionar y corregir.</div>
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                f"""
+                <div class="alert-banner proximo" style="margin-top: 20px; background-color: #D1FAE5 !important; border-color: #10B981 !important; color: #065F46 !important;">
+                  <div style="font-size: 1.5rem; line-height: 1; margin-right: 10px;">🟢</div>
+                  <div>
+                    <div class="alert-title">Planta en Óptimo Estado Metrológico</div>
+                    <div class="alert-msg">¡Excelente! No hay equipos vencidos, no conformes ni retrasados en el cronograma actual.</div>
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+        # Panel de Inspección (Interactividad Drill-down)
+        st.markdown("<br>", unsafe_allow_html=True)
+        render_section_header("🔍 Panel de Inspección de Métricas (Drill-down)")
+        
+        opcion_inspeccionar = st.pills(
+            "Selecciona una métrica para inspeccionar el listado de equipos (¿Qué provoca aquello que funciona mal?):",
+            options=[
+                "Ocultar Inspección",
+                "Equipos Vencidos",
+                "Equipos por Programar / Próximos",
+                "Equipos Sin Intervención > 1 año",
+                "Servicios Pendientes de Calificar",
+                "Equipos No Conformes"
+            ],
+            default="Ocultar Inspección"
+        )
+
+        df_filtrado = pd.DataFrame()
+        title_inspeccion = ""
+
+        if opcion_inspeccionar == "Equipos Vencidos":
+            df_filtrado = df_estado[df_estado["estado_servicio"] == "Vencido"]
+            title_inspeccion = "🚨 Listado de Equipos Vencidos"
+        elif opcion_inspeccionar == "Equipos por Programar / Próximos":
+            df_filtrado = df_estado[df_estado["estado_servicio"] == "Programar"]
+            title_inspeccion = "🟡 Listado de Equipos por Programar (Próximos a vencer)"
+        elif opcion_inspeccionar == "Equipos Sin Intervención > 1 año":
+            df_filtrado = df_estado[df_estado["fecha_servicio_vigente"].dropna() < limite_365]
+            title_inspeccion = "⚠️ Listado de Equipos sin intervención por más de 365 días"
+        elif opcion_inspeccionar == "Servicios Pendientes de Calificar":
+            df_filtrado = df_estado[df_estado["estado_conformidad"].isin(["Pendiente", "Pendiente de Calificar", "PENDIENTE"])]
+            title_inspeccion = "⏳ Listado de Servicios Pendientes de Calificar"
+        elif opcion_inspeccionar == "Equipos No Conformes":
+            df_filtrado = df_estado[df_estado["estado_conformidad"] == "No Cumple"]
+            title_inspeccion = "❌ Listado de Equipos No Conformes (No Cumple)"
+
+        if opcion_inspeccionar != "Ocultar Inspección":
+            if df_filtrado.empty:
+                st.success(f"🟢 No se encontraron equipos para: **{opcion_inspeccionar}**")
+            else:
+                st.markdown(f"##### {title_inspeccion}")
+                
+                # Seleccionar columnas descriptivas para el metrólogo
+                columnas_ver = ["codigo_equipo", "nombre_equipo", "ubicacion", "fecha_proximo_servicio", "dias_restantes", "estado_conformidad", "proveedor"]
+                existing_cols = [c for c in columnas_ver if c in df_filtrado.columns]
+                df_tabla = df_filtrado[existing_cols].copy()
+                
+                # Traducir columnas de forma dinámica
+                nombre_mapeos = {
+                    "codigo_equipo": "Código",
+                    "nombre_equipo": "Nombre del Equipo",
+                    "ubicacion": "Ubicación / Área",
+                    "fecha_proximo_servicio": "Próx. Vencimiento",
+                    "dias_restantes": "Días Restantes",
+                    "estado_conformidad": "Conformidad",
+                    "proveedor": "Proveedor"
+                }
+                df_tabla = df_tabla.rename(columns=nombre_mapeos)
+                
+                # Formatear días restantes
+                def color_dias(val):
+                    try:
+                        d = int(val)
+                        if d < 0:
+                            return 'color: #DC2626; font-weight: bold; background-color: #FEE2E2;' # Crimson
+                        elif d <= 15:
+                            return 'color: #D97706; font-weight: bold; background-color: #FEF3C7;' # Amber
+                        else:
+                            return 'color: #059669; font-weight: bold; background-color: #D1FAE5;' # Green
+                    except:
+                        return ''
+
+                df_styled = df_tabla.style.map(color_dias, subset=["Días Restantes"])
+                st.dataframe(df_styled, use_container_width=True, hide_index=True)
+                st.info(f"💡 Mostrando {len(df_tabla)} registro(s) que causan la métrica '{opcion_inspeccionar}'.")
+
+        # SECCIÓN VISUALIZACIONES CUSTOM (Reemplazo de Plotly por HTML/CSS Premium)
         col_left, col_right = st.columns([1, 1])
         with col_left:
-            render_section_header("Distribución Global de Estados")
-            st.plotly_chart(donut_distribucion_estados(df_estado), use_container_width=True)
+            st.markdown(render_html_distribucion_estados(df_estado), unsafe_allow_html=True)
             
         with col_right:
-            render_section_header("Equipos Críticos por Ubicación")
-            st.plotly_chart(barras_vencimientos_por_area(df_estado), use_container_width=True)
+            st.markdown(render_html_vencimientos_por_area(df_estado), unsafe_allow_html=True)
+
+        st.markdown("<hr>", unsafe_allow_html=True)
+        
+        # SECCIÓN DEL GRÁFICO DE RADAR (Grande e interactivo)
+        render_section_header("🕸️ Análisis de Desempeño Multidimensional por Área (Radar)", "Compara la salud metrológica de un área específica contra el promedio general de la planta.")
+        
+        # Selector de área para el radar
+        areas_radar = ["TODAS"] + sorted(list(df_estado["ubicacion"].dropna().unique()))
+        col_radar_sel, _ = st.columns([2, 2])
+        with col_radar_sel:
+            area_radar_sel = st.selectbox("Selecciona la ubicación a inspeccionar en el radar:", options=areas_radar, index=0, key="radar_area_select")
+            
+        # RENDER DEL RADAR CHART (Grande, centrado)
+        col_radar_chart, col_radar_desc = st.columns([3, 2])
+        with col_radar_chart:
+            st.plotly_chart(radar_desempeno_area(df_estado, area_radar_sel), use_container_width=True, theme=None)
+            
+        with col_radar_desc:
+            st.markdown(
+                f"""
+                <div style="background-color: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 20px; min-height: 360px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <h4 style="margin: 0 0 10px 0; color: #1A2535; font-size: 13px; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #00A99D; padding-bottom: 5px;">📍 Dimensiones Evaluadas</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 11.5px; color: #4B5D72; line-height: 1.6;">
+                      <li><b>Vigencia:</b> Porcentaje de equipos con calibración vigente y al día.</li>
+                      <li><b>Conformidad:</b> Porcentaje de calibraciones calificadas como "Cumple" vs "No Cumple".</li>
+                      <li><b>Oportunidad:</b> Porcentaje de equipos libres de vencimiento regulatorio.</li>
+                      <li><b>Actualidad:</b> Equipos calibrados de forma reciente (menos de 365 días).</li>
+                      <li><b>Formalización:</b> Cobertura de proveedores asignados para los servicios técnicos.</li>
+                    </ul>
+                  </div>
+                  <div style="background-color: #F8FAFC; border: 1px solid #E2ECF5; border-radius: 8px; padding: 12px; font-size: 11px; color: #64748B; line-height:1.4;">
+                    💡 <b>Tip de análisis:</b> Una forma expandida y simétrica indica alta excelencia operativa. Cualquier contracción en un eje revela un cuello de botella específico que debe ser gestionado.
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
         st.markdown("<hr>", unsafe_allow_html=True)
         
@@ -314,18 +626,55 @@ if vista_seleccionada == "📊 Dashboard KPIs":
         col_t1, col_t2 = st.columns([1, 1])
         with col_t1:
             render_section_header("Evolución de Equipos al Día (Últimos 6 meses)")
-            st.plotly_chart(linea_tendencia_cumplimiento(df_estado), use_container_width=True)
+            st.plotly_chart(linea_tendencia_cumplimiento(df_estado), use_container_width=True, theme=None)
             
         with col_t2:
             render_section_header("Top Áreas con Mayor Riesgo")
             # Áreas con más equipos Vencidos o en Programar
             df_riesgo = df_estado[df_estado["estado_servicio"].isin(["Vencido", "Programar"])]
             if not df_riesgo.empty:
-                riesgo_tabla = df_riesgo.groupby("ubicacion").size().reset_index(name="Equipos en Riesgo")
-                riesgo_tabla = riesgo_tabla.sort_values("Equipos en Riesgo", ascending=False).head(3)
-                st.table(riesgo_tabla)
+                riesgo_tabla = df_riesgo.groupby("ubicacion").size().reset_index(name="equipos")
+                riesgo_tabla = riesgo_tabla.sort_values("equipos", ascending=False).head(3)
+                
+                # Renderizar tarjetas HTML estilizadas
+                items_html = ""
+                iconos = ["🔥", "⚠️", "📋"]
+                colores = ["#EF4444", "#F59E0B", "#94A3B8"]
+                
+                for idx, row in enumerate(riesgo_tabla.itertuples()):
+                    ico = iconos[idx] if idx < len(iconos) else "📋"
+                    col = colores[idx] if idx < len(colores) else "#94A3B8"
+                    items_html += f"""
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 11px 15px; background: #F8FAFC; border-left: 4px solid {col}; border-radius: 8px; margin-bottom: 8px; border-top: 1px solid #E2ECF5; border-right: 1px solid #E2ECF5; border-bottom: 1px solid #E2ECF5;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.1rem;">{ico}</span>
+                        <span style="font-weight: 700; color: #1A2535; font-size: 11px; text-transform: uppercase; letter-spacing: 0.02em;">{row.ubicacion}</span>
+                      </div>
+                      <span style="background: {col}15; color: {col}; font-weight: 800; font-size: 10.5px; padding: 2px 8px; border-radius: 20px;">{row.equipos} alertas</span>
+                    </div>
+                    """
+                
+                st.markdown(
+                    f"""
+                    <div style="background: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 15px; min-height: 240px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                      {items_html}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
             else:
-                st.success("🟢 No hay áreas en riesgo. Todos los equipos están en orden.")
+                st.markdown(
+                    """
+                    <div style="background: white; border: 1px solid #E2ECF5; border-radius: 12px; padding: 15px; min-height: 240px; display: flex; align-items: center; justify-content: center; text-align: center;">
+                      <div>
+                        <span style="font-size: 2rem;">🟢</span>
+                        <h4 style="color: #10B981; margin: 10px 0 5px 0; font-size: 14px; font-weight: 700;">Planta en Orden</h4>
+                        <p style="color: #64748B; font-size: 11px; margin: 0;">No hay ubicaciones con alertas activas.</p>
+                      </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
 # ═════════════════════════════════════════════════════════════════════════════
 # VISTA 2: CUMPLIMIENTO ANUAL (HISTÓRICO AÑO POR AÑO) - PRIORIDAD ALTA
@@ -400,7 +749,7 @@ elif vista_seleccionada == "📅 Cumplimiento Anual":
         col_g1, col_g2 = st.columns([1, 1])
         with col_g1:
             render_section_header(f"Evolución Mensual de Servicios en {anio_sel}")
-            st.plotly_chart(linea_evolucion_mensual(df_anio), use_container_width=True)
+            st.plotly_chart(linea_evolucion_mensual(df_anio), use_container_width=True, theme=None)
         with col_g2:
             render_section_header("Comparativo Interanual de Servicios")
             # Cargar todo el historial para comparativo
@@ -408,7 +757,7 @@ elif vista_seleccionada == "📅 Cumplimiento Anual":
             if not df_todo_hist.empty:
                 if area_sel != "TODAS":
                     df_todo_hist = df_todo_hist[df_todo_hist["ubicacion"] == area_sel]
-                st.plotly_chart(barras_comparativo_anual(df_todo_hist), use_container_width=True)
+                st.plotly_chart(barras_comparativo_anual(df_todo_hist), use_container_width=True, theme=None)
             else:
                 st.info("Sin datos para gráfico interanual.")
 
@@ -752,7 +1101,7 @@ elif vista_seleccionada == "📤 Migración ETL":
         render_section_header("Métricas de Calidad de Datos")
         df_migraciones = cargar_historial_etl()
         if not df_migraciones.empty:
-            st.plotly_chart(barras_calidad_datos(df_migraciones), use_container_width=True)
+            st.plotly_chart(barras_calidad_datos(df_migraciones), use_container_width=True, theme=None)
         else:
             st.info("Sin registros de migración.")
 
