@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Vista Previa: Alertas PAME</title>
+    <style>
+      body { font-family: Arial, sans-serif; color: #1A2535; line-height: 1.5; margin: 20px; }
+      .header { background-color: #0B3533; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+      .header h1 { color: #FFFFFF; margin: 0; font-size: 24px; }
+      .header h2 { color: #00A99D; margin: 5px 0 0 0; font-size: 16px; font-weight: normal; }
+      .section-title { font-size: 18px; font-weight: bold; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #00A99D; padding-bottom: 5px; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+      th { background-color: #0B3533; color: #FFFFFF; text-align: left; padding: 10px; font-weight: bold; }
+      td { padding: 10px; border: 1px solid #E2E8F0; }
+      .row-critica { background-color: #FEE2E2; }
+      .row-alta { background-color: #FEF3C7; }
+      .row-media { background-color: #F1F5F9; }
+      .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+      .badge-critica { background-color: #DC2626; color: #FFFFFF; }
+      .badge-alta { background-color: #D97706; color: #FFFFFF; }
+      .badge-media { background-color: #4B5563; color: #FFFFFF; }
+      .footer { text-align: center; margin-top: 30px; font-size: 11px; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 15px; }
+    </style>
+  </head>
+  <body>
+    <div style="max-width: 800px; margin: 0 auto; border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px; background-color: #FFFFFF;">
+      <div class="header">
+        <h1>PAME — Aseguramiento Metrológico</h1>
+        <h2>Reporte Diario de Alertas de Servicios</h2>
+      </div>
+      
+      <p>Estimado equipo de Metrología y Validaciones,</p>
+      <p>A continuación se presenta el resumen de los servicios metrológicos próximos a vencer o vencidos en la planta:</p>
+
+      <div class="section-title" style="color: #DC2626;">🚨 ALERTAS CRÍTICAS (Vencidos o Vencen en &le; 7 días)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Servicio</th>
+            <th>Vencimiento</th>
+            <th>Días</th>
+            <th>Proveedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-critica">
+            <td><b>LS1191</b></td>
+            <td>Balanza Analítica Sartorius</td>
+            <td>CONTROL CALIDAD</td>
+            <td>Calibración</td>
+            <td>2026-08-05</td>
+            <td><span class="badge badge-critica">Vence en 3 días</span></td>
+            <td>LAPROFF</td>
+          </tr>
+          <tr class="row-critica">
+            <td><b>CC397-25</b></td>
+            <td>Espectrofotómetro UV-Vis</td>
+            <td>CONTROL CALIDAD</td>
+            <td>Calificación OQ</td>
+            <td>2026-07-28</td>
+            <td><span class="badge badge-critica">VENCIDO (-5 d)</span></td>
+            <td>ZOSER</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title" style="color: #D97706;">⚠️ ALERTAS DE PRIORIDAD ALTA (Vencen en 8 a 15 días)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Servicio</th>
+            <th>Vencimiento</th>
+            <th>Días</th>
+            <th>Proveedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-alta">
+            <td><b>MB-0082</b></td>
+            <td>Incubadora Memmert</td>
+            <td>MICROBIOLOGÍA</td>
+            <td>Calificación PQ</td>
+            <td>2026-08-14</td>
+            <td><span class="badge badge-alta">12 días</span></td>
+            <td>CONTROL SUPERIOR</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-title" style="color: #4B5563;">🔔 ALERTAS DE PRIORIDAD MEDIA (Vencen en 16 a 30 días)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Servicio</th>
+            <th>Vencimiento</th>
+            <th>Días</th>
+            <th>Proveedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-media">
+            <td><b>PL-2091</b></td>
+            <td>Balanza de Plataforma</td>
+            <td>PLANTA DE PRODUCCIÓN</td>
+            <td>Mantenimiento Preventivo</td>
+            <td>2026-08-25</td>
+            <td><span class="badge badge-media">23 días</span></td>
+            <td>METROGLOBAL</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="footer">
+        Reporte generado el 02/08/2026 a las 08:00:00<br>
+        <b>Programa de Aseguramiento Metrológico — Laboratorios Laproff S.A.S.</b><br>
+        <i>Este es un correo automático, por favor no responda directamente a este mensaje.</i>
+      </div>
+    </div>
+  </body>
+</html>
