@@ -218,7 +218,7 @@ def barras_comparativo_anual(df_historico: pd.DataFrame) -> go.Figure:
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family=FONT_FAMILY, size=11, color=TEXT_COLOR),
         xaxis=dict(type='category', title=None, gridcolor="rgba(0,0,0,0)", tickfont=dict(size=10, family=FONT_FAMILY)),
-        yaxis=dict(gridcolor="#E2ECF5", title=None, tickfont=dict(size=10, family=FONT_FAMILY)),
+        yaxis=dict(gridcolor="#E2ECF5", title="Número de Servicios", tickfont=dict(size=10, family=FONT_FAMILY)),
         legend=dict(
             orientation="h", 
             yanchor="bottom", y=1.02, 
@@ -274,7 +274,7 @@ def linea_evolucion_mensual(df_anio: pd.DataFrame) -> go.Figure:
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family=FONT_FAMILY, size=11, color=TEXT_COLOR),
         xaxis=dict(gridcolor="rgba(0,0,0,0)", tickfont=dict(size=10, family=FONT_FAMILY)),
-        yaxis=dict(gridcolor="#E2ECF5", title=None, tickfont=dict(size=10, family=FONT_FAMILY)),
+        yaxis=dict(gridcolor="#E2ECF5", title="Número de Servicios", tickfont=dict(size=10, family=FONT_FAMILY)),
         legend=dict(
             orientation="h", 
             yanchor="bottom", y=1.02, 
