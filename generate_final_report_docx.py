@@ -395,8 +395,8 @@ def create_final_report():
     saved_successfully = False
     
     desktop_paths = [
-        "C:/Users/julianag18/Desktop/informe_final_practica.docx",
-        "C:/Users/julianag18/OneDrive/Desktop/informe_final_practica.docx"
+        "C:/Users/julianag18/Desktop/informe_final_practica_juliana.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/informe_final_practica_juliana.docx"
     ]
     
     for path in desktop_paths:
