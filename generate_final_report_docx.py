@@ -40,29 +40,30 @@ def create_final_report():
     # Helper para títulos principales con formato normal en español (Mayúscula solo en la primera letra)
     def add_heading_1(text):
         h = doc.add_paragraph()
-        h.paragraph_format.space_before = Pt(20)
-        h.paragraph_format.space_after = Pt(6)
+        h.paragraph_format.space_before = Pt(22)
+        h.paragraph_format.space_after = Pt(8)
         r = h.add_run(text)
         r.bold = True
-        r.font.size = Pt(12)
+        r.font.size = Pt(13)
         r.font.color.rgb = RGBColor(0x1A, 0x36, 0x5D) # Azul oscuro clásico UdeA
         return h
 
     def add_heading_2(text):
         h = doc.add_paragraph()
-        h.paragraph_format.space_before = Pt(12)
-        h.paragraph_format.space_after = Pt(4)
+        h.paragraph_format.space_before = Pt(14)
+        h.paragraph_format.space_after = Pt(6)
         r = h.add_run(text)
         r.bold = True
-        r.font.size = Pt(11)
+        r.font.size = Pt(11.5)
         r.font.color.rgb = RGBColor(0x2B, 0x6C, 0xB0)
         return h
 
-    def add_para(text, before=0, after=6):
+    def add_para(text, before=0, after=8):
         para = doc.add_paragraph()
         para.paragraph_format.space_before = Pt(before)
         para.paragraph_format.space_after = Pt(after)
         para.paragraph_format.line_spacing = 1.15
+        para.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         r = para.add_run(text)
         return r
 
@@ -258,24 +259,135 @@ def create_final_report():
         "hace adecuadas para un proyecto de práctica académica en una empresa que está iniciando su proceso de digitalización."
     )
 
+    doc.add_page_break()
+
+    # NUEVA SECCIÓN DE JUSTIFICACIÓN DE DECISIONES DE DISEÑO
+    add_heading_1("IV. Decisiones de diseño y selección de software")
+    add_para(
+        "La construcción del módulo PAME requirió una justificación rigurosa de cada componente tecnológico. "
+        "A continuación se detallan los motivos técnicos y operativos por los cuales se seleccionó el camino tecnológico actual:"
+    )
+
+    add_heading_2("1. Lenguaje de programación: Python")
+    add_para(
+        "Se eligió Python como el lenguaje base debido a su madurez y versatilidad en la ingeniería y análisis de datos. "
+        "Python posee la biblioteca Pandas, estándar industrial para la manipulación de datos tabulares, lo cual facilitó el procesamiento "
+        "de archivos Excel y CSV del laboratorio de manera estructurada y segura. Además, al tratarse de un lenguaje de código abierto, "
+        "evita costos de licenciamiento para Laboratorios Laproff S.A.S. y garantiza la mantenibilidad a largo plazo por parte del equipo de ingeniería interno."
+    )
+
+    add_heading_2("2. Motor de base de datos NoSQL: Firebase Firestore")
+    add_para(
+        "La persistencia de datos tradicionalmente se manejaba en archivos relacionales o en hojas de cálculo planas. "
+        "Para este proyecto, se seleccionó Firebase Firestore (base de datos NoSQL orientada a documentos). "
+        "La razón técnica de esta elección radica en la flexibilidad del esquema metrológico: diferentes tipos de equipos "
+        "(balanzas, cromatógrafos, medidores de TOC) requieren campos y metadatos variables para documentar su calibración "
+        "(fórmulas de desviación, límites de tolerancia, firmas digitales). Un modelo relacional rígido habría requerido complejas tablas de unión, "
+        "mientras que el modelo de documentos de Firestore permite estructurar objetos dinámicos de manera limpia y escalable."
+    )
+
+    add_heading_2("3. Entorno de desarrollo de interfaz: Streamlit")
+    add_para(
+        "Para la interfaz de usuario se utilizó Streamlit. Al tratarse de un proyecto enfocado en la agilidad de visualización de datos, "
+        "Streamlit permitió construir un panel de control interactivo en tiempo récord directamente en Python, sin la necesidad de desarrollar "
+        "un frontend pesado en lenguajes como React o Angular. Esto aceleró el ciclo de retroalimentación con el metrólogo jefe del laboratorio, "
+        "permitiendo prototipar y ajustar los gráficos de Plotly y los selectores en tiempo real."
+    )
+
+    add_heading_2("4. Servidor de notificaciones transaccionales: Brevo")
+    add_para(
+        "Para la automatización de alertas por correo electrónico, se descartó el uso de servidores de correo genéricos (como Gmail básico) "
+        "debido a las restricciones de cuotas de envío y los algoritmos de filtrado de SPAM. Se implementó una integración directa con Brevo "
+        "a través de su pasarela SMTP y API. Brevo ofrece logs detallados de entrega, plantillas HTML enriquecidas y garantiza que las alertas "
+        "diarias de metrología no sean desviadas a la bandeja de correo no deseado del personal técnico."
+    )
+
+    doc.add_page_break()
+
+    # NUEVA SECCIÓN DE IMPLEMENTACIÓN PASO A PASO
+    add_heading_1("V. Implementación paso a paso y resolución de inconvenientes")
+    add_para(
+        "El desarrollo del proyecto se ejecutó siguiendo una serie de etapas lógicas, en las cuales se detectaron inconvenientes técnicos críticos "
+        "que fueron resueltos mediante reingeniería de software. A continuación se describe este proceso paso a paso:"
+    )
+
+    add_heading_2("Paso 1: Desarrollo de la tubería ETL (Extracción, Transformación y Carga)")
+    add_para(
+        "La primera tarea consistió en unificar el inventario de equipos distribuidos. "
+        "Se diseñó un script en Python que toma los archivos Excel de metrología, extrae las filas correspondientes a equipos y las normaliza. "
+        "El principal inconveniente detectado en esta etapa fue la inconsistencia de datos: las ubicaciones de los equipos tenían nombres distintos "
+        "(ej. 'Control Calidad', 'Control de Calidad', 'Lab. Control'). "
+        "Para solucionarlo, el componente de transformación del ETL implementó un mapeo estandarizado de cadenas de texto y reglas de limpieza de nulos. "
+        "Además, se programó un filtro para omitir registros duplicados de forma automática, validando la unicidad del número de serie antes de cargarlo a Firestore."
+    )
+
+    add_heading_2("Paso 2: Resolución del cuello de botella de base de datos (Problema N+1)")
+    add_para(
+        "Una vez los datos estuvieron en la nube, al renderizar la pestaña de 'Dashboard KPIs' o 'Cumplimiento Anual', la pantalla se congelaba por más de 3 minutos. "
+        "Al inspeccionar el código, se detectó el problema N+1: el aplicativo leía la lista de N equipos y, dentro de un ciclo recursivo por cada equipo, "
+        "realizaba una nueva petición a Firestore para consultar su historial de servicios individuales. Esto generaba miles de lecturas innecesarias "
+        "y colapsaba el rendimiento de la aplicación."
+    )
+    add_para(
+        "La solución consistió en rediseñar la estrategia de consulta: en lugar de bucles iterativos, se programó una sola consulta lineal que extrae "
+        "la colección completa de servicios metrológicos en un solo bloque. Posteriormente, los datos se agrupan en memoria del servidor mediante funciones vectoriales "
+        "de Pandas, reduciendo el tiempo de carga a milisegundos. Para optimizar aún más, se implementó el decorador de caché de Streamlit (`@st.cache_data`), "
+        "evitando consultas repetitivas a la base de datos a menos de que ocurra una nueva migración de datos."
+    )
+
+    add_heading_2("Paso 3: Automatización del motor de alertas por correo electrónico")
+    add_para(
+        "El motor de alertas ejecuta una validación diaria. Se implementó una regla de negocio donde los recordatorios preventivos se disparan con "
+        "exactamente un mes (30 días) de anticipación. Esta ventana de tiempo no es arbitraria; se justificó técnicamente debido al ciclo de abastecimiento de Laproff:"
+    )
+    
+    cycle_steps = [
+        "Semana 1: Contactar a los proveedores de calibración externa acreditados por el ONAC y realizar la solicitud de cotizaciones.",
+        "Semana 2: Procesar la cotización a través de la oficina de compras interna de Laproff y generar la orden de servicio.",
+        "Semana 3: Programar la llegada del técnico del laboratorio de metrología externo y coordinar la parada del equipo sin afectar la producción.",
+        "Semana 4: Ejecución de la calibración, espera del informe técnico y revisión metrológica final por parte del Jefe de Validaciones y Metrología."
+    ]
+    for step in cycle_steps:
+        p = doc.add_paragraph(style='List Bullet')
+        p.paragraph_format.space_after = Pt(4)
+        p.add_run(step)
+        
+    add_para(
+        "Para evitar saturar la bandeja de entrada del metrólogo con un correo por cada equipo vencido, se programó una regla de agrupación por lotes. "
+        "El sistema recopila todas las alertas del día y las unifica en un solo reporte diario en formato HTML interactivo. "
+        "Sin embargo, si un equipo de producción crítico es calificado en el sistema como 'No Cumple' o se encuentra vencido en uso activo, "
+        "el motor de notificaciones dispara una alerta crítica de forma inmediata al correo del supervisor para evitar desviaciones de calidad."
+    )
+
+    add_heading_2("Paso 4: Rediseño visual del Dashboard interactivo")
+    add_para(
+        "Para presentar la información de manera ejecutiva al asesor interno y externo, se diseñó un panel de control interactivo. "
+        "Se implementó un gráfico de radar (araña) que calcula 5 métricas clave para evaluar el desempeño metrológico del área seleccionada vs la planta. "
+        "Este radar mide de 0 a 100% las dimensiones de Vigencia, Conformidad, Oportunidad, Actualidad y Formalización. "
+        "Asimismo, se agregaron tarjetas estilizadas en HTML dentro de Streamlit con alertas prioritarias visuales en colores rojo, amarillo y gris, "
+        "permitiendo identificar cuellos de botella metrológicos en menos de 5 segundos."
+    )
+
+    doc.add_page_break()
+
     # 8. METODOLOGÍA
-    add_heading_1("IV. Metodología")
+    add_heading_1("VI. Metodología")
     add_para(
         "El proyecto tiene un enfoque aplicado de tipo mixto: cuantitativo en lo que respecta al análisis de métricas de calidad de los datos y los indicadores del PAME, "
-        "y cualitativo en la caracterización de los procesos actuales del área y la validación con los usuarios. El desarrollo sigue una metodología estructurada en cinco fases:"
+        "y cualitativo en la caracterización de los procesos actuales del área y la validación con los usuarios. El desarrollo siguió una metodología estructurada en cinco fases:"
     )
     
     phases = [
         ("Fase 1 — Adaptación e identificación de necesidades: ", 
-         "En esta fase se realiza la inducción al entorno organizacional, el reconocimiento de los procesos del área de metrología y la identificación de necesidades específicas relacionadas con la gestión del PAME. Se incluye la revisión bibliográfica y el análisis del estado actual del sistema, así como la entrega de la propuesta."),
+         "En esta fase se realizó la inducción al entorno organizacional, el reconocimiento de los procesos del área de metrología y la identificación de necesidades específicas de Laproff. Se incluyó la revisión bibliográfica y el análisis del estado actual del sistema."),
         ("Fase 2 — Análisis de fuentes de datos: ", 
-         "Se revisan en detalle todas las fuentes de información metrológica disponibles, incluyendo archivos en Excel, registros físicos y los módulos del aplicativo PAME. Se documentan las inconsistencias, campos vacíos y duplicados."),
+         "Se revisaron en detalle todas las fuentes de información metrológica disponibles, incluyendo archivos en Excel, registros físicos y los módulos del aplicativo PAME. Se documentaron las inconsistencias, campos vacíos y duplicados."),
         ("Fase 3 — Diseño del sistema: ", 
-         "Con base en el diagnóstico, se define la arquitectura del módulo. Esto incluye el diseño del modelo de datos, la definición del proceso ETL, la lógica del cronograma de servicios y el esquema de generación de alertas."),
+         "Con base en el diagnóstico, se definió la arquitectura del módulo. Esto incluyó el diseño del modelo de datos, la definición del proceso ETL, la lógica del cronograma de servicios y el esquema de generación de alertas."),
         ("Fase 4 — Desarrollo e implementación: ", 
-         "Se construyen de manera incremental los tres componentes del módulo: el proceso ETL, el motor de automatización del cronograma con alertas por criticidad, y el dashboard de KPIs en Streamlit."),
+         "Se construyeron de manera incremental los tres componentes del módulo: el proceso ETL, el motor de automatización del cronograma con alertas por criticidad, y el dashboard de KPIs en Streamlit."),
         ("Fase 5 — Validación y documentación: ", 
-         "El sistema completo se somete a pruebas utilizando datos representativos del área de metrología, evaluando duplicados, completitud, consistencia, la exactitud de las alertas y la usabilidad final.")
+         "El sistema completo se sometió a pruebas utilizando datos representativos del área de metrología, evaluando duplicados, completitud, consistencia, la exactitud de las alertas y la usabilidad final.")
     ]
     for title, desc in phases:
         p = doc.add_paragraph(style='List Bullet')
@@ -285,7 +397,7 @@ def create_final_report():
         p.add_run(desc)
 
     # 9. ANÁLISIS DE RESULTADOS
-    add_heading_1("V. Análisis de resultados")
+    add_heading_1("VII. Análisis de resultados")
     add_para(
         "Los resultados obtenidos tras la implementación del módulo PAME demuestran una mejora sustancial en la operatividad del aseguramiento metrológico. "
         "El primer impacto medible fue la optimización del rendimiento en la carga del cronograma completo. "
@@ -336,6 +448,17 @@ def create_final_report():
     run_cap.bold = True
     run_cap.font.size = Pt(9.5)
 
+    add_heading_2("Pruebas y validación automatizada mediante Pytest")
+    add_para(
+        "Para certificar el correcto funcionamiento del software de cara a futuras auditorías, se desarrolló una suite "
+        "de pruebas unitarias automatizadas con Pytest. "
+        "Se diseñaron 13 pruebas que cubren: (1) la correcta transformación de tipos de datos en la tubería ETL, "
+        "(2) la validación de la lógica del cálculo de estado de los servicios (Vigente, Próximo o Vencido), "
+        "(3) la correcta generación de plantillas HTML para correos transaccionales y (4) el correcto filtrado "
+        "y priorización de alertas críticas inmediatas frente a reportes diarios de KPIs. "
+        "El 100% de la suite de pruebas unitarias se ejecutó de manera exitosa, confirmando la robustez y estabilidad del sistema final."
+    )
+
     add_heading_2("Implementación del radar interactivo y KPIs")
     add_para(
         "Como se observa en el panel de control del usuario, la integración del gráfico de radar metrológico "
@@ -347,7 +470,7 @@ def create_final_report():
     )
 
     # 10. CONCLUSIONES Y RECOMENDACIONES
-    add_heading_1("VI. Conclusiones y recomendaciones")
+    add_heading_1("VIII. Conclusiones y recomendaciones")
     
     p = doc.add_paragraph()
     p.add_run("A. Conclusiones").bold = True
