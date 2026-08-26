@@ -70,51 +70,46 @@ def create_final_report():
     p_logo = doc.add_paragraph()
     p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_logo.paragraph_format.space_after = Pt(24)
-    run_logo = p_logo.add_run("UNIVERSIDAD DE ANTIOQUIA\nFACULTAD DE INGENIERÍA")
+    run_logo = p_logo.add_run("UNIVERSIDAD DE ANTIOQUIA\nFACULTAD DE INGENIERÍA\nDEPARTAMENTO DE BIOINGENIERÍA")
     run_logo.bold = True
-    run_logo.font.size = Pt(13)
+    run_logo.font.size = Pt(12)
     run_logo.font.color.rgb = RGBColor(0x1A, 0x36, 0x5D)
 
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(40)
     p_title.paragraph_format.space_after = Pt(12)
-    run_title = p_title.add_run("Desarrollo e implementación del módulo digital de aseguramiento metrológico (PAME)")
+    run_title = p_title.add_run("Diseño e implementación de un módulo complementario para la gestión y digitalización del Programa de Aseguramiento Metrológico (PAME) en Laboratorios Laproff S.A.S.")
     run_title.bold = True
-    run_title.font.size = Pt(16)
+    run_title.font.size = Pt(14)
     run_title.font.color.rgb = RGBColor(0x1A, 0x36, 0x5D)
-
-    p_subtitle = doc.add_paragraph()
-    p_subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_subtitle.paragraph_format.space_after = Pt(40)
-    run_subtitle = p_subtitle.add_run("Optimización de bases de datos NoSQL y automatización de notificaciones por correo electrónico en Laboratorios Laproff S.A.S.")
-    run_subtitle.italic = True
-    run_subtitle.font.size = Pt(12)
 
     p_author = doc.add_paragraph()
     p_author.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_author.paragraph_format.space_after = Pt(30)
     p_author.add_run("Autor:\n").bold = True
-    p_author.add_run("Juliana Gómez\n\n")
-    p_author.add_run("Orientador académico:\n").bold = True
-    p_author.add_run("Luis Alfonso Gutiérrez\n\n")
+    p_author.add_run("Juliana González Afanador\n\n")
+    p_author.add_run("Asesor académico (U. de A.):\n").bold = True
+    p_author.add_run("Luis Carlos Alvarez Vélez\n\n")
+    p_author.add_run("Asesor externo (Laproff):\n").bold = True
+    p_author.add_run("Luis Miguel Osorio (Jefe de Validaciones y Metrología)\n\n")
     p_author.add_run("Modalidad:\n").bold = True
-    p_author.add_run("Semestre de industria (Práctica empresarial)")
+    p_author.add_run("Práctica empresarial / Semestre de industria")
 
     p_footer = doc.add_paragraph()
     p_footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_footer.paragraph_format.space_before = Pt(60)
-    p_footer.add_run("Medellín, Colombia\n2026")
+    p_footer.paragraph_format.space_before = Pt(50)
+    p_footer.add_run("Sabaneta, Colombia\n2026")
 
     doc.add_page_break()
 
     # 2. PÁGINA LEGAL Y LICENCIA
     add_heading_1("Página legal de citación y licencia")
     add_para(
-        "Cómo se cita este documento: Gómez, Juliana. \"Desarrollo e implementación del módulo digital de aseguramiento metrológico (PAME) en Laboratorios Laproff S.A.S.\", Informe Final de Práctica de Semestre de Industria, Facultad de Ingeniería, Universidad de Antioquia, Medellín, 2026."
+        "Cómo se cita este documento: González Afanador, Juliana. \"Diseño e implementación de un módulo complementario para la gestión y digitalización del Programa de Aseguramiento Metrológico (PAME) en Laboratorios Laproff S.A.S.\", Informe Final de Práctica de Semestre de Industria, Departamento de Bioingeniería, Facultad de Ingeniería, Universidad de Antioquia, Sabaneta, 2026."
     )
     add_para(
-        "Referencia estilo IEEE (2020): J. Gómez, \"Desarrollo e implementación del módulo digital de aseguramiento metrológico (PAME) en Laboratorios Laproff S.A.S.,\" Trabajo de Práctica en Industria, Facultad de Ingeniería, Universidad de Antioquia, Medellín, Colombia, 2026."
+        "Referencia estilo IEEE (2020): J. González Afanador, \"Diseño e implementación de un módulo complementario para la gestión y digitalización del Programa de Aseguramiento Metrológico (PAME) en Laboratorios Laproff S.A.S.,\" Trabajo de Práctica en Industria, Facultad de Ingeniería, Universidad de Antioquia, Sabaneta, Colombia, 2026."
     )
     add_para(
         "Este documento se distribuye bajo una Licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional (CC BY-NC-ND 4.0). Usted es libre de compartir y distribuir este material en cualquier medio o formato, siempre y cuando atribuya los créditos correspondientes a la autora, no lo utilice con fines comerciales y no altere la obra original."
@@ -135,7 +130,7 @@ def create_final_report():
     )
     p_keys = doc.add_paragraph()
     p_keys.add_run("Palabras clave: ").bold = True
-    p_keys.add_run("Aseguramiento metrológico, base de datos NoSQL, optimización de consultas, Streamlit, servidor SMTP, automatización de alertas, Laboratorios Laproff.")
+    p_keys.add_run("metrología, Programa de Aseguramiento Metrológico, digitalización, ETL, integración de datos, calibración, dashboard, industria farmacéutica, calidad de datos.")
 
     # 4. ABSTRACT (Inglés)
     add_heading_1("Abstract")
@@ -149,23 +144,35 @@ def create_final_report():
     )
     p_kwords = doc.add_paragraph()
     p_kwords.add_run("Keywords: ").bold = True
-    p_kwords.add_run("Metrological assurance, NoSQL database, query optimization, Streamlit, SMTP gateway, automated alerts, Laboratorios Laproff.")
+    p_kwords.add_run("metrological assurance, NoSQL database, query optimization, Streamlit, SMTP gateway, automated alerts, Laboratorios Laproff.")
 
     doc.add_page_break()
 
     # 5. INTRODUCCIÓN
     add_heading_1("I. Introducción")
     add_para(
-        "En la industria farmacéutica, el aseguramiento metrológico representa una actividad indispensable para asegurar la calidad y consistencia en los procesos de análisis. "
-        "Cualquier desviación o falla en las tolerancias permitidas de los instrumentos puede alterar las lecturas de calidad, comprometiendo la conformidad regulatoria de los medicamentos. "
-        "Tradicionalmente, en Laboratorios Laproff S.A.S., el control de las fechas de vencimiento de las calibraciones y validaciones se llevaba a cabo de forma manual a través de hojas de cálculo distribuidas. "
-        "Este modelo manual generaba retrasos en la cotización de los servicios externos y presentaba riesgos de vencimiento inadvertido debido a la falta de notificaciones automatizadas."
+        "En la industria farmacéutica, la gestión metrológica es parte central del sistema de calidad. Garantizar que los equipos de medición estén calibrados y en condiciones "
+        "adecuadas de uso es un requisito que organismos como el INVIMA exigen mediante las Buenas Prácticas de Manufactura (BPM). Para cumplir con esto, los laboratorios "
+        "implementan el Programa de Aseguramiento Metrológico (PAME), que permite hacer seguimiento al ciclo de vida de cada equipo: desde su ingreso al inventario, pasando "
+        "por sus calibraciones y verificaciones periódicas, hasta su eventual baja [1]."
     )
     add_para(
-        "El problema central que abordó esta práctica radicó en la ausencia de una herramienta centralizada capaz de unificar el inventario de equipos y disparar alertas tempranas con un margen lógico para la gestión logística. "
-        "Por consiguiente, el objetivo de este proyecto consistió en diseñar, desarrollar e implementar el módulo digital PAME integrado a las bases de datos de la empresa, "
-        "garantizando un rendimiento de carga inmediato y una visualización clara del estado de conformidad de la planta. "
-        "La justificación metodológica de la alerta se basó en el ciclo de compras y compras externas, el cual exige un plazo de 30 días para cotizar, programar la calibración sin detener la producción de planta, ejecutar el servicio por parte del proveedor acreditado y emitir el informe de conformidad técnico."
+        "Laboratorios Laproff S.A.S. lleva varios años gestionando este programa de manera parcialmente manual, con registros en papel y hojas de cálculo. Recientemente, la "
+        "empresa inició el desarrollo de un aplicativo interno orientado a digitalizar el PAME. Este sistema ya cuenta con módulos para el registro de equipos (código, nombre, "
+        "serie, estado, ubicación, fabricante y proveedor) y el seguimiento del cronograma de servicios (fechas, tipos de servicio, proveedores y estados de conformidad). Sin "
+        "embargo, el proceso de migración de la información histórica aún está en curso y existen vacíos en cuanto a la automatización del cronograma y la visualización "
+        "integrada de indicadores."
+    )
+    add_para(
+        "Este proyecto nació de la observación directa del área durante las primeras semanas de práctica. En ese período de adaptación y reconocimiento del entorno, fue posible "
+        "identificar tres oportunidades concretas: (1) facilitar la migración de datos históricos al nuevo sistema de forma ordenada y sin pérdida de información; (2) automatizar el "
+        "seguimiento de los vencimientos de calibración, que actualmente depende del control manual de cada responsable; y (3) tener una vista consolidada del estado del PAME "
+        "que permita tomar decisiones con mayor rapidez y con respaldo en datos reales."
+    )
+    add_para(
+        "La propuesta no busca reemplazar el aplicativo que la empresa está construyendo, sino complementarlo con capacidades que aún no están cubiertas en sus etapas "
+        "iniciales. Desde el punto de vista académico, el proyecto integra áreas del programa de Bioingeniería como la gestión de datos, el desarrollo de software aplicado y la "
+        "metrología en entornos industriales regulados."
     )
 
     # 6. OBJETIVOS
@@ -174,18 +181,18 @@ def create_final_report():
     p = doc.add_paragraph()
     p.add_run("A. Objetivo general").bold = True
     add_para(
-        "Diseñar, desarrollar e implementar el módulo digital de aseguramiento metrológico (PAME) en Laboratorios Laproff S.A.S. "
-        "para centralizar el cronograma de calibraciones, automatizar el envío de alertas y asegurar un rendimiento óptimo de carga con bases de datos reales."
+        "Diseñar e implementar un módulo complementario al aplicativo del Programa de Aseguramiento Metrológico (PAME) de Laboratorios Laproff S.A.S., "
+        "que integre un proceso de migración y centralización de datos, la automatización del cronograma de servicios metrológicos y un panel de "
+        "indicadores clave, con el fin de apoyar el proceso de digitalización del área de metrología."
     )
     
     p = doc.add_paragraph()
     p.add_run("B. Objetivos específicos").bold = True
     
     specs = [
-        "Analizar el estado inicial de las bases de datos y la estructura del cronograma manual para definir el modelo de persistencia NoSQL en Firebase Firestore.",
-        "Rediseñar el motor de consultas de base de datos pasando de consultas individuales tipo N+1 a una carga agrupada lineal O(N) con almacenamiento en caché local, eliminando el congelamiento de pantalla de la interfaz.",
-        "Implementar el motor de notificaciones automáticas por correo electrónico mediante la API de Brevo, configurando alertas por lotes preventivos de 5 equipos y avisos inmediatos para equipos con estado crítico.",
-        "Construir un panel de control interactivo en Streamlit que incluya un gráfico de radar para evaluar el desempeño metrológico de cada área y una barra de distribución visual para los correos diarios de KPIs."
+        "Analizar las fuentes de información metrológica existentes en el área de metrología de Laboratorios Laproff, identificando sus estructuras, formatos y principales inconsistencias, como base para el diseño del sistema de integración.",
+        "Implementar el módulo complementario, que incluya el proceso de extracción, transformación y carga de datos (ETL) hacia una base de datos centralizada, el motor de automatización del cronograma de calibraciones con alertas por vencimiento, y el panel de indicadores clave (KPIs) del programa metrológico.",
+        "Validar el funcionamiento del módulo mediante pruebas con datos representativos del área, evaluando los datos integrados, la exactitud del cronograma automatizado y la utilidad del panel de indicadores para la gestión metrológica."
     ]
     for spec in specs:
         p = doc.add_paragraph(style='List Bullet')
@@ -194,33 +201,83 @@ def create_final_report():
 
     # 7. MARCO TEÓRICO
     add_heading_1("III. Marco teórico")
+    
+    add_heading_2("1. Metrología y aseguramiento metrológico en la industria farmacéutica")
     add_para(
-        "El aseguramiento metrológico en laboratorios farmacéuticos se rige por estrictas normativas nacionales e internacionales que exigen la trazabilidad de los instrumentos de medición hacia patrones de referencia nacionales [1]. "
-        "La calibración preventiva garantiza que los errores sistemáticos del equipo se mantengan dentro del límite de tolerancia admitido para cada ensayo técnico. "
-        "En la ingeniería de software actual, el desarrollo de aplicaciones para visualización rápida de datos ha sido facilitado por entornos de ejecución como Streamlit [2], "
-        "que permiten estructurar interfaces web completas en lenguaje Python, interactuando de forma transparente con bases de datos documentales en la nube, tales como Google Firestore [3]."
+        "La metrología es la ciencia de la medición y sus aplicaciones. En la industria farmacéutica, su función es garantizar que las mediciones realizadas en los procesos "
+        "de producción y control sean exactas, reproducibles y trazables a patrones nacionales e internacionales [1]. El Vocabulario Internacional de Metrología (VIM) define la "
+        "trazabilidad metrológica como la propiedad de un resultado de medición que puede relacionarse con una referencia mediante una cadena ininterrumpida y documentada "
+        "de calibraciones [1]."
     )
     add_para(
-        "Sin embargo, uno de los problemas recurrentes en la conexión de estas aplicaciones es el exceso de peticiones a la base de datos por parte de la interfaz. "
-        "El problema N+1 ocurre cuando el código realiza una consulta principal (por ejemplo, cargar el inventario de equipos) y luego ejecuta N consultas individuales secundarias "
-        "(una por cada equipo para consultar su historial de servicios) [4]. "
-        "La solución clásica documentada en la literatura de desarrollo ágil consiste en agrupar las peticiones secundarias en una sola consulta de unión (batch join) y almacenar el estado en caché local "
-        "para evitar la latencia y la sobrecarga de cuotas de lectura de base de datos [5]."
+        "El aseguramiento metrológico se implementa a través del PAME, cuya estructura sigue los lineamientos de la norma ISO 10012:2003, que establece los requisitos para "
+        "los sistemas de gestión de las mediciones [2]. En Colombia, el INVIMA exige a los laboratorios farmacéuticos el cumplimiento de las Buenas Prácticas de Manufactura, "
+        "dentro de las cuales el control metrológico incluye el registro y seguimiento de los equipos, sus calibraciones y la documentación asociada [3]."
+    )
+
+    add_heading_2("2. Digitalización de procesos en entornos industriales")
+    add_para(
+        "La digitalización en entornos industriales implica convertir información y procesos que se gestionaban de forma manual o en papel a formatos digitales que puedan ser "
+        "procesados, almacenados y consultados de manera más ágil [4]. En contextos regulados como el farmacéutico, este proceso no puede hacerse sin cuidar la integridad y "
+        "trazabilidad de los datos. Laudon y Laudon señalan que la migración de sistemas tradicionales a plataformas digitales es una etapa crítica, en la que la calidad "
+        "de la información histórica y la estandarización de los datos determinan en gran medida el éxito del nuevo sistema [4]."
+    )
+
+    add_heading_2("3. Procesos ETL (Extract, Transform, Load)")
+    add_para(
+        "ETL es la metodología estándar de la industria para integrar datos provenientes de fuentes distintas. Se compone de tres etapas: extracción (leer los datos desde las "
+        "fuentes originales), transformación (limpiar, estandarizar y dar consistencia a los datos) y carga (almacenar los datos ya procesados en un repositorio centralizado) [5]. "
+        "Kimball y Caserta afirman que un proceso ETL bien diseñado es la base de cualquier sistema de información confiable, porque garantiza que los datos que llegan al "
+        "repositorio central son correctos, completos y coherentes [5]. En este proyecto, el ETL es el núcleo del módulo, dado que la información metrológica de Laproff está dispersa "
+        "en múltiples formatos y su consolidación requiere reglas de negocio propias del dominio metrológico."
+    )
+
+    add_heading_2("4. Evaluación de los datos")
+    add_para(
+        "Los datos se evalúan a través de varias dimensiones: exactitud, completitud, consistencia, oportunidad y trazabilidad [6]. Wang y Strong desarrollaron un marco "
+        "para organizar las dimensiones que los consumidores de datos consideran relevantes al juzgar si la información es adecuada para el uso que se le va a dar, entre ellas que "
+        "los datos sean correctos, estén completos y no presenten duplicados ni contradicciones [6]. En proyectos de migración e integración, estas dimensiones se convierten "
+        "en métricas concretas para medir el desempeño del proceso ETL: el porcentaje de registros duplicados eliminados, la completitud de los campos obligatorios y la "
+        "consistencia de los valores entre tablas son los indicadores que se utilizarán en la validación de este proyecto."
+    )
+
+    add_heading_2("5. Indicadores clave de desempeño (KPIs) en gestión metrológica")
+    add_para(
+        "Los KPIs son métricas cuantificables que permiten evaluar el estado de un proceso frente a sus objetivos [7]. En este proyecto, el dashboard del PAME incluirá seis "
+        "indicadores específicos, directamente asociados al estado del cronograma de calibraciones: total de equipos registrados, equipos al día, equipos próximos a vencer, "
+        "equipos vencidos que requieren acción inmediata y equipos sin historial de datos. Wireman señala que definir con precisión los indicadores que se van a medir antes de "
+        "iniciar el seguimiento es un paso clave para que el control del desempeño sea útil y permita tomar decisiones [7], criterio que orientó la selección de estos seis KPIs como "
+        "los de mayor impacto operativo para la gestión metrológica del área."
+    )
+
+    add_heading_2("6. Herramientas tecnológicas utilizadas")
+    add_para(
+        "El módulo se desarrollará en Python, lenguaje de programación usado en proyectos de análisis y gestión de datos por su versatilidad y la cantidad de bibliotecas "
+        "disponibles [8]. Se utilizará Pandas para la manipulación y limpieza de datos, Openpyxl para la lectura de archivos Excel, el conector de Supabase/Firestore para la gestión "
+        "de la base de datos, y Streamlit para el desarrollo del dashboard interactivo. Estas herramientas son de código abierto y no generan costos de licenciamiento, lo que las "
+        "hace adecuadas para un proyecto de práctica académica en una empresa que está iniciando su proceso de digitalización."
     )
 
     # 8. METODOLOGÍA
     add_heading_1("IV. Metodología")
     add_para(
-        "El proyecto se desarrolló bajo un enfoque metodológico mixto que involucró dos etapas principales:"
+        "El proyecto tiene un enfoque aplicado de tipo mixto: cuantitativo en lo que respecta al análisis de métricas de calidad de los datos y los indicadores del PAME, "
+        "y cualitativo en la caracterización de los procesos actuales del área y la validación con los usuarios. El desarrollo sigue una metodología estructurada en cinco fases:"
     )
     
-    methods = [
-        ("Etapa Cuantitativa (Medición de Rendimiento): ", 
-         "Se recopilaron los tiempos de carga y respuesta de la base de datos Firestore antes y después del rediseño del código. Esto permitió medir empíricamente la reducción en los segundos de congelamiento de pestaña."),
-        ("Etapa Cualitativa (Reglas de Conformidad Metrológica): ", 
-         "Se estructuró el flujo de negocio del laboratorio. A través de entrevistas con el metrólogo de Laproff, se determinó que la variable clave de programación no era solo el vencimiento, sino el ciclo de contratación externa y la conformidad (calificación de Cumple / No Cumple), las cuales definen las alertas por lotes.")
+    phases = [
+        ("Fase 1 — Adaptación e identificación de necesidades: ", 
+         "En esta fase se realiza la inducción al entorno organizacional, el reconocimiento de los procesos del área de metrología y la identificación de necesidades específicas relacionadas con la gestión del PAME. Se incluye la revisión bibliográfica y el análisis del estado actual del sistema, así como la entrega de la propuesta."),
+        ("Fase 2 — Análisis de fuentes de datos: ", 
+         "Se revisan en detalle todas las fuentes de información metrológica disponibles, incluyendo archivos en Excel, registros físicos y los módulos del aplicativo PAME. Se documentan las inconsistencias, campos vacíos y duplicados."),
+        ("Fase 3 — Diseño del sistema: ", 
+         "Con base en el diagnóstico, se define la arquitectura del módulo. Esto incluye el diseño del modelo de datos, la definición del proceso ETL, la lógica del cronograma de servicios y el esquema de generación de alertas."),
+        ("Fase 4 — Desarrollo e implementación: ", 
+         "Se construyen de manera incremental los tres componentes del módulo: el proceso ETL, el motor de automatización del cronograma con alertas por criticidad, y el dashboard de KPIs en Streamlit."),
+        ("Fase 5 — Validación y documentación: ", 
+         "El sistema completo se somete a pruebas utilizando datos representativos del área de metrología, evaluando duplicados, completitud, consistencia, la exactitud de las alertas y la usabilidad final.")
     ]
-    for title, desc in methods:
+    for title, desc in phases:
         p = doc.add_paragraph(style='List Bullet')
         p.paragraph_format.space_after = Pt(4)
         run_title = p.add_run(title)
