@@ -519,7 +519,10 @@ def create_final_report():
     
     desktop_paths = [
         "C:/Users/julianag18/Desktop/informe_final_practica_juliana.docx",
-        "C:/Users/julianag18/OneDrive/Desktop/informe_final_practica_juliana.docx"
+        "C:/Users/julianag18/OneDrive/Desktop/informe_final_practica_juliana.docx",
+        "C:/Users/julianag18/Desktop/Proyecto de grado/proyecto_grado-main/informe_final_practica_juliana.docx",
+        "C:/Users/julianag18/OneDrive/Desktop/proyecto_grado-main/informe_final_practica_juliana.docx",
+        "./informe_final_practica_juliana.docx"
     ]
     
     for path in desktop_paths:
