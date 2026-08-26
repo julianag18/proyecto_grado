@@ -159,59 +159,46 @@ def create_final_report():
     doc.add_page_break()
 
     # ---------------------------------------------------------
-    # INICIO DE SECCIÓN DOBLE COLUMNA (Cuerpo del reporte IEEE)
+    # INICIO DE SECCIÓN ÚNICA (Cuerpo del reporte en monocolumna)
     # ---------------------------------------------------------
-    section_double = doc.add_section(WD_SECTION_START.CONTINUOUS)
-    section_double.top_margin = Inches(1)
-    section_double.bottom_margin = Inches(1)
-    section_double.left_margin = Inches(1)
-    section_double.right_margin = Inches(1)
-    
-    # XML manipulation to set 2 columns
-    sectPr = section_double._sectPr
-    cols = sectPr.find(qn('w:cols'))
-    if cols is None:
-        cols = OxmlElement('w:cols')
-        sectPr.append(cols)
-    cols.set(qn('w:num'), '2')
-    cols.set(qn('w:space'), '288') # 0.2 inch gap in dxa (1 inch = 1440 dxa, so 0.2 = 288)
+    section_mono_body = doc.add_section(WD_SECTION_START.CONTINUOUS)
+    section_mono_body.top_margin = Inches(1)
+    section_mono_body.bottom_margin = Inches(1)
+    section_mono_body.left_margin = Inches(1)
+    section_mono_body.right_margin = Inches(1)
 
-    # Helpers de títulos IEEE en dos columnas
+    # Helpers de títulos IEEE en monocolumna
     def add_ieee_heading_1(text):
         h = doc.add_paragraph()
-        h.alignment = WD_ALIGN_PARAGRAPH.CENTER
         h.paragraph_format.space_before = Pt(16)
         h.paragraph_format.space_after = Pt(6)
         h.paragraph_format.keep_with_next = True
         r = h.add_run(text)
         r.font.name = 'Times New Roman'
-        r.font.size = Pt(10)
+        r.font.size = Pt(11)
         r.bold = True
         return h
 
     def add_ieee_heading_2(text):
         h = doc.add_paragraph()
-        h.alignment = WD_ALIGN_PARAGRAPH.LEFT
         h.paragraph_format.space_before = Pt(12)
         h.paragraph_format.space_after = Pt(4)
         h.paragraph_format.keep_with_next = True
         r = h.add_run(text)
         r.font.name = 'Times New Roman'
-        r.font.size = Pt(10)
-        r.italic = True
+        r.font.size = Pt(11)
+        r.bold = True
         return h
 
     def add_ieee_heading_3(text):
         h = doc.add_paragraph()
-        h.alignment = WD_ALIGN_PARAGRAPH.LEFT
         h.paragraph_format.space_before = Pt(8)
         h.paragraph_format.space_after = Pt(2)
-        h.paragraph_format.left_indent = Inches(0.15)
         h.paragraph_format.keep_with_next = True
         r = h.add_run(text)
         r.font.name = 'Times New Roman'
         r.font.size = Pt(10)
-        r.italic = True
+        r.bold = True
         return h
 
     # I. INTRODUCCIÓN
