@@ -24,22 +24,21 @@ def set_cell_margins(cell, top=140, bottom=140, left=180, right=180):
 def create_final_report():
     doc = docx.Document()
     
-    # ---------------------------------------------------------
-    # CONFIGURACIÓN DE PÁGINA (Monocolumna)
-    # Margen estándar UdeA de 1 pulgada (2.54 cm)
-    # ---------------------------------------------------------
+    # Margen estándar de 1 pulgada para todas las páginas
     for section in doc.sections:
         section.top_margin = Inches(1)
         section.bottom_margin = Inches(1)
         section.left_margin = Inches(1)
         section.right_margin = Inches(1)
 
+    # Configuración de fuente normal (Times New Roman, 11 pt, color negro)
     style = doc.styles['Normal']
     font = style.font
     font.name = 'Times New Roman'
     font.size = Pt(11)
     font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
+    # Helpers de cabeceras oficiales (Niveles 1 a 4 IEEE)
     def add_heading_1(text):
         h = doc.add_paragraph()
         h.paragraph_format.space_before = Pt(24)
@@ -84,7 +83,7 @@ def create_final_report():
         r.font.size = Pt(11)
         return r
 
-    # 1. PORTADA ACADÉMICA
+    # 1. PORTADA ACADÉMICA COMPLETA
     p_logo = doc.add_paragraph()
     p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_logo.paragraph_format.space_after = Pt(24)
@@ -97,7 +96,7 @@ def create_final_report():
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(60)
     p_title.paragraph_format.space_after = Pt(12)
-    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓLULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
+    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓDULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
     run_title.bold = True
     run_title.font.name = 'Times New Roman'
     run_title.font.size = Pt(14)
@@ -122,7 +121,7 @@ def create_final_report():
 
     doc.add_page_break()
 
-    # 2. PÁGINA LEGAL Y LICENCIA
+    # 2. PÁGINA LEGAL DE CITA Y REFERENCIA
     add_heading_1("Página legal de citación y licencia")
     add_para(
         "Cómo se cita este documento: González Afanador, Juliana. \"Diseño e implementación de un módulo complementario para la gestión y digitalización del Programa de Aseguramiento Metrológico (PAME) en Laboratorios Laproff S.A.S.\", Informe Final de Práctica de Semestre de Industria, Departamento de Bioingeniería, Facultad de Ingeniería, Universidad de Antioquia, Sabaneta, 2026."
@@ -166,30 +165,81 @@ def create_final_report():
 
     doc.add_page_break()
 
+    # 5. TABLA DE CONTENIDO (Secciones preliminares)
+    add_heading_1("Tabla de contenido")
+    add_para("RESUMEN............................................................................................................................................... III")
+    add_para("ABSTRACT............................................................................................................................................. IV")
+    add_para("I. INTRODUCCIÓN.................................................................................................................................... 1")
+    add_para("II. OBJETIVOS............................................................................................................................................ 1")
+    add_para("    A. Objetivo general............................................................................................................................... 1")
+    add_para("    B. Objetivos específicos.......................................................................................................................... 1")
+    add_para("III. MARCO TEÓRICO................................................................................................................................ 2")
+    add_para("IV. METODOLOGÍA.................................................................................................................................... 3")
+    add_para("V. ANÁLISIS DE RESULTADOS................................................................................................................. 5")
+    add_para("VI. CONCLUSIONES Y RECOMENDACIONES......................................................................................... 8")
+    add_para("REFERENCIAS........................................................................................................................................... 9")
+    add_para("ANEXOS................................................................................................................................................... 10")
+
+    doc.add_page_break()
+
+    # 6. TABLAS, FIGURAS Y ABREVIATURAS
+    add_heading_1("Lista de tablas")
+    add_para("TABLA I. COMPARATIVO DE RENDIMIENTO Y FUNCIONALIDAD........................................................ 5")
+    add_para("TABLA II. MATRIZ COMPARATIVA DE RENDIMIENTO Y CAPACIDADES OPERATIVAS..................... 6")
+
+    add_heading_1("Lista de figuras")
+    add_para("Fig. 1. Gráfico de radar metrológico de madurez de procesos analíticos en planta............................ 7")
+
+    add_heading_1("Siglas, acrónimos y abreviaturas")
+    siglas = [
+        ("ALCOA+", "Attributable, Legible, Contemporaneous, Original, Accurate (Principios de Integridad de Datos)"),
+        ("BPM", "Buenas Prácticas de Manufactura (Normativa sanitaria farmacéutica)"),
+        ("CSV", "Comma-Separated Values (Valores Separados por Comas)"),
+        ("ETL", "Extract, Transform, Load (Extracción, Transformación y Carga de datos)"),
+        ("INVIMA", "Instituto Nacional de Vigilancia de Medicamentos y Alimentos"),
+        ("IQ/OQ/PQ", "Installation, Operational, and Performance Qualification (Calificaciones técnicas de equipos)"),
+        ("JSON", "JavaScript Object Notation (Formato de almacenamiento de datos NoSQL)"),
+        ("KPI", "Key Performance Indicator (Indicador Clave de Desempeño)"),
+        ("NDIR", "Non-Dispersive Infrared (Espectroscopia Infrarroja No Dispersiva)"),
+        ("ONAC", "Organismo Nacional de Acreditación de Colombia"),
+        ("PAME", "Programa de Aseguramiento Metrológico"),
+        ("PW/WFI", "Purified Water / Water for Injection (Tipos de agua grado farmacéutico)"),
+        ("SMTP", "Simple Mail Transfer Protocol (Protocolo de transferencia de correo electrónico)"),
+        ("TOC", "Total Organic Carbon (Carbono Orgánico Total)"),
+        ("USP", "United States Pharmacopeia (Farmacopea de los Estados Unidos)")
+    ]
+    for sig, desc in siglas:
+        p = doc.add_paragraph()
+        p.paragraph_format.left_indent = Inches(0.25)
+        p.paragraph_format.space_after = Pt(2)
+        r_sig = p.add_run(f"{sig}: ")
+        r_sig.bold = True
+        r_sig.font.name = 'Times New Roman'
+        p.add_run(desc).font.name = 'Times New Roman'
+
+    doc.add_page_break()
+
     # I. INTRODUCCIÓN
     add_heading_1("I. INTRODUCCIÓN")
     add_para(
-        "En el contexto de la industria farmacéutica, el aseguramiento metrológico representa uno de los pilares críticos de la garantía de la calidad y de la excelencia operacional. "
-        "Los laboratorios de control de calidad y las plantas de manufactura farmacéutica dependen enteramente de la confiabilidad, precisión y exactitud de sus instrumentos "
-        "de medición. En Colombia, el Instituto Nacional de Vigilancia de Medicamentos y Alimentos (INVIMA), bajo el mandato de las Buenas Prácticas de Manufactura (BPM) "
-        "según la Resolución 1160 de 2016, exige un control exhaustivo y documentado de los estados de calibración, calificación y mantenimiento de los equipos analíticos [1]. "
-        "La operación de instrumentos con certificados de calibración vencidos o fuera de tolerancias de aceptación metrológicas no solo representa una no conformidad severa "
-        "en las auditorías regulatorias, sino que introduce el riesgo crítico de liberar lotes de medicamentos con dosificaciones incorrectas o parámetros de calidad desviados."
+        "En la industria farmacéutica, el aseguramiento metrológico constituye el pilar fundamental sobre el cual se sustenta el control de calidad físico y químico. "
+        "Las Buenas Prácticas de Manufactura (BPM), estipuladas en Colombia por el INVIMA mediante la Resolución 1160 de 2016, exigen un monitoreo riguroso "
+        "e ininterrumpido sobre todas las variables críticas de los equipos analíticos y de producción [1]. Instrumentos tales como espectrofotómetros, "
+        "sistemas de análisis de Carbono Orgánico Total (TOC) y balanzas analíticas requieren calibraciones periódicas trazables hacia patrones nacionales "
+        "con el fin de mitigar riesgos de desviaciones críticas que afecten la calidad final de los medicamentos."
     )
     add_para(
-        "Tradicionalmente, en Laboratorios Laproff S.A.S., el seguimiento de estas actividades preventivas se ha realizado a través de hojas de cálculo individuales "
-        "administradas de manera aislada por los analistas técnicos y los coordinadores de validación de cada sección. Este enfoque descentralizado presentaba "
-        "inconvenientes operativos considerables: dispersión de la información, nula visibilidad gerencial agregada sobre el estado metrológico de la planta, y la "
-        "ausencia de alertas automatizadas preventivas que advirtieran de forma oportuna la inminencia del vencimiento técnico de un instrumento. "
-        "Esto deba como resultado la constante necesidad de inspecciones manuales del archivo para evitar que un equipo crítico quedara fuera de especificaciones."
+        "Tradicionalmente, en Laboratorios Laproff S.A.S., este control preventivo dependía de hojas de cálculo independientes que se actualizaban manualmente. "
+        "Este esquema descentralizado y propenso al error humano presentaba vacíos críticos en la auditoría y control de plazos de calibración externa. "
+        "Si bien la compañía inició la construcción de un sistema centralizado para registrar los equipos, carecía de un módulo analítico "
+        "que permitiera automatizar las alertas e inspeccionar la conformidad del cronograma metrológico de forma unificada. "
+        "De este modo, se identificó la necesidad de diseñar e implementar un módulo digital complementario para el Programa de Aseguramiento Metrológico (PAME)."
     )
     add_para(
-        "Para subsanar de raíz estas debilidades del proceso operativo, se propuso el diseño, desarrollo e implementación de un módulo complementario digital integrado "
-        "para el Programa de Aseguramiento Metrológico (PAME). La meta fue centralizar los cronogramas en una base de datos documental escalable y segura, automatizar un "
-        "motor de avisos predictivos por correo electrónico y proveer a la gerencia de calidad de un tablero analítico moderno con visualización de datos en tiempo real. "
-        "Este informe documenta exhaustivamente la ingeniería detrás del aplicativo desarrollado, los retos técnicos asociados a la latencia de base de datos en la nube y "
-        "la migración de datos estructurados, y los resultados de validación del prototipo funcional, demostrando la integración práctica de metodologías de desarrollo "
-        "de software y rigor metrológico para cumplir los exigentes estándares de la industria farmacéutica."
+        "El presente trabajo reporta detalladamente el proceso de ingeniería de software llevado a cabo a lo largo de 24 semanas de práctica industrial. "
+        "El desarrollo no estuvo exento de retos técnicos, tales como inconsistencias extremas en las fuentes de datos y un severo cuello de botella "
+        "de rendimiento de base de datos que ralentizaba la carga del cronograma. A continuación, se detalla la justificación del diseño, la resolución de "
+        "problemas algorítmicos, la validación metodológica y los resultados obtenidos."
     )
 
     # II. OBJETIVOS
@@ -216,63 +266,49 @@ def create_final_report():
     # III. MARCO TEÓRICO
     add_heading_1("III. MARCO TEÓRICO")
     
-    add_heading_2("A. El Aseguramiento Metrológico en la Industria Farmacéutica Regulada")
+    add_heading_2("A. Aseguramiento Metrológico en la Industria Farmacéutica")
     add_para(
-        "El aseguramiento metrológico abarca las actividades de calibración, validación, mantenimiento preventivo y verificación de instrumentos de medición. "
-        "La calibración compara las lecturas de un instrumento contra un patrón de referencia trazable con el fin de cuantificar su error sistemático y su incertidumbre [2]. "
-        "En la manufactura de medicamentos bajo estándares de Buenas Prácticas de Manufactura (BPM), la norma internacional ISO 10012:2003 exige estructurar un sistema "
-        "de gestión de las mediciones que demuestre de forma ininterrumpida la idoneidad metrológica de cada sensor analítico. Cualquier equipo con una calibración "
-        "vencida o calificado como 'No Cumple' debe ser identificado físicamente de inmediato para evitar su uso en ensayos oficiales de calidad [3]."
+        "El aseguramiento metrológico se define como el conjunto de operaciones requeridas para asegurar que un equipo de medición esté en condiciones de "
+        "conformidad con los requisitos para su uso previsto. En la industria farmacéutica nacional, el INVIMA rige la trazabilidad metrológica siguiendo "
+        "las directrices de la ISO 10012:2003 [2]. Esta norma establece los requisitos de gestión de mediciones, requiriendo un control estricto sobre "
+        "el cronograma de calibraciones, el estado de los instrumentos y el archivo auditable de certificados técnicos de proveedores autorizados [3]."
     )
 
-    add_heading_2("B. Integridad de los Datos y Principios ALCOA+ en Sistemas de Software")
+    add_heading_2("B. Transformación Digital e Integridad de Datos")
     add_para(
-        "En la informática de laboratorios y manufactura farmacéutica, la transformación digital no solo obedece a la agilidad operativa, sino a mandatos normativos rígidos "
-        "sobre la integridad de los datos. La directiva ALCOA+ establece que todos los datos deben ser Atribuibles (saber quién los generó), Legibles (comprensibles en el tiempo), "
-        "Contemporáneos (registrados al instante del evento), Originales (fuente primaria no modificada) y Exactos (libres de errores de digitación manual). "
-        "Las hojas de cálculo planas en formato Excel carecen de pistas de auditoría (audit trail) nativas, permitiendo la alteración histórica de fechas de calibración sin "
-        "dejar registros. Un desarrollo moderno de base de datos documental debe mitigar este riesgo estructurando colecciones inmutables en servidores en la nube con "
-        "mecanismos estrictos de autenticación de API para preservar la trazabilidad documental ante auditorías oficiales [4]."
+        "La digitalización de laboratorios químicos y biológicos debe alinearse con los principios ALCOA+ (Atribuible, Legible, Contemporáneo, Original y Exacto). "
+        "La transición de hojas de cálculo planas a sistemas con bases de datos estructuradas e interfaces controladas minimiza el riesgo de manipulación de "
+        "fechas y resultados. Laudon y Laudon afirman que la migración e integración de sistemas es una de las etapas críticas de la transformación digital, "
+        "puesto que un error en el filtrado inicial contamina el nuevo repositorio con registros duplicados o corruptos [4]."
     )
 
-    add_heading_2("C. Modelado Documental NoSQL frente a Bases de Datos Relacionales (SQL)")
+    add_heading_2("C. Bases de Datos NoSQL y Firebase Firestore")
     add_para(
-        "La naturaleza de los equipos metrológicos de un laboratorio químico es sumamente heterogénea. "
-        "Una balanza analítica analógica requiere registrar magnitudes de masa, pruebas de excentricidad de carga, repetibilidad e incertidumbre expandida. "
-        "Por el contrario, un analizador de Carbono Orgánico Total (TOC) como el GEHAKA 2400 realiza mediciones avanzadas de conductividad diferencial, "
-        "carbono inorgánico y carbono total mediante procesos continuos de oxidación de compuestos orgánicos mediante radiación UV y persulfato de amonio. "
-        "El modelado en una base de datos relacional (SQL) para un catálogo de equipos tan disímil genera un esquema rígido que requiere decenas de tablas "
-        "de unión y constantes consultas tipo JOIN que degradan severamente el rendimiento computacional ante solicitudes masivas. "
-        "Las bases de datos NoSQL basadas en documentos (como Firebase Firestore) resuelven este dilema de modelado. Permiten almacenar colecciones de documentos "
-        "JSON dinámicos, donde cada documento representa un equipo con sus especificaciones particulares, soportando datos dinámicos sin "
-        "afectar el rendimiento global de las búsquedas en el sistema [5]."
+        "Las bases de datos relacionales tradicionales imponen restricciones de esquema rígidas. En metrología, la diversidad de variables de calibración "
+        "entre una balanza (linealidad, excentricidad, repetibilidad) y un cromatógrafo de gases (flujo, temperatura, área de pico) hace ineficiente un esquema SQL fijo. "
+        "Firebase Firestore ofrece una base de datos NoSQL documental y flexible, donde cada equipo puede poseer sus propios campos y listas de metadatos "
+        "anidados sin comprometer la integridad estructural de la colección general de equipos [5]."
     )
 
-    add_heading_2("D. Algoritmia, Latencia de Red y el Fenómeno de Consulta N+1")
+    add_heading_2("D. El Problema de Consulta N+1 y Optimización del Rendimiento")
     add_para(
-        "El problema de rendimiento N+1 es un defecto algorítmico clásico que ocurre cuando un sistema de software, para renderizar un listado de N registros principales "
-        "con sus respectivos detalles, ejecuta una petición principal inicial y posteriormente ejecuta N consultas adicionales e individuales en una estructura de bucle recursivo [6]. "
-        "En arquitecturas web conectadas a bases de datos en la nube (como Firestore), esto causa dos fallos críticos: "
-        "(1) Latencia de Red Acumulada: Cada petición a la nube requiere un viaje de ida y vuelta (round-trip) que introduce milisegundos de retraso en la red pública; ante "
-        "cientos de equipos, el retraso acumulado congela por completo la interfaz web de la aplicación. "
-        "(2) Incremento de Costos Operativos: Las bases de datos en la nube cobran cuotas por cantidad de lecturas ejecutadas; un ciclo recursivo N+1 dispara miles de lecturas "
-        "innecesarias por cada recarga de pantalla de usuario. "
-        "Para solucionarlo, el patrón de diseño exige migrar a una única consulta masiva unificada (batch query), reduciendo la complejidad del proceso a tiempo lineal O(N) "
-        "y delegando el agrupamiento y filtrado de las colecciones a estructuras de datos en memoria local a través de funciones vectorizadas rápidas de Pandas [7]."
+        "En la ingeniería de software, el problema de consulta N+1 ocurre cuando una aplicación ejecuta una consulta inicial para obtener un conjunto de "
+        "registros (N) y posteriormente realiza una consulta adicional por cada registro para recuperar datos complementarios en un ciclo repetitivo [6]. "
+        "En entornos web, esto satura las conexiones de red e incrementa drásticamente los tiempos de latencia y facturación por cuota de lectura. "
+        "Para corregirlo, se requiere aplicar técnicas de consultas agrupadas (batch query), donde se realiza una única petición masiva y la unión de "
+        "los datos se computa localmente en memoria utilizando algoritmos optimizados de complejidad lineal O(N) [7]."
     )
-
-    doc.add_page_break()
 
     # IV. METODOLOGÍA
-    add_heading_1("IV. METODOLOGÍA Y CRONOGRAMA DE EJECUCIÓN (PASO A PASO)")
+    add_heading_1("IV. METODOLOGÍA")
     add_para(
-        "El proyecto se llevó a cabo siguiendo una estructura cronológica rigurosa de 6 meses de duración, dividida en fases de ingeniería con entregables acoplados. "
-        "A continuación se detalla la metodología ejecutada paso a paso:"
+        "El desarrollo del proyecto se ejecutó siguiendo una estructura metodológica aplicada con un enfoque mixto y un diseño no experimental "
+        "distribuido a lo largo de un periodo cronológico de 6 meses (24 semanas) de práctica industrial, dividido en las siguientes etapas secuenciales:"
     )
 
     add_heading_2("A. Fase 1: Contextualización y Levantamiento de Requerimientos (Mes 1)")
     add_para(
-        "Durante el primer mes de la práctica industrial, se realizó un proceso intensivo de inmersión en el dominio metrológico y regulatorio del laboratorio. "
+        "El primer mes estuvo dedicado a la inmersión en el dominio metrológico y regulatorio del laboratorio. "
         "Se asimiló el vocabulario técnico crítico del área, incluyendo los conceptos de Carbono Orgánico Total (TOC), Agua Purificada (PW), Agua para Inyección (WFI), "
         "calificaciones de diseño, instalación, operación y desempeño (IQ/OQ/PQ), y directrices de validación del INVIMA. "
         "Asimismo, se estudió el funcionamiento de los sensores espectrofotométricos de absorción infrarroja no dispersiva (NDIR), evaluando la precisión respecto al "
@@ -345,18 +381,16 @@ def create_final_report():
         "Esta documentación técnica sirvió de base para entrenar un asistente de programación con IA, facilitando la validación del código y correcciones menores del dashboard."
     )
     add_para(
-        "El proyecto finalizado y el análisis metrológico complementario realizado sobre el analizador de TOC GEHAKA 2400 (que detallaba el plan de idoneidad del sistema) "
+        "El proyecto finalizado y el análisis metrológico del analizador de TOC GEHAKA 2400 (que detallaba el plan de idoneidad del sistema) "
         "fueron presentados formalmente ante el comité primario del área de metrología de Laboratorios Laproff S.A.S., recibiendo la aprobación unánime de los asesores."
     )
 
-    doc.add_page_break()
-
     # V. ANÁLISIS DE RESULTADOS
-    add_heading_1("V. ANÁLISIS DE RESULTADOS Y VALIDACIÓN")
+    add_heading_1("V. ANÁLISIS DE RESULTADOS")
     add_para(
-        "El módulo digital PAME implementó mejoras cuantitativas y operativas drásticas en comparación con el control tradicional del laboratorio. "
-        "Para evidenciar de forma rigurosa estas diferencias de rendimiento y capacidades técnicas, se estructuró la TABLA II, "
-        "detallando las dimensiones críticas evaluadas bajo la norma IEEE:"
+        "La validación del módulo digital PAME arrojó excelentes resultados de rendimiento e integridad. "
+        "Las diferencias operativas y de rendimiento entre el proceso manual heredado y el módulo digital desarrollado "
+        "se resumen en la TABLA II, la cual fue estructurada siguiendo de manera estricta la norma de presentación de tablas de IEEE:"
     )
 
     # TABLA II IEEE
@@ -439,7 +473,7 @@ def create_final_report():
     add_heading_2("Análisis Crítico de la Matriz Comparativa")
     add_para(
         "Al evaluar detalladamente las diferencias condensadas en la TABLA II, es posible determinar tres mejoras fundamentales "
-        "aportadas por el módulo PAME frente a la operación tradicional del laboratorio. "
+        "esenciales que el módulo PAME aporta al laboratorio de metrología. "
         "En primer lugar, la unificación del modelo de datos de entrada mediante la tubería ETL automatizada erradica el error humano "
         "asociado a la transcripción manual de fechas y normaliza variaciones críticas de texto, garantizando la consistencia "
         "de la información subida a Firebase Firestore. "
