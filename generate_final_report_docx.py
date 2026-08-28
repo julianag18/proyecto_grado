@@ -181,8 +181,7 @@ def create_final_report():
         "administradas de manera aislada por los analistas técnicos y los coordinadores de validación de cada sección. Este enfoque descentralizado presentaba "
         "inconvenientes operativos considerables: dispersión de la información, nula visibilidad gerencial agregada sobre el estado metrológico de la planta, y la "
         "ausencia de alertas automatizadas preventivas que advirtieran de forma oportuna la inminencia del vencimiento técnico de un instrumento. "
-        "Esto último obligaba al personal a realizar constantes inspecciones visuales manuales del cronograma general para evitar que un equipo quedara fuera de servicio "
-        "o, peor aún, fuera utilizado en un análisis oficial de liberación de producto con su certificación técnica caducada."
+        "Esto deba como resultado la constante necesidad de inspecciones manuales del archivo para evitar que un equipo crítico quedara fuera de especificaciones."
     )
     add_para(
         "Para subsanar de raíz estas debilidades del proceso operativo, se propuso el diseño, desarrollo e implementación de un módulo complementario digital integrado "
@@ -219,12 +218,11 @@ def create_final_report():
     
     add_heading_2("A. El Aseguramiento Metrológico en la Industria Farmacéutica Regulada")
     add_para(
-        "El aseguramiento metrológico se define como el conjunto de operaciones requeridas para garantizar que los equipos de medición cumplan con las especificaciones "
-        "necesarias para su uso previsto. En entornos regulados por agencias sanitarias (como el INVIMA o la FDA), cada instrumento analítico se somete a ciclos continuos "
-        "de calibración y calificación (instalación IQ, operación OQ y desempeño PQ) para certificar su trazabilidad metrológica hacia patrones internacionales reconocidos [2]. "
-        "De acuerdo con la norma internacional ISO 10012:2003, un sistema de control metrológico eficaz exige que el laboratorio farmacéutico defina y respete intervalos de "
-        "calibración específicos para cada variable crítica y que documente formalmente las desviaciones de tolerancia permitidas. Si una medición excede las tolerancias "
-        "definidas, el instrumento debe marcarse inmediatamente como fuera de especificación para evitar desviaciones en la manufactura de fármacos [3]."
+        "El aseguramiento metrológico abarca las actividades de calibración, validación, mantenimiento preventivo y verificación de instrumentos de medición. "
+        "La calibración compara las lecturas de un instrumento contra un patrón de referencia trazable con el fin de cuantificar su error sistemático y su incertidumbre [2]. "
+        "En la manufactura de medicamentos bajo estándares de Buenas Prácticas de Manufactura (BPM), la norma internacional ISO 10012:2003 exige estructurar un sistema "
+        "de gestión de las mediciones que demuestre de forma ininterrumpida la idoneidad metrológica de cada sensor analítico. Cualquier equipo con una calibración "
+        "vencida o calificado como 'No Cumple' debe ser identificado físicamente de inmediato para evitar su uso en ensayos oficiales de calidad [3]."
     )
 
     add_heading_2("B. Integridad de los Datos y Principios ALCOA+ en Sistemas de Software")
@@ -246,8 +244,8 @@ def create_final_report():
         "El modelado en una base de datos relacional (SQL) para un catálogo de equipos tan disímil genera un esquema rígido que requiere decenas de tablas "
         "de unión y constantes consultas tipo JOIN que degradan severamente el rendimiento computacional ante solicitudes masivas. "
         "Las bases de datos NoSQL basadas en documentos (como Firebase Firestore) resuelven este dilema de modelado. Permiten almacenar colecciones de documentos "
-        "JSON dinámicos, donde cada equipo contiene sus propios metadatos anidados específicos sin forzar a los demás instrumentos a compartir el mismo esquema rígido, "
-        "optimizando la escalabilidad del sistema [5]."
+        "JSON dinámicos, donde cada documento representa un equipo con sus especificaciones particulares, soportando datos dinámicos sin "
+        "afectar el rendimiento global de las búsquedas en el sistema [5]."
     )
 
     add_heading_2("D. Algoritmia, Latencia de Red y el Fenómeno de Consulta N+1")
@@ -263,229 +261,197 @@ def create_final_report():
         "y delegando el agrupamiento y filtrado de las colecciones a estructuras de datos en memoria local a través de funciones vectorizadas rápidas de Pandas [7]."
     )
 
-    # IV. DECISIONES DE DISEÑO Y SELECCIÓN DE SOFTWARE
-    add_heading_1("IV. DECISIONES DE DISEÑO Y SELECCIÓN DE SOFTWARE")
+    doc.add_page_break()
+
+    # IV. METODOLOGÍA
+    add_heading_1("IV. METODOLOGÍA Y CRONOGRAMA DE EJECUCIÓN (PASO A PASO)")
     add_para(
-        "La arquitectura de software implementada se estructuró a partir de un riguroso análisis comparativo de tecnologías de desarrollo. "
-        "En esta sección se detallan las justificaciones técnicas y los compromisos de ingeniería que sustentaron la elección de cada componente del ecosistema:"
+        "El proyecto se llevó a cabo siguiendo una estructura cronológica rigurosa de 6 meses de duración, dividida en fases de ingeniería con entregables acoplados. "
+        "A continuación se detalla la metodología ejecutada paso a paso:"
     )
 
-    add_heading_2("A. Lenguaje de Programación: Python y su ecosistema analítico")
+    add_heading_2("A. Fase 1: Contextualización y Levantamiento de Requerimientos (Mes 1)")
     add_para(
-        "Se seleccionó Python como lenguaje de programación principal del proyecto, superando la alternativa de lenguajes compilados como Java o C#. "
-        "El factor determinante fue la disponibilidad y rendimiento de Pandas, la biblioteca estándar para el análisis y manipulación de datos tabulares, "
-        "y de Pytest para estructurar pruebas unitarias avanzadas. "
-        "En un proyecto metrológico centrado en la migración de archivos Excel dispersos y la automatización de notificaciones, "
-        "Python nos permitió escribir código legible, fácil de mantener por el equipo de Laproff y con un tiempo de desarrollo sustancialmente menor."
+        "Durante el primer mes de la práctica industrial, se realizó un proceso intensivo de inmersión en el dominio metrológico y regulatorio del laboratorio. "
+        "Se asimiló el vocabulario técnico crítico del área, incluyendo los conceptos de Carbono Orgánico Total (TOC), Agua Purificada (PW), Agua para Inyección (WFI), "
+        "calificaciones de diseño, instalación, operación y desempeño (IQ/OQ/PQ), y directrices de validación del INVIMA. "
+        "Asimismo, se estudió el funcionamiento de los sensores espectrofotométricos de absorción infrarroja no dispersiva (NDIR), evaluando la precisión respecto al "
+        "rango de escala total (Full Scale) y el empleo de estándares de referencia de sacarosa certificados por la USP."
+    )
+    add_para(
+        "Se identificó la necesidad concreta de desarrollar un módulo analítico complementario que no reemplazara el software corporativo en desarrollo en Laproff, "
+        "sino que aportara capacidades diferenciadoras de alerta preventiva y visualización histórica agregada. "
+        "Para ello, se auditó la fuente de datos real proporcionada por el área de Metrología: el archivo `Cronograma_De_Servicios.csv`. "
+        "Este archivo posee aproximadamente 3.600 registros metrológicos distribuidos en 14 columnas de datos (incluyendo códigos de equipos, ubicaciones físicas, "
+        "fechas de servicio, periodicidad y estados de conformidad), codificado bajo el formato latin-1 y delimitado por punto y coma. "
+        "Mediante reuniones periódicas con el Jefe de Validaciones y Metrología (asesor externo), se definió el alcance funcional del aplicativo, estableciendo como meta "
+        "construir un prototipo funcional robusto para el control en tiempo real del cronograma."
     )
 
-    add_heading_2("B. Firebase Firestore frente a Supabase y PostgreSQL")
+    add_heading_2("B. Fase 2: Definición de Arquitectura y Modelado de Datos (Mes 2)")
     add_para(
-        "Se evaluó implementar una base de datos relacional PostgreSQL con Supabase. "
-        "Sin embargo, tras analizar el inventario metrológico real de la planta, se identificó que la variabilidad de campos por tipo de equipo "
-        "(ej. balanzas con pruebas de linealidad, cromatógrafos con tiempos de retención y medidores de conductividad con constantes de celda) "
-        "habría requerido una base relacional altamente normalizada con múltiples tablas de unión. "
-        "Firebase Firestore fue seleccionado gracias a su flexibilidad NoSQL documental. Esto permitió a cada registro de equipo poseer un objeto JSON "
-        "metrológico dinámico propio. "
-        "Además, Firestore ofrece sincronización nativa en tiempo real y una latencia de escritura baja, idónea para sistemas que registran "
-        "datos de calibración sobre la marcha desde diferentes áreas de la planta farmacéutica."
+        "El segundo mes se enfocó en el análisis arquitectónico y la selección del motor de persistencia. "
+        "Se realizó un análisis comparativo entre una base de datos relacional PostgreSQL administrada mediante Supabase y una documental NoSQL estructurada en Firebase Firestore. "
+        "La justificación técnica de la decisión final a favor de Firestore radicó en su capacidad nativa para almacenar y procesar documentos JSON heterogéneos. "
+        "Dado que las balanzas analíticas, termohigrómetros y equipos analíticos complejos como el analizador de TOC registran datos metrológicos marcadamente diferentes, "
+        "un esquema SQL clásico habría impuesto una rigidez perjudicial con múltiples tablas JOIN. "
+        "Firestore permitió representar de forma directa el inventario de equipos y sus correspondientes subcolecciones de historial de calibraciones y alertas. "
+        "Adicionalmente, en esta fase se definieron formalmente los KPIs diferenciales que debía ofrecer el módulo, tales como el Índice de Salud de la planta "
+        "y el análisis interanual, elementos ausentes en el desarrollo corporativo central."
     )
 
-    add_heading_2("C. Interfaz de Usuario: Streamlit frente a frameworks tradicionales")
+    add_heading_2("C. Fase 3: Construcción de la Tubería ETL (Mes 3)")
     add_para(
-        "La construcción de una aplicación web interactiva de manera tradicional (utilizando React, Angular o Vue en el frontend y Node.js o Flask en el backend) "
-        "requiere semanas de desarrollo dedicadas a la creación de APIs REST, layouts web y la sincronización de estados. "
-        "Se eligió Streamlit porque permite compilar e iterar rápidamente la interfaz web directamente en lenguaje Python, reduciendo a cero la latencia de "
-        "desarrollo del frontend. "
-        "Su integración transparente con Plotly facilitó la inyección de gráficos metrológicos sofisticados (radar, líneas, barras) "
-        "y su capacidad de recarga de estados en caché local ayudó a resolver los problemas de rendimiento directamente en el backend de Python."
+        "El tercer mes estuvo dedicado al desarrollo del pipeline de extracción, transformación y carga (ETL) desarrollado en Python. "
+        "Para asegurar la flexibilidad del sistema ante posibles cambios futuros en las exportaciones de datos de la empresa, "
+        "se incorporó la lectura nativa de formatos JSON, además de los formatos CSV de Laproff. "
+        "Se programó una subrutina de detección automática de estructura capaz de interpretar las variaciones en las columnas de 4 formatos de cronograma distintos."
+    )
+    add_para(
+        "Con el objetivo de validar la robustez de la tubería ETL sin alterar la base de datos real del laboratorio, se generaron tres archivos sintéticos de prueba: "
+        "(1) `cronograma_sample.csv` (55 registros que incorporaban intencionalmente celdas vacías, caracteres especiales y fechas mal formateadas para evaluar la tolerancia al error), "
+        "(2) `cronograma_historico.json` (123 registros reales cubriendo el periodo de calibraciones 2022–2024 para poblar el histórico anual) "
+        "y (3) `equipos_nuevos.csv` (10 registros con equipos nuevos sin historial previo). "
+        "Las pruebas realizadas confirmaron que el pipeline corrige las inconsistencias de texto de forma automática y omite registros duplicados empleando una llave compuesta de control."
     )
 
-    add_heading_2("D. Servicio de Correo SMTP y Plantillas Transaccionales: Brevo")
+    add_heading_2("D. Fase 4: Motor de Alertas y Notificaciones (Mes 4)")
     add_para(
-        "El motor de alertas requería una pasarela con altos estándares de entregabilidad. "
-        "El uso de cuentas SMTP estándar de consumo masivo (Gmail corporativo) presentaba severos límites de envío y bloqueos por sospecha de spam "
-        "cuando se enviaban múltiples correos consecutivos a los analistas. "
-        "Se implementó Brevo (antiguo Sendinblue) como pasarela transaccional. "
-        "Brevo nos permitió diseñar plantillas HTML interactivas con estilos responsivos y barras de distribución visual, ofreciendo logs "
-        "detallados de entrega y asegurando que las alertas de vencimiento de 30 días arriben a la bandeja de entrada del metrólogo sin demoras."
+        "Durante el cuarto mes, se implementó el motor de notificaciones solicitado explícitamente por el Jefe de Validaciones de Laproff para evitar la revisión visual manual. "
+        "Se configuró el envío automatizado a través de la pasarela SMTP transaccional de Brevo. "
+        "Se diseñaron plantillas de correo electrónico responsivas en HTML que incorporan el logotipo institucional, tablas estructuradas de los equipos próximos "
+        "y una barra visual de distribución de estados. "
+        "Para accionar el motor, se programó un script planificador (scheduler) de ejecución diaria en segundo plano. "
+        "Este script corre cada mañana, computa la diferencia de días entre la fecha actual y la fecha de vencimiento metrológico de cada equipo, "
+        "y despacha alertas por lotes si encuentra instrumentos dentro del margen crítico de 30 días, o alertas inmediatas individuales ante fallos analíticos."
+    )
+
+    add_heading_2("E. Fase 5: Desarrollo del Tablero Interactivo en Streamlit (Mes 5)")
+    add_para(
+        "El quinto mes se centró en la construcción de la interfaz web interactiva en Streamlit. "
+        "Se integraron gráficos dinámicos desarrollados con Plotly, tales como curvas de tendencia mensual con relleno degradado y el comparativo anual. "
+        "Para responder a los requerimientos del asesor externo, se desarrolló especialmente la pestaña de 'Cumplimiento Anual', "
+        "la cual permite visualizar año tras año la evolución del cumplimiento y el estado de conformidad acumulado por área. "
+        "Esta vista histórica constituía el requerimiento diferenciador clave del módulo PAME. "
+        "Se iteró continuamente en el diseño de los selectores laterales, filtros por sección y tablas editables para garantizar que la interfaz "
+        "fuera intuitiva tanto para los analistas de laboratorio como para los auditores de calidad."
+    )
+
+    add_heading_2("F. Fase 6: Integración, Pruebas y Entrega (Mes 6)")
+    add_para(
+        "El último mes estuvo dedicado a la integración final del sistema completo de extremo a extremo (ETL $\rightarrow$ Firestore $\rightarrow$ Alertas $\rightarrow$ Streamlit). "
+        "Se realizaron pruebas de integración inyectando simultáneamente los tres archivos sintéticos de prueba y el archivo de datos reales del laboratorio. "
+        "Para asegurar la transferencia de conocimiento y facilitar futuras mejoras, se redactó una documentación técnica estructurada en bloques lógicos. "
+        "Esta documentación técnica sirvió de base para entrenar un asistente de programación con IA, facilitando la validación del código y correcciones menores del dashboard."
+    )
+    add_para(
+        "El proyecto finalizado y el análisis metrológico complementario realizado sobre el analizador de TOC GEHAKA 2400 (que detallaba el plan de idoneidad del sistema) "
+        "fueron presentados formalmente ante el comité primario del área de metrología de Laboratorios Laproff S.A.S., recibiendo la aprobación unánime de los asesores."
     )
 
     doc.add_page_break()
 
-    # V. IMPLEMENTACIÓN PASO A PASO Y RESOLUCIÓN DE INCONVENIENTES
-    add_heading_1("V. IMPLEMENTACIÓN PASO A PASO Y RESOLUCIÓN DE INCONVENIENTES")
+    # V. ANÁLISIS DE RESULTADOS
+    add_heading_1("V. ANÁLISIS DE RESULTADOS Y VALIDACIÓN")
     add_para(
-        "El desarrollo del módulo digital PAME se ejecutó de forma incremental a lo largo de las 24 semanas de la práctica. "
-        "A continuación se presenta el flujo detallado de la implementación, documentando los principales inconvenientes técnicos "
-        "y las respectivas estrategias de ingeniería aplicadas para solucionarlos:"
+        "El módulo digital PAME implementó mejoras cuantitativas y operativas drásticas en comparación con el control tradicional del laboratorio. "
+        "Para evidenciar de forma rigurosa estas diferencias de rendimiento y capacidades técnicas, se estructuró la TABLA II, "
+        "detallando las dimensiones críticas evaluadas bajo la norma IEEE:"
     )
 
-    add_heading_2("A. Hito 1: Construcción y Depuración de la Tubería ETL")
-    add_para(
-        "La fase inicial del proyecto estuvo enfocada en consolidar y normalizar el historial disperso de calibraciones. "
-        "Se programó un script de automatización ETL en Python (`src/etl/pipeline.py`) utilizando la biblioteca Pandas. "
-        "El script extrae las tablas desde archivos Excel y CSV, ejecuta rutinas de transformación de tipos y las carga a Firestore."
-    )
-    add_para(
-        "1. Inconveniente Detectado: Se halló una extrema inconsistencia en los nombres de las ubicaciones y equipos digitados manualmente por los operarios. "
-        "Ubicaciones como 'Control de Calidad' aparecían registradas de más de 12 formas diferentes, lo que imposibilitaba agrupar correctamente los datos analíticos "
-        "o calcular estadísticas por área. Asimismo, múltiples celdas de fechas críticas estaban vacías o contenían valores inválidos de texto."
-    )
-    add_para(
-        "2. Solución y Mejoras Aplicadas: Se integró en la fase de transformación un diccionario estandarizado de mapeo de texto que unifica de forma automática "
-        "la nomenclatura. Se diseñó una función de validación de fechas que evalúa las cadenas de texto, descartando los registros corruptos y escribiendo logs "
-        "de auditoría detallados. Para evitar la duplicidad de registros, se configuró un validador que genera una llave única compuesta (código_equipo + fecha_servicio), "
-        "bloqueando la subida a base de datos de registros repetidos."
-    )
+    # TABLA II IEEE
+    p_tab_label = doc.add_paragraph()
+    p_tab_label.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_tab_label.paragraph_format.space_before = Pt(12)
+    p_tab_label.paragraph_format.space_after = Pt(2)
+    p_tab_label.paragraph_format.keep_with_next = True
+    r_tab = p_tab_label.add_run("TABLA II")
+    r_tab.bold = True
+    r_tab.font.name = 'Times New Roman'
+    r_tab.font.size = Pt(10)
 
-    add_heading_2("B. Hito 2: Optimización de Base de Datos y Resolución del Problema N+1")
-    add_para(
-        "Tras migrar los datos iniciales del laboratorio, al renderizar el dashboard interactivo de Streamlit, la interfaz del usuario se congelaba "
-        "por más de 3 minutos, arrojando errores de timeout. Al auditar la comunicación del backend, se descubrió la presencia del fenómeno de consulta N+1. "
-        "La aplicación leía una lista inicial de N equipos y, dentro de un bucle iterativo recursivo, realizaba una nueva petición a Firestore "
-        "para extraer el historial de calibraciones individuales de cada instrumento."
-    )
-    add_para(
-        "1. Inconveniente Detectado: Con un volumen real de 200 equipos analíticos, el aplicativo ejecutaba 201 peticiones consecutivas a Firestore "
-        "por cada usuario en pantalla, saturando el ancho de banda y consumiendo el límite de cuotas de lectura gratuitas del servicio en la nube."
-    )
-    add_para(
-        "2. Solución y Mejoras Aplicadas: Se reescribió el backend en `src/database/equipos_repo.py`. Se eliminó el bucle recursivo. "
-        "Se programó una única consulta en bloque masivo que descarga la colección completa de calibraciones en una sola petición. "
-        "Posteriormente, la unión de datos se realiza en memoria local empleando agrupamientos vectorizados de Pandas, logrando una respuesta lineal O(N) "
-        "en milisegundos. Para optimizar aún más el rendimiento, se decoraron las funciones de carga con `@st.cache_data`, inmovilizando la consulta "
-        "a menos de que el usuario suba un nuevo archivo de migración o edite el cronograma."
-    )
+    p_tab_title = doc.add_paragraph()
+    p_tab_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_tab_title.paragraph_format.space_after = Pt(8)
+    p_tab_title.paragraph_format.keep_with_next = True
+    r_title = p_tab_title.add_run("MATRIZ COMPARATIVA DE RENDIMIENTO Y CAPACIDADES OPERATIVAS")
+    r_title.bold = True
+    r_title.font.name = 'Times New Roman'
+    r_title.font.size = Pt(10)
 
-    add_heading_2("C. Hito 3: Lógica Metrológica del Motor de Alertas y Justificación Logística")
-    add_para(
-        "Se implementó un motor cron en segundo plano que valida diariamente el cronograma metrológico de Laproff. "
-        "Se parametrizó una regla de negocio donde las notificaciones preventivas por correo electrónico se disparan con un mes (30 días) de anticipación. "
-        "Esta ventana temporal se justificó operacionalmente debido al ciclo de abastecimiento de compras metrológicas externas en la industria farmacéutica:"
-    )
+    table_comp = doc.add_table(rows=11, cols=3)
+    table_comp.alignment = WD_TABLE_ALIGNMENT.CENTER
     
-    cycle_steps = [
-        "Semana 1: Selección del proveedor acreditado por el ONAC específico para el instrumento, envío de fichas y solicitud de cotizaciones formales de calibración.",
-        "Semana 2: Trámite del presupuesto con el área financiera de Laproff, aprobación del gasto y generación de la orden de compra oficial de servicio externo.",
-        "Semana 3: Coordinación de la visita física del técnico metrólogo en planta y programación de la parada técnica del equipo de manufactura para evitar interferir con las campañas activas de producción de medicamentos.",
-        "Semana 4: Ejecución de la calibración, emisión del certificado metrológico impreso/digital, análisis de desviación contra tolerancias de la farmacopea y verificación final de la conformidad por el Jefe de Validaciones y Metrología."
-    ]
-    for step in cycle_steps:
-        p = doc.add_paragraph(style='List Bullet')
-        p.paragraph_format.space_after = Pt(4)
-        p.add_run(step)
-        
-    add_para(
-        "1. Inconveniente Detectado: Enviar un correo electrónico independiente por cada equipo vencido saturaba la bandeja del metrólogo jefe. "
-        "Por el contrario, si un equipo de alta criticidad para la producción farmacéutica fallaba metrológicamente y se registraba como 'No Cumple', "
-        "esperar al reporte del final del día para notificarlo ponía en grave riesgo la conformidad de los lotes de medicamentos en proceso de envasado."
-    )
-    add_para(
-        "2. Solución y Mejoras Aplicadas: Se programó una regla de agrupación por lotes. El motor cron recopila las alertas preventivas del día "
-        "y genera un reporte diario único estructurado en HTML con la lista consolidada de los instrumentos. "
-        "Sin embargo, si se registra un estado metrológico crítico ('No Cumple' o 'Vencido en Uso'), el motor de notificaciones dispara "
-        "una alerta inmediata e independiente al supervisor técnico del área para suspender la operación del equipo de inmediato."
-    )
-
-    add_heading_2("D. Hito 4: Visualización Ejecutiva y KPIs en Tiempo Real")
-    add_para(
-        "Para permitir auditorías ejecutivas rápidas, se rediseñó visualmente la interfaz del panel de control de Streamlit. "
-        "Se integró un gráfico de radar (araña) interactivo en la pestaña principal, permitiendo evaluar la madurez metrológica de cada sección. "
-        "El radar pondera 5 métricas críticas de 0 a 100%: (1) Vigencia: Porcentaje de equipos con calibración al día. "
-        "(2) Conformidad: Porcentaje de calibraciones que cumplen los límites de tolerancia de manufactura. "
-        "(3) Oportunidad: Equipos libres de vencimiento normativo inmediato. "
-        "(4) Actualidad: Porcentaje de calibraciones realizadas hace menos de un año. "
-        "(5) Formalización: Equipos con proveedor y contrato técnico vigente asignado en la base de datos."
-    )
-
-    # VI. METODOLOGÍA
-    add_heading_1("VI. METODOLOGÍA")
-    add_para(
-        "La metodología de la práctica se enmarcó en un enfoque aplicado de tipo mixto, estructurado en 5 fases a lo largo del periodo de 24 semanas. "
-        "La fase cuantitativa midió variables del sistema como tiempos de respuesta (segundos) y calidad de datos (porcentaje de duplicados omitidos). "
-        "La fase cualitativa abarcó el levantamiento de requisitos operativos mediante entrevistas directas con el metrólogo de Laproff "
-        "y el diseño de las reglas lógicas del negocio farmacéutico."
-    )
-
-    # VII. ANÁLISIS DE RESULTADOS Y VALIDACIÓN
-    add_heading_1("VII. ANÁLISIS DE RESULTADOS Y VALIDACIÓN")
-    add_para(
-        "La validación técnica del módulo PAME arrojó excelentes resultados de rendimiento e integridad. "
-        "La TABLA I resume las diferencias cuantitativas entre el proceso manual heredado y el módulo digital desarrollado:"
-    )
-
-    # Tabla I: Comparación técnica
-    table_kpi = doc.add_table(rows=5, cols=3)
-    table_kpi.alignment = WD_TABLE_ALIGNMENT.CENTER
+    headers_comp = ["Dimensión / Criterio", "Proceso / Sistema Actual de Laproff", "Módulo Digital PAME"]
+    widths_comp = [Inches(2.0), Inches(2.2), Inches(2.3)]
     
-    headers_kpi = ["Métrica de Operación", "Cronograma Manual Anterior", "Módulo Digital PAME"]
-    widths_kpi = [Inches(2.2), Inches(2.1), Inches(2.2)]
-    
-    hdr_cells_kpi = table_kpi.rows[0].cells
-    for i, header_text in enumerate(headers_kpi):
-        hdr_cells_kpi[i].text = header_text
-        set_cell_background(hdr_cells_kpi[i], "1A365D")
-        set_cell_margins(hdr_cells_kpi[i])
-        run = hdr_cells_kpi[i].paragraphs[0].runs[0]
+    hdr_cells = table_comp.rows[0].cells
+    for i, header_text in enumerate(headers_comp):
+        hdr_cells[i].text = header_text
+        set_cell_background(hdr_cells[i], "1A365D")
+        set_cell_margins(hdr_cells[i])
+        run = hdr_cells[i].paragraphs[0].runs[0]
         run.bold = True
         run.font.name = 'Times New Roman'
-        run.font.size = Pt(10)
+        run.font.size = Pt(9.5)
         run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
 
-    data_kpi = [
-        ("Tiempo de respuesta (cambio de pestañas)", "Aproximadamente 3 minutos (Timeout)", "Milisegundos (Caché local)"),
-        ("Gestión de alertas de vencimiento", "Revisión visual e informal de celdas", "Automática, agrupada en lotes cada 30 días"),
-        ("Esquema de persistencia", "Archivos Excel dispersos en red local", "Base de datos NoSQL documental Firestore"),
-        ("Monitoreo gerencial de conformidad", "No existía consolidación", "Radar 5D e Índice de Salud en tiempo real")
+    data_comp = [
+        ("Datos de entrada", "Excel manual y disperso por analista", "ETL automatizado con soporte de CSV/JSON y detección automática de estructura"),
+        ("Estructura de datos", "Hojas de cálculo planas desestructuradas", "Base documental JSON Firebase Firestore en la nube"),
+        ("Trazabilidad histórica", "Nula consolidación anual histórica", "Historial anual consolidado con análisis interanual (2022–2024)"),
+        ("Mecanismo de alertas", "Revisión manual visual del cronograma", "Alertas SMTP automáticas (Brevo) agrupadas por lotes de 30 días"),
+        ("Visualización", "Reportes estáticos planos e informales", "Tablero interactivo en Streamlit con radar 5D y gráficos Plotly"),
+        ("Escalabilidad", "Manual; requiere modificar fórmulas y archivos", "Automática; soporta nuevos equipos dinámicos sin alterar el esquema"),
+        ("Tiempos de respuesta", "Retrasos críticos detectados tarde", "Carga inmediata (milisegundos) y alertas proactivas a tiempo"),
+        ("Intervención humana", "Alta carga operativa de digitación y control", "Mínima; tubería ETL automatiza validaciones y limpieza"),
+        ("KPIs disponibles", "Ninguno centralizado de conformidad", "Índice de Salud de la planta y KPIs multidimensionales"),
+        ("Aseguramiento de Calidad", "Complejo de auditar ante el INVIMA", "Cumplimiento ALCOA+ con trazabilidad digital inmediata")
     ]
 
-    for row_idx, row_data in enumerate(data_kpi, start=1):
-        row_cells = table_kpi.rows[row_idx].cells
+    for row_idx, row_data in enumerate(data_comp, start=1):
+        row_cells = table_comp.rows[row_idx].cells
         for col_idx, cell_value in enumerate(row_data):
             row_cells[col_idx].text = cell_value
             set_cell_margins(row_cells[col_idx])
             p_run = row_cells[col_idx].paragraphs[0].runs[0]
             p_run.font.name = 'Times New Roman'
-            p_run.font.size = Pt(10)
+            p_run.font.size = Pt(9.5)
             if row_idx % 2 == 0:
                 set_cell_background(row_cells[col_idx], "F7FAFC")
             else:
                 set_cell_background(row_cells[col_idx], "FFFFFF")
 
-    for row in table_kpi.rows:
-        for idx, width in enumerate(widths_kpi):
+    for row in table_comp.rows:
+        for idx, width in enumerate(widths_comp):
             row.cells[idx].width = width
 
-    p_caption = doc.add_paragraph()
-    p_caption.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_caption.paragraph_format.space_before = Pt(4)
-    run_cap = p_caption.add_run("TABLA I. COMPARATIVO DE RENDIMIENTO Y FUNCIONALIDAD")
-    run_cap.bold = True
-    run_cap.font.name = 'Times New Roman'
-    run_cap.font.size = Pt(9.5)
+    # Nota inferior
+    p_note = doc.add_paragraph()
+    p_note.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_note.paragraph_format.space_before = Pt(4)
+    p_note.paragraph_format.space_after = Pt(12)
+    run_note = p_note.add_run("Nota: Datos recopilados a partir de las pruebas unitarias sobre los 3.600 registros de Laproff y los archivos de prueba sintéticos.")
+    run_note.italic = True
+    run_note.font.name = 'Times New Roman'
+    run_note.font.size = Pt(8.5)
 
-    add_heading_2("Validación de Software mediante Pruebas Unitarias")
+    add_heading_2("Análisis Crítico de la Matriz Comparativa")
     add_para(
-        "Para garantizar la exactitud operativa exigida por la industria farmacéutica, se implementó una suite de "
-        "13 pruebas unitarias automatizadas utilizando Pytest. Las pruebas cubren las siguientes dimensiones críticas del software:"
-    )
-    add_para(
-        "1) Pruebas del ETL (`tests/test_etl.py`): Valida que la extracción de datos desde CSV y JSON normalice los tipos de datos, filtre duplicados y levante excepciones controladas ante archivos corruptos o columnas inexistentes."
-    )
-    add_para(
-        "2) Pruebas de Alertas (`tests/test_alertas.py`): Comprueba que el cálculo de estado asigne correctamente el estado de 'Vencido' si supera la fecha actual, y 'Programar' si se encuentra dentro de la ventana crítica de 30 días. Asimismo, verifica que la generación de plantillas HTML y la agrupación por lotes no presente errores de sintaxis."
-    )
-    add_para(
-        "3) Pruebas de Priorización: Confirma que el sistema de correo distinga entre las alertas preventivas agrupadas por lotes y las notificaciones críticas inmediatas enviadas ante fallas o calibraciones fallidas en planta."
-    )
-    add_para(
-        "El 100% de la suite de pruebas unitarias locales pasó con éxito, confirmando que la lógica metrológica "
-        "y el backend de base de datos del módulo PAME están libres de fallas técnicas de codificación."
+        "Al evaluar detalladamente las diferencias condensadas en la TABLA II, es posible determinar tres mejoras fundamentales "
+        "aportadas por el módulo PAME frente a la operación tradicional del laboratorio. "
+        "En primer lugar, la unificación del modelo de datos de entrada mediante la tubería ETL automatizada erradica el error humano "
+        "asociado a la transcripción manual de fechas y normaliza variaciones críticas de texto, garantizando la consistencia "
+        "de la información subida a Firebase Firestore. "
+        "En segundo lugar, el motor de alertas por correo electrónico parametrizado a 30 días introduce una garantía de tiempo "
+        "lógico indispensable para el ciclo de cotización y compras de servicios de calibración externa bajo las BPM de la UdeA. "
+        "Finalmente, la disponibilidad de KPIs dinámicos agregados y la vista interanual le conceden al Jefe de Metrología y Validaciones "
+        "una herramienta de control auditable de primer nivel, reduciendo a milisegundos la consulta técnica de conformidad "
+        "ante auditorías del INVIMA."
     )
 
-    # VIII. CONCLUSIONES Y RECOMENDACIONES
-    add_heading_1("VIII. CONCLUSIONES Y RECOMENDACIONES")
+    # VI. CONCLUSIONES Y RECOMENDACIONES
+    add_heading_1("VI. CONCLUSIONES Y RECOMENDACIONES")
     
     add_heading_2("A. Conclusiones")
     add_para(
@@ -499,8 +465,8 @@ def create_final_report():
         "de cambio de pestañas en Streamlit de minutos a milisegundos, garantizando la usabilidad de la herramienta con datos reales."
     )
     add_para(
-        "3. La ventana preventiva de alertas automáticas establecida en 30 días demostró ser operacionalmente óptima. Se validó que este margen temporal cubre "
-        "con holgura las cuatro fases del ciclo de compras metrológicas farmacéuticas externas (cotización, orden de compra, programación de parada de planta "
+        "3. El plazo preventivo de 30 días establecido en el motor de alertas se justifica plenamente en términos logísticos. Se demostró que este margen temporal "
+        "cubre con holgura las cuatro fases del ciclo de compras metrológicas farmacéuticas externas (cotización, orden de compra, programación de parada de planta "
         "y análisis técnico de conformidad), previniendo detenciones inesperadas en las líneas de producción."
     )
     add_para(
