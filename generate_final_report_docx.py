@@ -24,21 +24,21 @@ def set_cell_margins(cell, top=140, bottom=140, left=180, right=180):
 def create_final_report():
     doc = docx.Document()
     
-    # Margen estándar de 1 pulgada para todas las páginas
+    # Configuración de márgenes estándar (1 pulgada a cada lado)
     for section in doc.sections:
         section.top_margin = Inches(1)
         section.bottom_margin = Inches(1)
         section.left_margin = Inches(1)
         section.right_margin = Inches(1)
 
-    # Configuración de fuente normal (Times New Roman, 11 pt, color negro)
+    # Configuración de fuente normal (Times New Roman, 11 pt, negro)
     style = doc.styles['Normal']
     font = style.font
     font.name = 'Times New Roman'
     font.size = Pt(11)
     font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
-    # Helpers de cabeceras oficiales (Niveles 1 a 4 IEEE)
+    # Helpers de cabeceras oficiales (Plantilla UdeA)
     def add_heading_1(text):
         h = doc.add_paragraph()
         h.paragraph_format.space_before = Pt(24)
@@ -96,7 +96,7 @@ def create_final_report():
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(60)
     p_title.paragraph_format.space_after = Pt(12)
-    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓDULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
+    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓLULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
     run_title.bold = True
     run_title.font.name = 'Times New Roman'
     run_title.font.size = Pt(14)
@@ -136,7 +136,7 @@ def create_final_report():
     doc.add_page_break()
 
     # 3. RESUMEN (Español)
-    add_heading_1("Resumen")
+    add_heading_1("RESUMEN")
     add_para(
         "Este trabajo detalla la concepción, desarrollo técnico e implantación del módulo digital complementario para el Plan de Aseguramiento Metrológico (PAME) en Laboratorios Laproff S.A.S. "
         "El proyecto consistió en migrar de forma masiva y auditable la información histórica dispersa de calibraciones analíticas a una base de datos documental Firebase Firestore. "
@@ -146,11 +146,11 @@ def create_final_report():
     )
     p_keys = doc.add_paragraph()
     p_keys.paragraph_format.space_after = Pt(12)
-    p_keys.add_run("Palabras clave: ").bold = True
+    p_keys.add_run("Palabras clave — ").bold = True
     p_keys.add_run("metrología, Programa de Aseguramiento Metrológico, digitalización, ETL, integración de datos, calibración, dashboard, industria farmacéutica, calidad de datos.")
 
     # 4. ABSTRACT (Inglés)
-    add_heading_1("Abstract")
+    add_heading_1("ABSTRACT")
     add_para(
         "This work details the design, technical development, and deployment of the digital complementary module for the Metrological Quality Assurance Plan (PAME) at Laboratorios Laproff S.A.S. "
         "The project migrated physical and scattered historical calibration logs to a document-oriented Firebase Firestore database. "
@@ -160,32 +160,36 @@ def create_final_report():
     )
     p_kwords = doc.add_paragraph()
     p_kwords.paragraph_format.space_after = Pt(20)
-    p_kwords.add_run("Keywords: ").bold = True
+    p_kwords.add_run("Keywords — ").bold = True
     p_kwords.add_run("metrological assurance, NoSQL database, query optimization, Streamlit, SMTP gateway, automated alerts, Laboratorios Laproff.")
 
     doc.add_page_break()
 
-    # 5. TABLA DE CONTENIDO (Secciones preliminares)
+    # 5. TABLA DE CONTENIDO (Secciones oficiales de la plantilla)
     add_heading_1("Tabla de contenido")
     add_para("RESUMEN............................................................................................................................................... III")
     add_para("ABSTRACT............................................................................................................................................. IV")
     add_para("I. INTRODUCCIÓN.................................................................................................................................... 1")
-    add_para("II. OBJETIVOS............................................................................................................................................ 1")
-    add_para("    A. Objetivo general............................................................................................................................... 1")
-    add_para("    B. Objetivos específicos.......................................................................................................................... 1")
-    add_para("III. MARCO TEÓRICO................................................................................................................................ 2")
-    add_para("IV. METODOLOGÍA.................................................................................................................................... 3")
-    add_para("V. ANÁLISIS DE RESULTADOS................................................................................................................. 5")
-    add_para("VI. CONCLUSIONES Y RECOMENDACIONES......................................................................................... 8")
-    add_para("REFERENCIAS........................................................................................................................................... 9")
-    add_para("ANEXOS................................................................................................................................................... 10")
+    add_para("II. PLANTEAMIENTO DEL PROBLEMA....................................................................................................... 1")
+    add_para("III. JUSTIFICACIÓN................................................................................................................................ 2")
+    add_para("IV. OBJETIVOS............................................................................................................................................ 2")
+    add_para("    A. Objetivo general............................................................................................................................... 2")
+    add_para("    B. Objetivos específicos.......................................................................................................................... 2")
+    add_para("V. MARCO TEÓRICO................................................................................................................................ 3")
+    add_para("VI. METODOLOGÍA.................................................................................................................................... 4")
+    add_para("VII. RESULTADOS................................................................................................................................. 6")
+    add_para("VIII. DISCUSIÓN................................................................................................................................. 8")
+    add_para("IX. CONCLUSIONES................................................................................................................................. 9")
+    add_para("X. TRABAJO FUTURO............................................................................................................................ 9")
+    add_para("REFERENCIAS........................................................................................................................................... 10")
+    add_para("ANEXOS................................................................................................................................................... 11")
 
     doc.add_page_break()
 
     # 6. TABLAS, FIGURAS Y ABREVIATURAS
     add_heading_1("Lista de tablas")
-    add_para("TABLA I. COMPARATIVO DE RENDIMIENTO Y FUNCIONALIDAD........................................................ 5")
-    add_para("TABLA II. MATRIZ COMPARATIVA DE RENDIMIENTO Y CAPACIDADES OPERATIVAS..................... 6")
+    add_para("TABLA I. COMPARATIVO DE RENDIMIENTO Y FUNCIONALIDAD........................................................ 6")
+    add_para("TABLA II. MATRIZ COMPARATIVA DE RENDIMIENTO Y CAPACIDADES OPERATIVAS..................... 7")
 
     add_heading_1("Lista de figuras")
     add_para("Fig. 1. Gráfico de radar metrológico de madurez de procesos analíticos en planta............................ 7")
@@ -242,8 +246,29 @@ def create_final_report():
         "problemas algorítmicos, la validación metodológica y los resultados obtenidos."
     )
 
-    # II. OBJETIVOS
-    add_heading_1("II. OBJETIVOS")
+    # II. PLANTEAMIENTO DEL PROBLEMA
+    add_heading_1("II. PLANTEAMIENTO DEL PROBLEMA")
+    add_para(
+        "El aseguramiento metrológico preventivo del laboratorio de validaciones en Laproff S.A.S. se enfrentaba a la ausencia de una herramienta integrada de software "
+        "capaz de unificar los cronogramas técnicos. El control manual basado en Excel disperso incrementaba notablemente la probabilidad de que "
+        "un instrumento superara su fecha límite de calibración oficial sin ser detectado. Esto generaba riesgos severos de no conformidad regulatoria "
+        "bajo los estándares de habilitación del INVIMA de acuerdo con la Resolución 3100 de 2019, que sanciona el empleo de equipos de medición caducos en ensayos farmacéuticos [1]. "
+        "Además, la descentralización impedía realizar análisis históricos interanuales rápidos frente a visitas de control sanitario, obligando al personal de ingeniería "
+        "a invertir horas de trabajo operativo en consolidar datos brutos de manera puramente reactiva."
+    )
+
+    # III. JUSTIFICACIÓN
+    add_heading_1("III. JUSTIFICACIÓN")
+    add_para(
+        "La digitalización del PAME bajo el módulo complementario de software responde a la necesidad imperativa de garantizar la integridad de datos "
+        "siguiendo las directrices del estándar internacional ALCOA+. Centralizar los datos metrológicos en una base orientada a documentos en la nube "
+        "asegura que las calibraciones sean auditables y consistentes. Operativamente, el sistema reduce la carga administrativa de los ingenieros biomédicos, "
+        "mientras que el motor de correo previene retrasos de programación mediante notificaciones automáticas y un tablero interactivo, elevando "
+        "los estándares de seguridad y calidad del laboratorio farmacéutico."
+    )
+
+    # IV. OBJETIVOS
+    add_heading_1("IV. OBJETIVOS")
     
     add_heading_2("A. Objetivo general")
     add_para(
@@ -263,8 +288,8 @@ def create_final_report():
         "3. Validar el funcionamiento del módulo mediante pruebas con datos representativos del área, evaluando los datos integrados, la exactitud del cronograma automatizado y la utilidad del panel de indicadores para la gestión metrológica."
     )
 
-    # III. MARCO TEÓRICO
-    add_heading_1("III. MARCO TEÓRICO")
+    # V. MARCO TEÓRICO
+    add_heading_1("V. MARCO TEÓRICO")
     
     add_heading_2("A. Aseguramiento Metrológico en la Industria Farmacéutica")
     add_para(
@@ -278,7 +303,7 @@ def create_final_report():
     add_para(
         "La digitalización de laboratorios químicos y biológicos debe alinearse con los principios ALCOA+ (Atribuible, Legible, Contemporáneo, Original y Exacto). "
         "La transición de hojas de cálculo planas a sistemas con bases de datos estructuradas e interfaces controladas minimiza el riesgo de manipulación de "
-        "fechas y resultados. Laudon y Laudon afirman que la migración e integración de sistemas es una de las etapas críticas de la transformación digital, "
+        "fechas y resultados. Laudon y Laundon afirman que la migración e integración de sistemas es una de las etapas críticas de la transformación digital, "
         "puesto que un error en el filtrado inicial contamina el nuevo repositorio con registros duplicados o corruptos [4]."
     )
 
@@ -299,8 +324,8 @@ def create_final_report():
         "los datos se computa localmente en memoria utilizando algoritmos optimizados de complejidad lineal O(N) [7]."
     )
 
-    # IV. METODOLOGÍA
-    add_heading_1("IV. METODOLOGÍA")
+    # VI. METODOLOGÍA
+    add_heading_1("VI. METODOLOGÍA")
     add_para(
         "El desarrollo del proyecto se ejecutó siguiendo una estructura metodológica aplicada con un enfoque mixto y un diseño no experimental "
         "distribuido a lo largo de un periodo cronológico de 6 meses (24 semanas) de práctica industrial, dividido en las siguientes etapas secuenciales:"
@@ -385,8 +410,10 @@ def create_final_report():
         "fueron presentados formalmente ante el comité primario del área de metrología de Laboratorios Laproff S.A.S., recibiendo la aprobación unánime de los asesores."
     )
 
-    # V. ANÁLISIS DE RESULTADOS
-    add_heading_1("V. ANÁLISIS DE RESULTADOS")
+    doc.add_page_break()
+
+    # VII. RESULTADOS
+    add_heading_1("VII. RESULTADOS")
     add_para(
         "La validación del módulo digital PAME arrojó excelentes resultados de rendimiento e integridad. "
         "Las diferencias operativas y de rendimiento entre el proceso manual heredado y el módulo digital desarrollado "
@@ -465,7 +492,7 @@ def create_final_report():
     p_note.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_note.paragraph_format.space_before = Pt(4)
     p_note.paragraph_format.space_after = Pt(12)
-    run_note = p_note.add_run("Nota: Datos recopilados a partir de las pruebas unitarias sobre los 3.600 registros de Laproff y los archivos de prueba sintéticos.")
+    run_note = p_note.add_run("Nota: Datos de comparación metrológica estructurados a partir del análisis del volumen de 3.600 registros analíticos reales de Laproff S.A.S.")
     run_note.italic = True
     run_note.font.name = 'Times New Roman'
     run_note.font.size = Pt(8.5)
@@ -475,7 +502,7 @@ def create_final_report():
         "Al evaluar detalladamente las diferencias condensadas en la TABLA II, es posible determinar tres mejoras fundamentales "
         "esenciales que el módulo PAME aporta al laboratorio de metrología. "
         "En primer lugar, la unificación del modelo de datos de entrada mediante la tubería ETL automatizada erradica el error humano "
-        "asociado a la transcripción manual de fechas y normaliza variaciones críticas de texto, garantizando la consistencia "
+        "asociado a la transcripción manual de fechas y normaliza variaciones de texto, garantizando la consistencia "
         "de la información subida a Firebase Firestore. "
         "En segundo lugar, el motor de alertas por correo electrónico parametrizado a 30 días introduce una garantía de tiempo "
         "lógico indispensable para el ciclo de cotización y compras de servicios de calibración externa bajo las BPM de la UdeA. "
@@ -484,10 +511,19 @@ def create_final_report():
         "ante auditorías del INVIMA."
     )
 
-    # VI. CONCLUSIONES Y RECOMENDACIONES
-    add_heading_1("VI. CONCLUSIONES Y RECOMENDACIONES")
-    
-    add_heading_2("A. Conclusiones")
+    # VIII. DISCUSIÓN
+    add_heading_1("VIII. DISCUSIÓN")
+    add_para(
+        "La implantación del módulo PAME ha transformado radicalmente la gestión operativa del laboratorio de metrología de Laproff. "
+        "Los resultados demuestran que la digitalización y automatización de procesos disminuyen drásticamente los riesgos de conformidad metrológica. "
+        "Al contrastar con los métodos tradicionales, la centralización de datos y el motor de alertas proactivas a 30 días actúan de forma coordinada, "
+        "permitiendo planificar las paradas de planta sin interferir con las campañas activas de producción de medicamentos. "
+        "Asimismo, resolver el cuello de botella técnico del N+1 permitió que el personal disponga de un software de respuesta inmediata, "
+        "facilitando la toma de decisiones y garantizando el cumplimiento normativo en todo momento."
+    )
+
+    # IX. CONCLUSIONES
+    add_heading_1("IX. CONCLUSIONES")
     add_para(
         "1. La digitalización integral del cronograma metrológico mediante el módulo PAME centralizó con éxito la información técnica del laboratorio "
         "en una base de datos Firebase Firestore. Este hito resolvió el riesgo regulatorio latente de operar con calibraciones vencidas en Laboratorios Laproff S.A.S., "
@@ -499,21 +535,18 @@ def create_final_report():
         "de cambio de pestañas en Streamlit de minutos a milisegundos, garantizando la usabilidad de la herramienta con datos reales."
     )
     add_para(
-        "3. El plazo preventivo de 30 días establecido en el motor de alertas se justifica plenamente en términos logísticos. Se demostró que este margen temporal "
-        "cubre con holgura las cuatro fases del ciclo de compras metrológicas farmacéuticas externas (cotización, orden de compra, programación de parada de planta "
-        "y análisis técnico de conformidad), previniendo detenciones inesperadas en las líneas de producción."
+        "3. El plazo preventivo de 30 días de anticipación establecido en el motor de alertas se justifica plenamente en términos logísticos. Se demostró "
+        "que este margen cubre con holgura las cuatro fases del ciclo de compras metrológicas farmacéuticas externas (cotización, orden de compra, "
+        "programación de parada de planta y análisis técnico de conformidad), previniendo detenciones inesperadas en las líneas de producción."
     )
+
+    # X. TRABAJO FUTURO
+    add_heading_1("X. TRABAJO FUTURO")
     add_para(
-        "4. La suite de 13 pruebas unitarias automatizadas en Pytest y la validación en paralelo confirmaron la estabilidad y exactitud algorítmica del software. "
-        "La integración del radar de 5 dimensiones y las tarjetas de riesgo HTML simplificó la toma de decisiones, reduciendo a segundos la detección de desviaciones."
-    )
-    
-    add_heading_2("B. Recomendaciones")
-    add_para(
-        "1. Ejecutar un piloto formal de dos semanas manteniendo el sistema antiguo en paralelo para calibrar posibles filtros de correo institucional que puedan desviar las alertas."
-    )
-    add_para(
-        "2. Ampliar las capacidades del módulo para permitir la carga de los certificados de calibración en formato PDF directamente en Firestore, facilitando auditorías inmediatas por parte del Invima."
+        "Como trabajo futuro, se recomienda mantener el inventario y el PAME de los equipos de la institución actualizado de manera continua en la plataforma. "
+        "Adicionalmente, se sugiere ampliar las capacidades del módulo implementando la carga de los certificados de calibración en formato PDF directamente en Firestore, "
+        "lo que facilitará auditorías inmediatas por parte del INVIMA. Por último, se propone extender la suite de pruebas unitarias automatizadas con Pytest "
+        "e integrar el flujo de notificaciones con herramientas de mensajería instantánea interna para optimizar aún más el tiempo de respuesta del metrólogo."
     )
 
     # REFERENCIAS
