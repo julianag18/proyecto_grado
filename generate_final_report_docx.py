@@ -96,7 +96,7 @@ def create_final_report():
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_title.paragraph_format.space_before = Pt(60)
     p_title.paragraph_format.space_after = Pt(12)
-    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓLULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
+    run_title = p_title.add_run("DISEÑO E IMPLEMENTACIÓN DE UN MÓDULO COMPLEMENTARIO PARA LA GESTIÓN Y DIGITALIZACIÓN DEL PROGRAMA DE ASEGURAMIENTO METROLÓGICO (PAME) EN LABORATORIOS LAPROFF S.A.S.")
     run_title.bold = True
     run_title.font.name = 'Times New Roman'
     run_title.font.size = Pt(14)
@@ -261,7 +261,7 @@ def create_final_report():
     add_heading_1("III. JUSTIFICACIÓN")
     add_para(
         "La digitalización del PAME bajo el módulo complementario de software responde a la necesidad imperativa de garantizar la integridad de datos "
-        "siguiendo las directrices del estándar internacional ALCOA+. Centralizar los datos metrológicos en una base orientada a documentos en la nube "
+        "siguiendo las directrices del estándar internacional ALCOA+. Centralizar los datos metrológicos en una base de datos documental en la nube "
         "asegura que las calibraciones sean auditables y consistentes. Operativamente, el sistema reduce la carga administrativa de los ingenieros biomédicos, "
         "mientras que el motor de correo previene retrasos de programación mediante notificaciones automáticas y un tablero interactivo, elevando "
         "los estándares de seguridad y calidad del laboratorio farmacéutico."
@@ -303,7 +303,7 @@ def create_final_report():
     add_para(
         "La digitalización de laboratorios químicos y biológicos debe alinearse con los principios ALCOA+ (Atribuible, Legible, Contemporáneo, Original y Exacto). "
         "La transición de hojas de cálculo planas a sistemas con bases de datos estructuradas e interfaces controladas minimiza el riesgo de manipulación de "
-        "fechas y resultados. Laudon y Laundon afirman que la migración e integración de sistemas es una de las etapas críticas de la transformación digital, "
+        "fechas y resultados. Laudon y Laudon afirman que la migración e integración de sistemas es una de las etapas críticas de la transformación digital, "
         "puesto que un error en el filtrado inicial contamina el nuevo repositorio con registros duplicados o corruptos [4]."
     )
 
@@ -331,83 +331,89 @@ def create_final_report():
         "distribuido a lo largo de un periodo cronológico de 6 meses (24 semanas) de práctica industrial, dividido en las siguientes etapas secuenciales:"
     )
 
-    add_heading_2("A. Fase 1: Contextualización y Levantamiento de Requerimientos (Mes 1)")
+    add_heading_2("A. Diagnóstico de fuentes de información y análisis de requisitos regulatorios")
     add_para(
-        "El primer mes estuvo dedicado a la inmersión en el dominio metrológico y regulatorio del laboratorio. "
-        "Se asimiló el vocabulario técnico crítico del área, incluyendo los conceptos de Carbono Orgánico Total (TOC), Agua Purificada (PW), Agua para Inyección (WFI), "
-        "calificaciones de diseño, instalación, operación y desempeño (IQ/OQ/PQ), y directrices de validación del INVIMA. "
-        "Asimismo, se estudió el funcionamiento de los sensores espectrofotométricos de absorción infrarroja no dispersiva (NDIR), evaluando la precisión respecto al "
-        "rango de escala total (Full Scale) y el empleo de estándares de referencia de sacarosa certificados por la USP."
+        "Esta primera fase metodológica se centró en la inmersión profunda dentro del dominio metrológico y regulatorio farmacéutico. "
+        "Se recopiló e interpretó el vocabulario técnico fundamental, comprendiendo la criticidad del Carbono Orgánico Total (TOC) como parámetro de control de calidad "
+        "para los sistemas de agua purificada (PW) y agua para inyección (WFI). Asimismo, se analizaron las calificaciones de diseño, instalación, operación y desempeño "
+        "(IQ/OQ/PQ) que el INVIMA exige para asegurar la conformidad de los equipos según las BPM (Resolución 1160 de 2016). "
+        "Se estudió detalladamente el funcionamiento de los sensores espectrofotométricos de absorción infrarroja no dispersiva (NDIR), evaluando su exactitud respecto al "
+        "rango de escala total (Full Scale) e instrumentando curvas de calibración con sacarosa bajo especificaciones USP."
     )
     add_para(
-        "Se identificó la necesidad concreta de desarrollar un módulo analítico complementario que no reemplazara el software corporativo en desarrollo en Laproff, "
-        "sino que aportara capacidades diferenciadoras de alerta preventiva y visualización histórica agregada. "
-        "Para ello, se auditó la fuente de datos real proporcionada por el área de Metrología: el archivo `Cronograma_De_Servicios.csv`. "
-        "Este archivo posee aproximadamente 3.600 registros metrológicos distribuidos en 14 columnas de datos (incluyendo códigos de equipos, ubicaciones físicas, "
-        "fechas de servicio, periodicidad y estados de conformidad), codificado bajo el formato latin-1 y delimitado por punto y coma. "
-        "Mediante reuniones periódicas con el Jefe de Validaciones y Metrología (asesor externo), se definió el alcance funcional del aplicativo, estableciendo como meta "
-        "construir un prototipo funcional robusto para el control en tiempo real del cronograma."
-    )
-
-    add_heading_2("B. Fase 2: Definición de Arquitectura y Modelado de Datos (Mes 2)")
-    add_para(
-        "El segundo mes se enfocó en el análisis arquitectónico y la selección del motor de persistencia. "
-        "Se realizó un análisis comparativo entre una base de datos relacional PostgreSQL administrada mediante Supabase y una documental NoSQL estructurada en Firebase Firestore. "
-        "La justificación técnica de la decisión final a favor de Firestore radicó en su capacidad nativa para almacenar y procesar documentos JSON heterogéneos. "
-        "Dado que las balanzas analíticas, termohigrómetros y equipos analíticos complejos como el analizador de TOC registran datos metrológicos marcadamente diferentes, "
-        "un esquema SQL clásico habría impuesto una rigidez perjudicial con múltiples tablas JOIN. "
-        "Firestore permitió representar de forma directa el inventario de equipos y sus correspondientes subcolecciones de historial de calibraciones y alertas. "
-        "Adicionalmente, en esta fase se definieron formalmente los KPIs diferenciales que debía ofrecer el módulo, tales como el Índice de Salud de la planta "
-        "y el análisis interanual, elementos ausentes en el desarrollo corporativo central."
+        "El entregable directo de esta etapa consistió en el análisis del archivo real de metrología, denominado `Cronograma_De_Servicios.csv`. "
+        "Este archivo contenía un volumen de ~3.600 registros estructurados en 14 columnas, delimitado por punto y coma y codificado en latin-1. "
+        "A través de reuniones periódicas con el Jefe de Validaciones y Metrología (asesor externo), se definieron las deficiencias del proceso actual de Laproff. "
+        "Esto permitió delimitar que el nuevo módulo digital PAME actuaría de forma complementaria, integrando alertas preventivas y una visualización histórica "
+        "avanzada que serviría de puente para alimentar el siguiente bloque del modelado computacional."
     )
 
-    add_heading_2("C. Fase 3: Construcción de la Tubería ETL (Mes 3)")
+    add_heading_2("B. Especificación de arquitectura computacional y modelado de datos documental")
     add_para(
-        "El tercer mes estuvo dedicado al desarrollo del pipeline de extracción, transformación y carga (ETL) desarrollado en Python. "
-        "Para asegurar la flexibilidad del sistema ante posibles cambios futuros en las exportaciones de datos de la empresa, "
-        "se incorporó la lectura nativa de formatos JSON, además de los formatos CSV de Laproff. "
-        "Se programó una subrutina de detección automática de estructura capaz de interpretar las variaciones en las columnas de 4 formatos de cronograma distintos."
+        "Durante el segundo mes de la práctica, se realizó la evaluación arquitectónica del motor de base de datos. "
+        "Se contrastaron dos alternativas tecnológicas principales: una base de datos relacional PostgreSQL montada en Supabase y una base de datos documental NoSQL "
+        "estructurada en Firebase Firestore. La justificación técnica para la selección final de Firestore se basó en la variabilidad estructural "
+        "de los instrumentos del laboratorio. En la metrología farmacéutica, los parámetros requeridos para calibrar un termohigrómetro difieren radicalmente "
+        "de los requeridos para una balanza analítica o un medidor de conductividad; un esquema relacional SQL convencional habría exigido múltiples tablas JOIN, "
+        "complejizando la base de datos y comprometiendo su rendimiento."
     )
     add_para(
-        "Con el objetivo de validar la robustez de la tubería ETL sin alterar la base de datos real del laboratorio, se generaron tres archivos sintéticos de prueba: "
-        "(1) `cronograma_sample.csv` (55 registros que incorporaban intencionalmente celdas vacías, caracteres especiales y fechas mal formateadas para evaluar la tolerancia al error), "
-        "(2) `cronograma_historico.json` (123 registros reales cubriendo el periodo de calibraciones 2022–2024 para poblar el histórico anual) "
-        "y (3) `equipos_nuevos.csv` (10 registros con equipos nuevos sin historial previo). "
-        "Las pruebas realizadas confirmaron que el pipeline corrige las inconsistencias de texto de forma automática y omite registros duplicados empleando una llave compuesta de control."
-    )
-
-    add_heading_2("D. Fase 4: Motor de Alertas y Notificaciones (Mes 4)")
-    add_para(
-        "Durante el cuarto mes, se implementó el motor de notificaciones solicitado explícitamente por el Jefe de Validaciones de Laproff para evitar la revisión visual manual. "
-        "Se configuró el envío automatizado a través de la pasarela SMTP transaccional de Brevo. "
-        "Se diseñaron plantillas de correo electrónico responsivas en HTML que incorporan el logotipo institucional, tablas estructuradas de los equipos próximos "
-        "y una barra visual de distribución de estados. "
-        "Para accionar el motor, se programó un script planificador (scheduler) de ejecución diaria en segundo plano. "
-        "Este script corre cada mañana, computa la diferencia de días entre la fecha actual y la fecha de vencimiento metrológico de cada equipo, "
-        "y despacha alertas por lotes si encuentra instrumentos dentro del margen crítico de 30 días, o alertas inmediatas individuales ante fallos analíticos."
+        "El entregable de esta fase fue el diseño conceptual y lógico del esquema JSON de Firestore, organizando la colección principal de equipos y sus correspondientes "
+        "subcolecciones de servicios y alertas históricas. Se definieron, asimismo, los indicadores clave de desempeño (KPIs) específicos para el área de control, "
+        "tales como el porcentaje de equipos conformes y el índice de salud metrológica del laboratorio. Este modelado documental proporcionó la estructura de datos "
+        "necesaria para el desarrollo posterior del pipeline de integración de datos."
     )
 
-    add_heading_2("E. Fase 5: Desarrollo del Tablero Interactivo en Streamlit (Mes 5)")
+    add_heading_2("C. Implementación del pipeline de extracción, transformación y carga de datos metrológicos")
     add_para(
-        "El quinto mes se centró en la construcción de la interfaz web interactiva en Streamlit. "
-        "Se integraron gráficos dinámicos desarrollados con Plotly, tales como curvas de tendencia mensual con relleno degradado y el comparativo anual. "
-        "Para responder a los requerimientos del asesor externo, se desarrolló especialmente la pestaña de 'Cumplimiento Anual', "
-        "la cual permite visualizar año tras año la evolución del cumplimiento y el estado de conformidad acumulado por área. "
-        "Esta vista histórica constituía el requerimiento diferenciador clave del módulo PAME. "
-        "Se iteró continuamente en el diseño de los selectores laterales, filtros por sección y tablas editables para garantizar que la interfaz "
-        "fuera intuitiva tanto para los analistas de laboratorio como para los auditores de calidad."
+        "El tercer mes se enfocó en la codificación de la tubería de integración de datos (ETL) utilizando Python y la biblioteca Pandas. "
+        "Para dotar al sistema de resiliencia y adaptabilidad ante futuros formatos de exportación de la empresa, se diseñó un algoritmo de detección automática de estructura. "
+        "Este motor es capaz de identificar y procesar dinámicamente cuatro variaciones de plantillas estructuradas de cronogramas, incorporando soporte nativo "
+        "para archivos en formato JSON además del formato CSV estándar."
+    )
+    add_para(
+        "Para validar rigurosamente el pipeline ETL sin alterar la base de datos real del laboratorio, se crearon tres archivos sintéticos de prueba: "
+        "(1) `cronograma_sample.csv` (55 filas que contenían datos faltantes, fechas erróneas y caracteres especiales para poner a prueba la tolerancia a fallos), "
+        "(2) `cronograma_historico.json` (123 registros de calibraciones reales ejecutadas entre 2022 y 2024) y (3) `equipos_nuevos.csv` (10 equipos nuevos sin historial previo). "
+        "Los resultados demostraron que el script normalizaba con éxito las cadenas de caracteres y detectaba duplicados mediante una clave compuesta, "
+        "creando una base de datos limpia y consistente, indispensable para el funcionamiento del motor de notificaciones preventivas."
     )
 
-    add_heading_2("F. Fase 6: Integración, Pruebas y Entrega (Mes 6)")
+    add_heading_2("D. Programación del motor transaccional de alertas y notificaciones preventivas")
     add_para(
-        "El último mes estuvo dedicado a la integración final del sistema completo de extremo a extremo (ETL $\rightarrow$ Firestore $\rightarrow$ Alertas $\rightarrow$ Streamlit). "
-        "Se realizaron pruebas de integración inyectando simultáneamente los tres archivos sintéticos de prueba y el archivo de datos reales del laboratorio. "
-        "Para asegurar la transferencia de conocimiento y facilitar futuras mejoras, se redactó una documentación técnica estructurada en bloques lógicos. "
-        "Esta documentación técnica sirvió de base para entrenar un asistente de programación con IA, facilitando la validación del código y correcciones menores del dashboard."
+        "El cuarto mes se dedicó al desarrollo del sistema de notificaciones automáticas, un requerimiento clave del área metrológica para eliminar "
+        "el control visual manual. Se implementó una conexión SMTP transaccional acoplada a la API de Brevo. "
+        "Se diseñaron plantillas responsivas en formato HTML que integran elementos dinámicos como el nombre del equipo, su código interno y el tiempo restante para su calibración."
     )
     add_para(
-        "El proyecto finalizado y el análisis metrológico del analizador de TOC GEHAKA 2400 (que detallaba el plan de idoneidad del sistema) "
-        "fueron presentados formalmente ante el comité primario del área de metrología de Laboratorios Laproff S.A.S., recibiendo la aprobación unánime de los asesores."
+        "Se programó un script planificador (scheduler) que ejecuta diariamente en segundo plano un análisis de las fechas de vencimiento de la base de datos de Firestore. "
+        "El algoritmo aplica una regla lógica preventiva: si la calibración de un equipo vencerá en un plazo inferior a 30 días, se genera una alerta proactiva y se agrupa por lotes; "
+        "sin embargo, si el margen es menor a 15 días, el correo se cataloga como alerta crítica inmediata e individual para el Jefe del área. "
+        "Este motor proporciona las alertas automatizadas que activan el flujo de trabajo en Streamlit."
+    )
+
+    add_heading_2("E. Diseño e integración del panel analítico interactivo de visualización")
+    add_para(
+        "Durante el quinto mes de desarrollo, se construyó el dashboard interactivo utilizando la plataforma Streamlit. "
+        "La interfaz web se diseñó con un enfoque centrado en la usabilidad, incorporando gráficos interactivos de Plotly con curvas de tendencia y barras de distribución. "
+        "A petición explícita del asesor externo, se desarrolló la pestaña de 'Cumplimiento Anual', permitiendo visualizar año tras año la evolución del cumplimiento y el estado de conformidad acumulado por área."
+    )
+    add_para(
+        "Para superar la alta latencia provocada por consultas consecutivas individuales a la base de datos (problema de consulta N+1) que congelaba la aplicación durante 3 minutos, "
+        "se reestructuraron las consultas para ejecutarse en un solo bloque masivo de lectura. Posteriormente, el agrupamiento y filtrado de datos se computó localmente en memoria "
+        "mediante Pandas con complejidad lineal O(N), reduciendo el tiempo de carga a milisegundos. Esta interfaz optimizada permitió iniciar las pruebas de integración finales del sistema."
+    )
+
+    add_heading_2("F. Protocolo de pruebas de integración, validación técnica y transferencia de conocimiento")
+    add_para(
+        "El último mes se destinó a la integración de extremo a extremo del sistema (ETL $\rightarrow$ Firestore $\rightarrow$ Alertas $\rightarrow$ Streamlit). "
+        "Se ejecutaron pruebas de flujo continuo inyectando los archivos de datos sintéticos y reales de forma simultánea. "
+        "Como garantía de transferencia tecnológica, se documentó el código fuente en bloques lógicos estructurados, facilitando la validación automatizada de código con IA."
+    )
+    add_para(
+        "Finalmente, se llevó a cabo la socialización del proyecto y de un análisis de riesgo metrológico complementario (enfocado en el analizador de TOC GEHAKA 2400 "
+        "y sus curvas de conductividad analítica) ante el comité primario de metrología de Laboratorios Laproff S.A.S., recibiendo la aprobación unánime de los asesores "
+        "debido a la solidez computacional y el cumplimiento de las normativas de calidad."
     )
 
     doc.add_page_break()
